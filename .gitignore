@@ -1,0 +1,29 @@
+# Private keys & secrets (CRITICAL)
+hoffmankey*
+*.pem
+*.key
+.env
+
+# R environment & renv
+.Rhistory
+.RData
+.RDataTmp
+renv/library/
+renv/local/
+renv/cellar/
+renv/staging/
+renv/cache/
+
+# Positron & IDE artifacts
+.posit/
+.Rproj.user/
+*.Rproj.user
+.vscode/mcp.json
+
+# Heavy cache archives
+Cache/Archive_Legacy_*/
+Cache/summaries/Archive/
+Logs/Archive/
+Submissions/Archive/
+Scripts/Archive/
+*.tmp
