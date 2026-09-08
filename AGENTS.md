@@ -885,10 +885,11 @@ scale_fill_manual(values = COLOR_CREDIBILITY, name = "Directional Credibility")
 - **Table 1**: Descriptive Statistics for Baseline Covariates and Cultural Participation Batteries ($N = 201 / 199$) (`tab:descriptives`)
 - **Table 2**: Latent Class Model Selection and Fit Statistics across Candidate Specifications ($K = 1 \dots 5$) (`tab:selection`)
 - **Table 3**: Model Fit and Predictive Power of Theoretical Variable Blocks across Expressive Domains (`tab:blocks`)
-- **Table 4**: Multinomial Logistic Parameter Estimates and Odds Ratios from Full Multivariable Endogenous Concomitant Models (Vertically stacked panels, 5 columns) (`tab:coefs`)
+- **Table A1**: Multinomial Logistic Parameter Estimates and Odds Ratios from Full Multivariable Endogenous Concomitant Models (Appendix, vertically stacked panels) (`tab:app_coefs`)
 - **Figure 1**: Latent participation trajectories across 12 Arts and Cultural Events from the 3-class multivariate binary model (`Plots/fig1_arts_12_events_by_class.png`, `fig:arts`)
 - **Figure 2**: Latent trajectories across 9 Book Reading Types from the 3-class multivariate binary model (`Plots/fig2_books_9_items_by_class.png`, `fig:books`)
 - **Figure 3**: Latent trajectories across the Top 10 Music Genres from the 3-class multivariate binary model (`Plots/fig3_music_10_genres_by_class.png`, `fig:music`)
+- **Figure 4**: Model-implied marginal predicted class probabilities with 95\% simulation confidence intervals across statistically significant predictor blocks from Table 3 across Arts, Books, and Music (`Plots/fig4_marginal_effects_all_domains.png`, `fig:marginal`)
 
 ### 4. Overleaf Git Synchronization & Zero Local Compilation Protocol
 - **Zero Local Compilation Rule (CRITICAL):**
