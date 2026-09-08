@@ -36,7 +36,19 @@ Study cultural taste change trajectories in the NetSense dataset using finite mi
     * `Plots/fig2_books_9_items_by_class.png`: 9 small-multiple panels showing reading probabilities with wave markers across all 9 book types for all three distinct classes.
     * `Plots/fig3_music_10_genres_by_class.png`: 10 small-multiple panels showing preference probabilities with wave markers across the top 10 music genres by class.
     * `Plots/fig4_multivariate_concomitant_odds_ratios.png`: Odds Ratio forest plot from the full multivariable concomitant models across Arts, Books, and Music.
-    * `Plots/fig5_activity_time_trend_shifts.png`: Net trajectory shifts ($\Delta = P(W_{\text{end}}) - P(W_1)$) by activity within latent classes across all 31 items in Arts, Books, and Music.
+- **Single-Word Class Labels & Streamlined Figure/Table Architecture**:
+  - Purged all slash-containing class labels in favor of punchy, single-word sociological typologies:
+    * Arts: “Omnivores”, “Traditionalists”, “Minimalists”
+    * Books: “Nonfictionists”, “Fictionists”, “Minimalists”
+    * Music: “Omnivores”, “Rockers”, “Mainstreamers”
+  - Pruned redundant Figure 5 (activity shifts plot), promoting the Odds Ratio forest plot to Figure 4.
+  - Relegated within-class slope moderation estimates (Table 5) to a comprehensive substantive footnote, as all interactions are non-significant ($p > 0.10$).
+  - Restructured Table 4 (full multivariable models) into vertically stacked panels by domain with 5 columns, perfectly fitting portrait layout in elastic `tabular*`.
+  - Added rich `Data and Measures` section with comprehensive descriptive statistics (Table 2) detailing NetSense survey stems, response categories, and longitudinal prevalence.
+- **Overleaf Git Remote Integration & Zero Local Compilation**:
+  - Connected project directly to Overleaf repository: `https://www.overleaf.com/project/6aa021d1a0797784962186d8` (`git.overleaf.com/6aa021d1a0797784962186d8`).
+  - Added global rule in `~/.config/agents/AGENTS.md` strictly prohibiting local `.tex` compilation when connected to Overleaf.
+  - Maintained bidirectional synchronization across Overleaf and GitHub (`origin`).
 - **LaTeX Journal Article Manuscript Architecture**:
   - Authored canonical master LaTeX manuscript (`manuscript.tex`) and standalone BibTeX bibliography (`references.bib`) ready for Overleaf compilation:
     * Formatted using standard article geometry, one-half spacing, microtype, and `booktabs` tables.
