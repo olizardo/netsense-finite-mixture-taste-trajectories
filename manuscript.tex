@@ -55,24 +55,17 @@ Because survey modules varied in their longitudinal administration across waves,
 
 \subsection{Expressive Cultural Participation Batteries}
 
-Across all three domains, cultural items are measured as binary indicators ($Y_{itj} \in \{0, 1\}$) reflecting semester-level participation or preference:
+Across all three expressive domains, cultural items are measured as binary indicators ($Y_{itj} \in \{0, 1\}$) reflecting semester-level participation or aesthetic preference. For public arts and cultural events, tracked across Waves 1 through 4, participation was measured by survey question Q45: ``\textit{In the past semester, have you attended any of the following cultural events?}'' Respondents indicated binary participation (``Yes'' = 1, ``No'' = 0) across 12 distinct activities spanning institutional highbrow, theatrical, and commercial popular venues: jazz performances; Latin, Spanish, or Salsa performances; classical music performances or symphonies; opera; musical theater or Broadway shows; stage plays or dramas; ballet or modern dance; art museums or galleries; science or history museums; rock or pop concerts; comedy clubs or stand-up shows; and movies in a cinema or theater.
 
-\begin{enumerate}
-\item \textbf{Public Arts and Cultural Events (12 Items, Waves 1--4)}: Measured by survey question Q45: ``\textit{In the past semester, have you attended any of the following cultural events?}'' Respondents indicated binary participation (``Yes'' = 1, ``No'' = 0) across 12 distinct activities: (1) Jazz performance; (2) Latin, Spanish, or Salsa performance; (3) Classical music performance or symphony; (4) Opera; (5) Musical theater or Broadway show; (6) Stage play or drama; (7) Ballet or modern dance; (8) Art museum or gallery; (9) Science or history museum; (10) Rock or pop concert; (11) Comedy club or stand-up show; and (12) Movie in a cinema or theater.
-\item \textbf{Leisure Book Reading Types (9 Items, Waves 1--6)}: Measured by survey question Q47: ``\textit{During the past semester, what types of books did you read for pleasure or leisure (not for class assignments)?}'' Binary indicators (``Yes'' = 1, ``No'' = 0) were recorded across 9 literary categories: (1) Mysteries and detective fiction; (2) Thrillers and suspense; (3) Romance; (4) Science fiction and fantasy; (5) General and literary fiction; (6) History, politics, and current affairs; (7) Biography and memoir; (8) Self-help and personal development; and (9) General non-fiction and popular science.
-\item \textbf{Musical Genre Preferences (Top 10 Genres, Waves 1--6)}: Measured by survey question Q44: ``\textit{Which of the following types of music do you like to listen to?}'' From the full 22-genre inventory, the 10 most prominent genres were selected for simultaneous multivariate modeling: (1) Classical music; (2) Dance music, electronica, and EDM; (3) Country and western; (4) Alternative and modern rock; (5) Classic rock and classic hits; (6) Broadway and show tunes; (7) Pop and Top 40; (8) Jazz; (9) Folk and singer-songwriter; and (10) Rap and hip-hop.
-\end{enumerate}
+For leisure book reading, tracked across Waves 1 through 6, reading choices were measured by survey question Q47: ``\textit{During the past semester, what types of books did you read for pleasure or leisure (not for class assignments)?}'' Binary indicators were recorded across nine literary categories: mysteries and detective fiction; thrillers and suspense; romance; science fiction and fantasy; general and literary fiction; history, politics, and current affairs; biography and memoir; self-help and personal development; and general non-fiction and popular science.
+
+Finally, for musical taste preferences, also tracked across Waves 1 through 6, preferences were measured by survey question Q44: ``\textit{Which of the following types of music do you like to listen to?}'' From the full 22-genre inventory administered in the survey, the 10 most prominent genres were selected for simultaneous multivariate trajectory modeling: classical music; dance music, electronica, and EDM; country and western; alternative and modern rock; classic rock and classic hits; Broadway and show tunes; pop and Top 40; jazz; folk and singer-songwriter; and rap and hip-hop.
 
 \subsection{Baseline Sociodemographic and Scholastic Covariates}
 
-To explain sorting into latent taste trajectories, we include nine baseline predictors measured at freshman entry:
-\begin{itemize}
-\item \textbf{Demographic Identity}: Gender identity (1 = Woman, 0 = Man); racial identification (1 = White, 0 = Students of Color); and religious preference (1 = Roman Catholic, 0 = Non-Catholic).
-\item \textbf{Family Socioeconomic Status}: Parental household pretax annual income, converted from 14 survey brackets to category midpoints in thousands of dollars (range: \$5,000 to \$300,000); and parental educational attainment, measured as the maximum years of schooling completed between mother and father (range: 10 to 18 years).
-\item \textbf{Pre-Collegiate Scholastic Capital}: High school academic achievement (1 = Mostly A or A- grades, 0 = B+ or lower); and advanced degree aspirations (1 = Plans to pursue Master's, Ph.D., M.D., or J.D., 0 = Bachelor's degree only).
-\item \textbf{Institutional and Collegiate Context}: Declared undergraduate major (1 = Science, Technology, Engineering, or Mathematics, 0 = Arts, Humanities, or Business); and hometown urbanicity (6-point scale from rural farm to major metropolitan area).
-\end{itemize}
-Missing values on baseline covariates (each under 6\% missingness) were handled via single predictive mean matching imputation in \texttt{mice} \citep{buuren2011mice}. Table~\ref{tab:descriptives} presents comprehensive descriptive statistics for all baseline covariates and cultural item batteries.
+To explain sorting into latent taste trajectories, we include nine baseline predictors measured at freshman matriculation, organized into four conceptual blocks. First, demographic identity includes gender identity (1 = Woman, 0 = Man), racial identification (1 = White, 0 = Students of Color), and religious preference (1 = Roman Catholic, 0 = Non-Catholic). Second, family socioeconomic status includes parental household pretax annual income, converted from 14 survey brackets to category midpoints in thousands of dollars (ranging from \$5,000 to \$300,000), alongside parental educational attainment, measured as the maximum years of schooling completed between mother and father (ranging from 10 to 18 years).
+
+Third, pre-collegiate scholastic capital includes high school academic achievement (1 = Mostly A or A- grades, 0 = B+ or lower) and advanced degree aspirations (1 = Plans to pursue Master's, Ph.D., M.D., or J.D., 0 = Bachelor's degree only). Fourth, institutional and collegiate context encompasses declared undergraduate major (1 = Science, Technology, Engineering, or Mathematics, 0 = Arts, Humanities, or Business) and hometown urbanicity, measured on a 6-point scale ranging from rural farm to major metropolitan area. Missing values on baseline covariates (each under 6\% missingness) were handled via single predictive mean matching imputation in the \texttt{mice} package \citep{buuren2011mice} in \textsf{R} \citep{Rmanual}. Table~\ref{tab:descriptives} presents comprehensive descriptive statistics for all baseline covariates and cultural item batteries.
 
 \begin{table}[htbp]
 \centering
@@ -161,11 +154,7 @@ To achieve temporal flexibility without imposing the rigid symmetry or boundary 
 \end{equation}
 where $\text{Time}_{it} = \text{Wave}_{it} - 1$ centers time at collegiate matriculation ($t = 0$), and $\text{ns}_1(t)$ and $\text{ns}_2(t)$ represent orthogonalized natural spline basis functions with linear boundary constraints.
 
-Because the observation window differs between public events (Waves 1--4) and recorded media (Waves 1--6), the internal knot locations adapt naturally to each domain's temporal horizon while maintaining identical parametric complexity (3 parameters per item per class):
-\begin{enumerate}
-\item \textbf{Arts \& Cultural Events ($t \in [0, 3]$)}: Boundary knots are placed at $t = 0$ (Wave 1) and $t = 3$ (Wave 4), with an internal knot placed at $t = 1.5$ (between freshman spring and sophomore fall). This positions the inflection flexibility directly at the onset of the sophomore slump and rebound.
-\item \textbf{Book Reading and Music Genres ($t \in [0, 5]$)}: Boundary knots are placed at $t = 0$ (Wave 1) and $t = 5$ (Wave 6), with an internal knot placed at the collegiate midpoint ($t = 2.5$, between sophomore fall and sophomore spring). This captures transitions from underclassman to upperclassman years while enforcing linear boundary constraints at matriculation and junior year.
-\end{enumerate}
+Because the observation window differs between public events (Waves 1--4) and recorded media (Waves 1--6), the internal knot locations adapt naturally to each domain's temporal horizon while maintaining identical parametric complexity (three parameters per item per class). For public arts and cultural events ($t \in [0, 3]$), boundary knots are placed at $t = 0$ (Wave 1) and $t = 3$ (Wave 4), with an internal knot placed at $t = 1.5$ (between freshman spring and sophomore fall). This placement positions the inflection flexibility directly at the onset of the sophomore slump and rebound. For book reading types and musical genres ($t \in [0, 5]$), boundary knots are placed at $t = 0$ (Wave 1) and $t = 5$ (Wave 6), with an internal knot placed at the collegiate midpoint ($t = 2.5$, between sophomore fall and sophomore spring). This formulation captures transitions from underclassman to upperclassman years while enforcing linear boundary constraints at matriculation and junior year.
 
 \subsection{Endogenous Multinomial Concomitant Models}
 
@@ -173,13 +162,7 @@ To avoid the classification error and attenuation inherent in two-step estimatio
 \begin{equation}
 \pi_{ik} = \frac{\exp(\mathbf{X}_i \boldsymbol{\gamma}_k)}{\sum_{l=1}^K \exp(\mathbf{X}_i \boldsymbol{\gamma}_l)}
 \end{equation}
-where $\boldsymbol{\gamma}_1 = \mathbf{0}$ sets Class 1 as the reference baseline. Across all three domains, the exact same battery of nine baseline predictors is included:
-\begin{itemize}
-\item \textbf{Sociodemographic Background}: Gender identity (1 = Woman, 0 = Man), racial identification (1 = White, 0 = Non-White), and religious affiliation (1 = Catholic, 0 = Non-Catholic).
-\item \textbf{Family Socioeconomic Status}: Parental household income in thousands and parental educational attainment in years of schooling.
-\item \textbf{Pre-Collegiate Scholastic Capital}: High school academic achievement (1 = Mostly A or A- grades, 0 = B+ or lower) and advanced degree aspirations (1 = Plans to pursue Master's, Ph.D., M.D., or J.D., 0 = Bachelor's only).
-\item \textbf{Institutional and Geographic Context}: Collegiate field of study (1 = STEM Field, 0 = Non-STEM Field) and hometown urbanicity.
-\end{itemize}
+where $\boldsymbol{\gamma}_1 = \mathbf{0}$ sets Class 1 as the reference baseline. Across all three domains, the exact same battery of nine baseline predictors is included simultaneously: sociodemographic background (gender identity, racial identification, and religious affiliation); family socioeconomic status (parental household income and parental educational attainment); pre-collegiate scholastic capital (high school academic performance and advanced degree aspirations); and institutional and geographic context (declared STEM major and hometown urbanicity).
 
 \section{Latent Class Selection Across Domains}
 
