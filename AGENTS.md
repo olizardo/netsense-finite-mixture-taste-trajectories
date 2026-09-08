@@ -28,15 +28,26 @@ Study cultural taste change trajectories in the NetSense dataset using finite mi
     3. **Music Genre Preferences (Top 10 genres, Waves 1 to 6, $N = 201$ complete cases)**:
        * Identified $K = 3$ musical taste classes: “Class 1: High Musical Omnivores” ($n = 62$, 30.8%), “Class 2: Rock & Heavy Metal Aficionados” ($n = 51$, 25.4%), and “Class 3: Mainstream Hits (Rap, Dance, Country)” ($n = 88$, 43.8%).
   - Estimated multivariable endogenous multinomial logit models (`FLXPmultinom`) predicting trajectory class placement across all three cultural domains.
+  - Computed overall predictive power of theoretical variable blocks (`Scripts/compute_block_wald_tests.R`) using Likelihood Ratio Tests (LRT $\chi^2$) and Wald $\chi^2$ statistics across Demographic Identity, Family SES, Scholastic Capital, and Collegiate Context. Found that Scholastic Capital and Demographic Identity drive class placement, while Family SES is statistically null across domains.
+  - Conducted within-class demographic slope moderation testing via class-stratified multilevel growth curve models (`lme4::glmer`), confirming that demographic-by-time interactions are non-significant ($p > 0.10$). Demographics act as between-class sorting gates (extensive margin) rather than within-class slope modifiers (intensive margin).
 - **Publication Figures & Discrete Wave Markers**:
   - Generated small-multiple publication figures in `Plots/` at 6.5-inch width, 300 DPI, with Okabe-Ito palettes, modernized `linewidth` aesthetics, and discrete wave markers (`geom_point`) anchoring empirical observations (`Scripts/11_generate_multivariate_binary_plots.R`):
     * `Plots/fig1_arts_12_events_by_class.png`: 12 small-multiple panels showing participation probabilities with wave markers across all 12 events by class.
     * `Plots/fig2_books_9_items_by_class.png`: 9 small-multiple panels showing reading probabilities with wave markers across all 9 book types for all three distinct classes.
     * `Plots/fig3_music_10_genres_by_class.png`: 10 small-multiple panels showing preference probabilities with wave markers across the top 10 music genres by class.
     * `Plots/fig4_multivariate_concomitant_odds_ratios.png`: Odds Ratio forest plot from the full multivariable concomitant models across Arts, Books, and Music.
-- **Quarto Reporting**:
-  - Fully updated and compiled `cultural_taste_trajectories_report.qmd` to standalone HTML (`cultural_taste_trajectories_report.html`) in pure Pandoc AST (< 2 seconds).
-  - Strictly verified compliance with academic style guidelines: full prose paragraphs, zero bullet points in narrative, double typographic quotes (“...”), zero forbidden terms ("utilize", "demonstrate", "massive", generic "robust", "democratic"), scholar names as last name only, and CUA Tripartite discussion structure.
+    * `Plots/fig5_activity_time_trend_shifts.png`: Net trajectory shifts ($\Delta = P(W_{\text{end}}) - P(W_1)$) by activity within latent classes across all 31 items in Arts, Books, and Music.
+- **LaTeX Journal Article Manuscript Architecture**:
+  - Authored canonical master LaTeX manuscript (`manuscript.tex`) and standalone BibTeX bibliography (`references.bib`) ready for Overleaf compilation:
+    * Formatted using standard article geometry, one-half spacing, microtype, and `booktabs` tables.
+    * Incorporates all 5 publication figures and 4 comprehensive APA tables (Model Selection, Block Predictive Power, Full Multivariable Concomitant Estimates, and Within-Class GLMM Moderation).
+    * Implements the CUA Tripartite discussion architecture (`Summary of Key Results`, `Limitations and Suggestions for Future Work`, and `Implications: Repertoires, Institutions, and the Collegiate Habitus`).
+    * Strictly complies with the zero local compilation rule, double typographic quotes, last names only for scholar references, and zero forbidden terms.
+  - Successfully purged obsolete `.qmd` and `.html` drafts per user instructions.
+- **Cache Optimization & Git Remote Deployment**:
+  - Cleared over 750 MB of heavy legacy Stan and `brms` `.rds` objects (`Cache/Archive_Legacy_Stan/` and `Cache/Archive_Legacy_BRMS/`), bringing the `Cache/` directory down to under 200 KB.
+  - Hardened `.gitignore` to strictly exclude private SSH keys (`hoffmankey*`), IDE artifacts, and heavy cache archives.
+  - Linked and pushed clean working tree to GitHub remote repository (`olizardo/netsense-finite-mixture-taste-trajectories.git`) on branch `main`.
 
 ---
 
