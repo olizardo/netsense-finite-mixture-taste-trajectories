@@ -889,7 +889,6 @@ scale_fill_manual(values = COLOR_CREDIBILITY, name = "Directional Credibility")
 - **Figure 1**: Latent participation trajectories across 12 Arts and Cultural Events from the 3-class multivariate binary model (`Plots/fig1_arts_12_events_by_class.png`, `fig:arts`)
 - **Figure 2**: Latent trajectories across 9 Book Reading Types from the 3-class multivariate binary model (`Plots/fig2_books_9_items_by_class.png`, `fig:books`)
 - **Figure 3**: Latent trajectories across the Top 10 Music Genres from the 3-class multivariate binary model (`Plots/fig3_music_10_genres_by_class.png`, `fig:music`)
-- **Figure 4**: Forest plot of Odds Ratios with 95\% confidence intervals from full multivariable endogenous concomitant models across Arts, Books, and Music (`Plots/fig4_multivariate_concomitant_odds_ratios.png`, `fig:forest`)
 
 ### 4. Overleaf Git Synchronization & Zero Local Compilation Protocol
 - **Zero Local Compilation Rule (CRITICAL):**
