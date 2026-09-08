@@ -840,132 +840,59 @@ scale_fill_manual(values = COLOR_CREDIBILITY, name = "Directional Credibility")
 
 ---
 
-## Project Architecture: Classifying and Predicting Degree Trajectories in Longitudinal Ego Networks
+## Project Architecture: Latent Trajectories of Cultural Taste: A Multivariate Binary Finite Mixture Analysis with Endogenous Concomitants
 
 ### 1. Overview & Collaborators
-- **Project Title:** Classifying and Predicting Degree Trajectories in Longitudinal Ego Networks
-- **Authors:** Omar Lizardo and David Hachen
-- **Overleaf Project URL:** https://www.overleaf.com/project/6a9db1ea255f30d10b63a391
-- **Overleaf Git Endpoint:** `https://git.overleaf.com/6a9db1ea255f30d10b63a391`
-- **Google Doc URL:** https://docs.google.com/document/d/147PaI7iC0LPB12CI_sT6XY_gCg76JKFkPP18maTc9TQ
-- **Google Doc ID:** `147PaI7iC0LPB12CI_sT6XY_gCg76JKFkPP18maTc9TQ`
-- **Data Source:** NetHealth Study (University of Notre Dame, 8 waves over 4 years, Fall 2015–Spring 2019: https://sites.nd.edu/nethealth/).
+- **Project Title:** Latent Trajectories of Cultural Taste: A Multivariate Binary Finite Mixture Analysis with Endogenous Concomitants
+- **Author:** Omar Lizardo (Department of Sociology, University of California, Los Angeles)
+- **Overleaf Project URL:** `https://www.overleaf.com/project/6aa021d1a0797784962186d8`
+- **Overleaf Git Endpoint:** `https://git.overleaf.com/6aa021d1a0797784962186d8`
+- **GitHub Remote:** `https://github.com/olizardo/netsense-finite-mixture-taste-trajectories.git`
+- **Data Source:** NetSense Study (University of Notre Dame, undergraduate cohort matriculating Fall 2011).
 - **Analytic Samples:**
-  - *Benchmark Waves 1–6 Sample:* $N = 450$ participants with $\ge 3$ network surveys in Waves 1–6, complete baseline survey, and passive phone compliance.
-  - *Expanded Waves 1–8 Sample:* $N = 457$ participants tracked through senior-year graduation.
+  - *Public Arts & Cultural Events:* $N = 199$ complete cases across Waves 1--4 (12 items).
+  - *Leisure Book Reading Types:* $N = 201$ complete cases across Waves 1--6 (9 items).
+  - *Musical Genre Preferences:* $N = 201$ complete cases across Waves 1--6 (top 10 genres).
 
 ### 2. Theoretical Grounding & Empirical Design
-The project investigates how personal network size (degree) changes dynamically across the complete collegiate life course, whether individuals follow distinct, predictable degree pathways, and how baseline psychological traits and sociodemographic background predict these trajectories:
-1. **Unified Eight-Wave Panel Architecture ($N = 457$)**:
-   - Spans eight full semesters from freshman matriculation in August 2015 to senior graduation in May 2019 ($N = 457$ analytical cohort, $N = 433$ complete-case modeling sample).
-   - Positions Chandler & Hachen (Sunbelt 2018) as the foundational preliminary study, while unifying the entire empirical investigation around principled count mixtures across all four collegiate years.
-2. **The Collegiate Network Landscape & Compound Strong vs. Weak Tie Decomposition**:
-   - Grounded in \citet{marsden1984measuring}, avoids single-dimension frequency contamination (spatial co-presence) and closeness ceiling compression by defining **Compound Strong Ties**: alters evaluated as ``Especially Close'' AND maintained through active contact (Daily or Weekly).
-   - **Weak Ties**: All other nominated contacts in the active personal network. Both dimensions are measured across 100% of all eight waves.
-   - **Key Substantive Discovery**: Total network size contracts steadily from 14.19 to 10.80 alters (-23.9%), but compound strong ties remain remarkably invariant (hovering at 6.18 to 6.54 alters from sophomore spring through graduation). Aggregate degree decay is driven almost entirely by the winnowing of weak ties (falling from 7.07 to 4.53 alters, a -35.9% collapse), shifting the strong-tie share of personal networks from 52.6% at matriculation to 65.6% at graduation.
-3. **Bivariate Multi-Trajectory Latent Class Growth Analysis (Poisson Mixtures)**:
-   - Replaces univariate counts with formal **Bivariate Multi-Trajectory Poisson finite mixture models** in `flexmix` \citep{grun2008flexmix}, simultaneously estimating the co-evolution of strong and weak ties.
-   - Robustness checks demonstrate that while formal BIC declines through higher-order solutions, $K = 3$ captures the primary structural elbow ($\Delta\text{BIC} = -4,155$ for $K = 2$, $-1,189$ for $K = 3$), cleanly distinguishing three developmental archetypes:
-     * **Network Conservers** ($n = 141$, 30.9\%): Maintain moderate strong ties ($\approx 6.3$--$6.8$ alters) and expansive weak ties ($\approx 8.0$--$9.8$ alters).
-     * **Accelerated Winnowers** ($n = 191$, 41.8\%): The modal pathway; preserves an intimate strong-tie core ($\approx 4.2$ alters) while their weak-tie perimeter collapses by 77% (from 6.08 to 1.40 alters).
-     * **High-Core Conservers** ($n = 125$, 27.4\%): Enter college with and sustain an exceptionally large, dense core of strong ties ($\approx 9.7$ to $8.9$ alters) alongside a smaller weak-tie layer ($\approx 3.5$ alters).
-4. **Predicting Trajectory Group Membership (Endogenous Concomitant Models)**:
-   - Incorporates baseline covariates directly into `flexmix` as endogenous concomitant variables via `FLXPmultinom(~ ...)`:
-     * Full Multivariable Model is highly significant vs. base ($\text{LRT } \chi^2 = 60.98, df = 26, p < 0.001$).
-     * Race & Gender block is significant ($\chi^2 = 23.17, df = 10, p = 0.010$).
-     * Extraversion alone is highly significant ($\chi^2 = 19.03, df = 2, p < 0.001$, lowering AIC to 27,061.0).
-     * Generalized Trust alone is highly significant ($\chi^2 = 16.08, df = 2, p < 0.001$).
-     * Family SES is completely null ($\chi^2 = 7.14, df = 4, p = 0.129$; adding SES to Race/Gender yields $\Delta\chi^2 = 3.31, p = 0.507$).
-   - Multivariable multinomial logit estimates (reference: Accelerated Winnowers):
-     * Generalized Trust strongly predicts High-Core Conservers ($\text{OR} = 1.58, 95\%\text{ CI: } [1.17, 2.15], p = 0.003$).
-     * Extraversion strongly predicts High-Core Conservers ($\text{OR} = 1.39, 95\%\text{ CI: } [1.06, 1.83], p = 0.017$).
-     * Asian students ($\text{OR} = 0.33, p = 0.014$) and Other/International students ($\text{OR} = 0.29, p = 0.033$) have significantly lower odds of conserving, channeled into the Accelerated Winnower pathway.
-5. **Continuous Growth Modeling as Supplementary Robustness Check (Appendix)**:
-   - Multilevel Poisson mixed-effects models (`glmer` in `lme4`) with random ego intercepts across all eight waves confirm that student networks contract by ~5.5% per wave ($\text{IRR} = 0.945, p < 0.001$), trust expands network volume ($\text{IRR} = 1.071, p = 0.006$), and extraverts experience significantly steeper winnowing over time ($\text{Time} \times \text{Extraversion IRR} = 0.994, p = 0.032$).
+1. **Multivariate Binary Mixture Modeling with Natural Cubic Splines**:
+   - Simultaneously estimates individual binary trajectories across all battery items using `flexmix` \citep{grun2008flexmix} in \textsf{R} \citep{Rmanual}, parameterized via orthogonal natural cubic splines (`splines::ns(time, df = 2)`).
+   - Eliminates polynomial runaway boundary tails while capturing non-linear collegiate rhythms (freshman baseline, sophomore slump, and junior recovery).
+2. **Substantive 3-Class Typologies (Single-Word Labels, Zero Slashes)**:
+   - **Arts & Cultural Events (12 Items, Waves 1--4, $N = 199$)**:
+     * **Omnivores** ($n = 48, 24.1\%$): Elevated attendance across all 12 venues; cultivated monotonic rise in opera (+27.7 pp).
+     * **Traditionalists** ($n = 93, 46.7\%$): Concentrated in institutional high-arts (museums, ballet, stage plays); deep sophomore slump in museums (-49.3 pp in art museums).
+     * **Minimalists** ($n = 58, 29.1\%$): Low baseline attendance with participation dropping near zero by sophomore year.
+   - **Leisure Book Reading Types (9 Items, Waves 1--6, $N = 201$)**:
+     * **Nonfictionists** ($n = 60, 29.9\%$): Analytical non-fiction readers (history/politics, biography/memoir, general non-fiction). Reallocate reading from political volumes to personal biographies (+23.3 pp).
+     * **Fictionists** ($n = 79, 39.3\%$): Narrative genre fiction readers (sci-fi/fantasy, thrillers, mysteries, general fiction).
+     * **Minimalists** ($n = 62, 30.8\%$): Consistently low leisure reading across all categories throughout college.
+   - **Music Genre Preferences (10 Genres, Waves 1--6, $N = 201$)**:
+     * **Omnivores** ($n = 62, 30.8\%$): High preference across all 10 genres simultaneously; monotonic expansion of country music (+23.7 pp).
+     * **Rockers** ($n = 51, 25.4\%$): Near-universal preference for rock and heavy metal; active rejection of country music.
+     * **Mainstreamers** ($n = 88, 43.8\%$): Commercial mainstream hits (rap/hip-hop, dance music, country), rejecting highbrow classical, jazz, or folk.
+3. **Endogenous Concomitant Models (`FLXPmultinom`)**:
+   - Single-step joint estimation of class sorting as a function of 9 baseline covariates.
+   - Pre-collegiate scholastic capital (high school GPA) universally predicts omnivorousness across domains ($\text{OR} = 0.15\text{--}0.29$ for non-omnivorous pathways).
+   - Gender identity sorts women away from Minimalist arts ($\text{OR} = 0.24$) and away from Rockers in music ($\text{OR} = 0.19$).
+   - Declared STEM majors are 2.66 times more likely to sort into Rockers ($\text{OR} = 2.66, p = 0.024$).
+   - Parental SES (household income and education) is completely statistically null across all domains ($p > 0.10$).
+4. **Extensive vs. Intensive Margin Distinction**:
+   - Multilevel growth curve moderation models (`lme4::glmer` \citep{bates2015fitting}) confirm that within-class demographic slope moderation is statistically null ($p > 0.10$).
+   - Sociodemographics operate purely as between-class sorting gates (extensive margin) rather than within-class slope modifiers (intensive margin). Relegated to a detailed substantive footnote in Section 6.
 
-### 3. Directory Structure & Asset Taxonomy
-```
-project/
-├── AGENTS.md                                # Project-specific guidelines and asset inventory
-├── manuscript.tex                           # Canonical master LaTeX manuscript (bivariate multi-trajectory)
-├── references.bib                           # Standalone BibTeX bibliography with software citations
-├── manuscript.pdf                           # Compiled publication PDF (Overleaf rendered)
-├── draft_manuscript.md                      # Active local markdown mirror
-├── README.md                                # Full technical and empirical documentation
-├── data/
-│   ├── raw/                                 # Symlinked raw survey microdata (.gitignored)
-│   └── processed/                           # Cleaned analytical datasets (.gitignored)
-├── Plots/                                   # Publication-grade PNG figures (6.5 in wide, 300 DPI)
-├── cache/                                   # Pre-compiled APA markdown tables
-└── Scripts/                                 # Turnkey modular execution pipeline
-    ├── 01_prepare_trajectory_data.R         # Ingestion, covariate cleaning, and 8-wave cohort creation
-    ├── 02_fit_bivariate_trajectory_models.R # Bivariate LCGA, decomposition, Figs 1-3, Tabs 1-4
-    ├── 04_appendix_multilevel_growth.R      # Appendix 8-wave Multilevel Poisson GLMM, Fig A1, Tab A1
-    ├── sync_manuscript.py                   # In-place OpenXML table & figure injector
-    └── sync_manuscript.R                    # Master Drive sync driver (Rscript Scripts/sync_manuscript.R)
-```
+### 3. Canonical Table & Figure Inventory
+- **Table 1**: Descriptive Statistics for Baseline Covariates and Cultural Participation Batteries ($N = 201 / 199$) (`tab:descriptives`)
+- **Table 2**: Latent Class Model Selection and Fit Statistics across Candidate Specifications ($K = 1 \dots 5$) (`tab:selection`)
+- **Table 3**: Model Fit and Predictive Power of Theoretical Variable Blocks across Expressive Domains (`tab:blocks`)
+- **Table 4**: Multinomial Logistic Parameter Estimates and Odds Ratios from Full Multivariable Endogenous Concomitant Models (Vertically stacked panels, 5 columns) (`tab:coefs`)
+- **Figure 1**: Latent participation trajectories across 12 Arts and Cultural Events from the 3-class multivariate binary model (`Plots/fig1_arts_12_events_by_class.png`, `fig:arts`)
+- **Figure 2**: Latent trajectories across 9 Book Reading Types from the 3-class multivariate binary model (`Plots/fig2_books_9_items_by_class.png`, `fig:books`)
+- **Figure 3**: Latent trajectories across the Top 10 Music Genres from the 3-class multivariate binary model (`Plots/fig3_music_10_genres_by_class.png`, `fig:music`)
+- **Figure 4**: Forest plot of Odds Ratios with 95\% confidence intervals from full multivariable endogenous concomitant models across Arts, Books, and Music (`Plots/fig4_multivariate_concomitant_odds_ratios.png`, `fig:forest`)
 
-### 4. Tables and Figures Inventory in Live Document & LaTeX (Strict Sequential Order)
-- **Table 1**: Longitudinal Means and Standard Errors of Decomposed Relational Layers Across Eight Collegiate Waves ($N = 457$) (`cache/table1_bivariate_trajectory_means.md`, LaTeX `\label{tab:decomp}`)
-- **Figure 1**: Decomposing Ego Network Evolution Across Eight Collegiate Waves: Total Degree, Strong Ties, and Weak Ties (`Plots/fig1_compound_strong_weak_trajectories.png`, LaTeX `\label{fig:decomp}`)
-- **Table 2**: Bivariate Latent Class Growth Analysis (LCGA) Model Fit Statistics Across Candidate Poisson Mixture Models on Eight-Wave Panel ($K = 1 \dots 5$) (`cache/table2_bivariate_model_selection.md`, LaTeX `\label{tab:biv_lcga}`)
-- **Figure 2**: Bivariate Multi-Trajectory Latent Class Growth Analysis Profiles Across Eight Collegiate Waves ($K = 3$) (`Plots/fig2_bivariate_lcga_trajectories.png`, LaTeX `\label{fig:biv_lcga}`)
-- **Table 3**: Model Fit Comparison of Endogenous Concomitant Bivariate Mixture Specifications ($K = 3, N = 433$) (`cache/table3_bivariate_concomitant_model_comparison.md`, LaTeX `\label{tab:concomitant_comparison}`)
-- **Table 4**: Multinomial Logistic Regression Estimates Predicting Bivariate Trajectory Class Membership (`cache/table4_bivariate_mlogit_predictors.md`, LaTeX `\label{tab:mlogit_predictors}`)
-- **Figure 3**: Forest Plot of Odds Ratios for Baseline Sociodemographic and Psychological Predictors of Bivariate Trajectory Class Membership (`Plots/fig3_bivariate_mlogit_forest_plot.png`, LaTeX `\label{fig:mlogit_forest}`)
-- **Table A1**: Fixed Effects Estimates from Multilevel Poisson Growth Curve GLMM with Random Ego Intercepts Across Eight Waves (`cache/tableA1_multilevel_glmm_estimates.md`, LaTeX `\label{tab:glmm_appendix}`)
-- **Figure A1**: Predicted Ego Degree Growth Trajectories by Personality Profiles Across Eight Waves from Multilevel Poisson GLMM (`Plots/figA1_multilevel_predicted_trajectories.png`, LaTeX `\label{fig:glmm_predicted}`)
-
-### 5. Strict Protocol for Autonomous Execution & Synchronization
-1. **The Live Google Doc Is King (ZERO OVERWRITING)**: Human authors edit and style text online. Never overwrite the live document by uploading a fresh Pandoc-compiled `.docx` file.
-2. **Download First**: Always download `draft_live.docx` via `googledrive::drive_download(as_id(doc_id), path = "draft_live.docx", overwrite = TRUE)`.
-3. **In-Place OpenXML Injection Only**: All asset updates must be applied directly to the downloaded `draft_live.docx` XML tree using DOM sibling search / relationship mapping (`Scripts/sync_manuscript.py`), updating only `<w:tbl>` and `<w:drawing>` containers.
-4. **Intermediate File Cleanup**: Always purge scratch files (`draft_*.docx`, `draft_*.txt`, `*.tmp`, `replacements.json`) via `on.exit()` in R or `try...finally` in Python.
-5. **Style Compliance**:
-   - Double typographic quotes (“...”) for named classes.
-   - Never use "democratic" for egalitarian / widely distributed / pervasive.
-   - Use "men" and "women" (never "male" / "female" as nouns).
-   - Use "Gender Identity" (or "Gender") rather than "Sex".
-   - Avoid generic "robust" (reserve strictly for formal statistical terms like "cluster-robust standard errors").
-   - Every visual figure must be accompanied by its dedicated analytical discussion paragraph.
-
-### 6. LaTeX Manuscript Architecture & Mathematical Notation Standards
-To ensure rigorous typesetting of mathematical formulations and empirical statistics, the primary manuscript is maintained in LaTeX (`manuscript.tex`). 
-
-**CRITICAL INSTRUCTION -- Zero Local LaTeX Compilation:**
-- **Do not render or compile the LaTeX manuscript locally.** The author renders and compiles the PDF directly online within Overleaf.
-- Agents must never spend time or tokens running local `pdflatex`, `bibtex`, or pdfTeX loops. Focus exclusively on high-precision editing of the source text files (`manuscript.tex`, `references.bib`, R/Python scripts, and markdown cache files) and synchronizing changes directly to the git remotes (`origin` and `overleaf`).
-
-1. **Compilation Protocol**:
-   - Compiles online in Overleaf with standard pdfLaTeX + BibTeX.
-   - Zero syntax errors, proper escaping of special characters, and valid cross-references.
-2. **Required Packages & Layout**:
-   - Document Class: `\documentclass[12pt]{article}` with `\usepackage[margin=1in]{geometry}` and `\onehalfspacing`.
-   - Fonts & Microtypography: `\usepackage[T1]{fontenc}`, `\usepackage{lmodern}`, `\usepackage{microtype}`.
-   - Mathematics: `\usepackage{amsmath,amssymb,amsfonts}`.
-   - Tables: `\usepackage{booktabs}`, `\usepackage{tabularx}`. Tables use `\small` sizing and calibrated `\tabcolsep` (e.g., 4.5pt--5pt) to prevent margin overflow.
-   - Figures: `\usepackage{graphicx}`, `\usepackage{caption}`. Figures are imported from `Plots/` at native aspect ratios (`width=\linewidth` or `width=0.85\linewidth`).
-   - Citations & Bibliography: `\usepackage[authoryear,round]{natbib}` with `\bibliographystyle{apalike}` linking to `references.bib` (39 complete entries with verified DOIs).
-   - Hyperlinks: `\usepackage{hyperref}` with `\hypersetup{colorlinks=true, linkcolor=blue!80!black, citecolor=blue!80!black, urlcolor=blue!80!black}`. Section headings containing math mode must use `\texorpdfstring{$...$}{...}` to prevent PDF bookmark warnings.
-3. **Rigorous Mathematical Notation Conventions**:
-   - **Degree Variable & Trajectory Vectors:** Always index degree as $D_{it}$ for ego $i$ at wave $t$, with discrete bounds $D_{it} \in \{0, 1, \dots, 25\}$. Ego trajectory vectors are denoted $\mathbf{y}_i = (D_{i1}, D_{i2}, \dots, D_{iT})$. Wave-to-wave differences are $\Delta_t = D_{i,t+1} - D_{it}$.
-   - **LCGA Poisson Mixture Formulation:** Mixture classes are denoted with uppercase $K$ ($K = 1 \dots 5$, optimal $K = 3$):
-     \begin{equation}
-     \log(\mathbb{E}[D_{it} \mid C_i = k]) = \beta_{0k} + \beta_{1k} \text{Time}_{it} + \beta_{2k} \text{Time}_{it}^2
-     \end{equation}
-   - **Multilevel Poisson GLMM Equation (Appendix):**
-     \begin{equation}
-     \log(\mathbb{E}[D_{it}]) = (\beta_0 + u_{0i}) + \beta_1 \text{Time}_{it} + \mathbf{X}_i \boldsymbol{\beta} + (\text{Time}_{it} \times \mathbf{Z}_i) \boldsymbol{\gamma}
-     \end{equation}
-     where $u_{0i} \sim \mathcal{N}(0, \sigma_u^2)$, $\text{Time}_{it} \in \{0, 1, \dots, 7\}$ denotes elapsed semester centered at Wave 1 baseline, $\mathbf{X}_i$ is the vector of baseline sociodemographics and personality main effects, $\mathbf{Z}_i$ represents focal personality traits (Extraversion and Neuroticism), and $\boldsymbol{\gamma}$ estimates differential winnowing slopes. Effect sizes are expressed as Incidence Rate Ratios ($\text{IRR} = \exp(\beta)$).
-   - **Statistical Diagnostics & Fit Metrics:** Likelihood ratio tests are denoted $\chi^2$; information criteria are $\text{AIC}$, $\text{BIC}$, and $\Delta\text{BIC}$; standardized traits are $z$-scores ($\mu = 0, \sigma = 1$). Sample sizes are denoted with capital $N$ for overall samples ($N = 457$ analytical cohort, $N = 433$ complete-case models) and lowercase $n$ for subsample counts ($n = 182$, 39.8\%). All $p$-values are formatted as $p < 0.05$, $p < 0.001$, or $p = 0.006$.
-4. **Recent Content & Structural Revisions (September 2026)**:
-   - **Author Line:** Updated to Omar Lizardo and David Hachen.
-   - **Unified Eight-Wave Analytical Architecture:** Reorganized the manuscript from a fragmented, multi-method presentation into a single, cohesive narrative tracking students across all eight collegiate waves ($N = 457$, $N = 433$ complete cases):
-     1. *Collegiate Landscape & Functional Decomposition:* Table 1 and Figure 1 establish the overall baseline trajectory across college, demonstrating that aggregate contraction (-24%) is confined to peripheral ties while daily activated ties (4.4--5.9 alters) and close supportive ties (10.5--12.0 alters) remain invariant.
-     2. *Poisson LCGA Mixture Modeling:* Table 2 and Figure 2 identify the three developmental trajectory archetypes across all 8 waves: Network Conservers ($n = 131, 28.7\%$), Moderate Winnowers ($n = 182, 39.8\%$), and Accelerated Winnowers ($n = 144, 31.5\%$).
-     3. *Stratified Functional Profiling:* Figure 3 profiles the functional tie layers across each latent class, showing that Accelerated Winnowers rapidly prune peripheral acquaintances until their network coincides with their core support clique by sophomore year.
-     4. *Predictive Multinomial Logistic Models:* Table 3 (vertically stacked APA panels) and Figure 4 (Odds Ratio forest plot) demonstrate that Generalized Trust promotes membership in the Conserver class ($\text{OR} = 1.31$), while parental SES exhibits zero predictive capacity.
-     5. *Continuous GLMM Growth Modeling (Appendix):* Table A1 and Figure A1 provide continuous mixed-effects robustness checks confirming that extraverts winnow significantly faster over time ($\text{IRR} = 0.994, p = 0.032$) and cross below introverts by senior year.
-   - **Tripartite Discussion Architecture (CUA Beauty Survey Standard):** Restructured the Discussion into three rigorous, publication-grade subsections: `\subsection{Summary of Key Results}`, `\subsection{Limitations and Suggestions for Future Work}` (addressing nomination bounding, causal inference, feedback loops, granularity, and scope conditions in full paragraphs), and `\subsection{Implications: The Adaptive Architecture of Personal Communities}`.
-   - **Direct Overleaf Git Remote Integration:** Fully synchronized with Overleaf project `https://git.overleaf.com/6a9db1ea255f30d10b63a391` via non-interactive token authentication (`~/.netrc`), maintaining identical parity across Overleaf, GitHub (`origin`), and local compiled PDFs.
+### 4. Overleaf Git Synchronization & Zero Local Compilation Protocol
+- **Zero Local Compilation Rule (CRITICAL):**
+  - Never execute `pdflatex`, `xelatex`, `latexmk`, or `bibtex` locally.
+  - Compile, preview, and debug directly online within Overleaf.
+  - Push clean commits directly to `overleaf main` (`git push overleaf main`) and GitHub `origin main` (`git push origin main`).

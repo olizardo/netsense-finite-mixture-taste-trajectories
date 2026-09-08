@@ -84,7 +84,7 @@ Missing values on baseline covariates (each under 6\% missingness) were handled 
 Variable & NetSense Survey Item & Distribution & Mean / \% & SD / Range \\
 \midrule
 \multicolumn{5}{l}{\textbf{Panel A: Baseline Covariates ($N = 201$)}} \\
-\quad Gender Identity & Female / Male & 46.7\% Woman & 46.7\% & $n = 93$ \\
+\quad Gender Identity & Woman / Man & 46.7\% Woman & 46.7\% & $n = 93$ \\
 \quad Racial Identity & White / Students of Color & 67.8\% White & 67.8\% & $n = 135$ \\
 \quad Religion & Roman Catholic / Other & 69.5\% Catholic & 69.5\% & $n = 137$ \\
 \quad Parental Income & Annual pretax bracket midpoints & Continuous (\$1,000s) & \$121.4k & SD = 80.4 \\
@@ -135,7 +135,7 @@ Variable & NetSense Survey Item & Distribution & Mean / \% & SD / Range \\
 \begin{minipage}{\linewidth}
 \vspace{4pt}
 \footnotesize
-\textit{Note:} Descriptive statistics computed across analytical cohorts ($N = 201$ complete cases in Books and Music; $N = 199$ complete cases in Arts). Panel A shows baseline values prior to single stochastic imputation for missing items (each $< 6\%$ missingness). Panels B, C, and D report the pooled longitudinal prevalence across all waves, alongside initial Wave 1 and final wave (Wave 4 for Arts, Wave 6 for Books and Music) empirical participation proportions.
+\textit{Note:} Descriptive statistics computed across analytical cohorts ($N = 201$ complete cases in Books and Music; $N = 199$ complete cases in Arts). Panel A shows baseline values before single stochastic imputation for missing items (each $< 6\%$ missingness). Panels B, C, and D report the pooled longitudinal prevalence across all waves, alongside initial Wave 1 and final wave (Wave 4 for Arts, Wave 6 for Books and Music) empirical participation proportions.
 \end{minipage}
 \end{table}
 
@@ -153,7 +153,7 @@ Repeated observations are grouped at the student level ensuring that latent clas
 
 \subsection{Harmonized Natural Spline Time Parameterization}
 
-To achieve temporal flexibility without imposing the rigid symmetry or boundary instability of quadratic polynomials, the probability of endorsing item $j$ at time $t$ in class $k$ is parameterized via an inverse logit link using a natural cubic spline with two degrees of freedom (\texttt{splines::ns(time, df = 2)}):
+To achieve temporal flexibility without imposing the rigid symmetry or boundary instability of quadratic polynomials, the probability of endorsing item $j$ at time $t$ in class $k$ is parameterized via an inverse logit link using a natural cubic spline with two degrees of freedom, implemented via the \texttt{splines} package \citep{venables2002modern} in \textsf{R} \citep{Rmanual} (\texttt{splines::ns(time, df = 2)}):
 \begin{equation}
 \text{logit}(\mu_{iktj}) = \beta_{0kj} + \beta_{1kj} \text{ns}_1(t) + \beta_{2kj} \text{ns}_2(t)
 \end{equation}
@@ -181,7 +181,7 @@ where $\boldsymbol{\gamma}_1 = \mathbf{0}$ sets Class 1 as the reference baselin
 
 \section{Latent Class Selection Across Domains}
 
-We evaluate candidate specifications from one through five latent classes ($K = 1 \dots 5$) across all three expressive domains. Table~\ref{tab:selection} presents model fit statistics, stepwise Likelihood Ratio Tests (LRT), and student-level class distributions.
+We evaluate candidate specifications from one through five latent classes ($K = 1 \dots 5$) across all three expressive domains, following standard class enumeration protocols for latent growth mixture models \citep{nylund2007deciding}. Table~\ref{tab:selection} presents model fit statistics, stepwise Likelihood Ratio Tests (LRT), and student-level class distributions.
 
 \begin{table}[htbp]
 \centering
@@ -222,13 +222,13 @@ $K = 5$ & -5276.7 & 154 & 10861.4 & 11618.2 & 261.8 (31) & $< .001$ & 17 (8.5\%)
 \end{minipage}
 \end{table}
 
-Across all three domains, moving from a single homogeneous growth curve ($K = 1$) to a multi-class mixture produces marked improvements in predictive log-likelihood. In leisure reading and music preferences, the three-class specification captures the primary structural elbow: moving from two to three classes yields large reductions in BIC ($\Delta\text{BIC} = -340.3$ in Books; $\Delta\text{BIC} = -241.4$ in Music; $p < 0.001$), generating well-populated, substantively cohesive groups of approximately equal size ($25\%$ to $45\%$). For public cultural events, estimating 12 item trajectories simultaneously consumes 37 additional parameters per class; while formal BIC reaches its minimum at $K = 2$ due to heavy dimensionality penalization, the stepwise Likelihood Ratio Test indicates that $K = 3$ improves model fit decisively ($\chi^2 = 139.4, df = 37, p < 0.001$). Substantively, $K = 3$ is essential: it cleanly separates high-arts museum and theater traditionalists from broader cultural consumers, a distinction that two-class models obscure. Beyond three classes, solutions fragment existing classes into redundant sub-clusters. Consequently, $K = 3$ is selected as the primary substantive specification across all three domains.
+Across all three domains, moving from a single homogeneous growth curve ($K = 1$) to a multi-class mixture produces marked improvements in predictive log-likelihood. In leisure reading and music preferences, the three-class specification captures the primary structural elbow: moving from two to three classes yields large reductions in BIC \citep{raftery1995bayesian} ($\Delta\text{BIC} = -340.3$ in Books; $\Delta\text{BIC} = -241.4$ in Music; $p < 0.001$), generating well-populated, substantively cohesive groups of roughly equal size ($25\%$ to $45\%$). For public cultural events, estimating 12 item trajectories simultaneously consumes 37 additional parameters per class; while formal BIC reaches its minimum at $K = 2$ due to heavy dimensionality penalization, the stepwise Likelihood Ratio Test indicates that $K = 3$ improves model fit decisively ($\chi^2 = 139.4, df = 37, p < 0.001$). Substantively, $K = 3$ is essential: it cleanly separates high-arts museum and theater traditionalists from broader cultural consumers, a distinction that two-class models obscure. Beyond three classes, solutions fragment existing classes into redundant sub-clusters. Consequently, $K = 3$ is selected as the primary substantive specification across all three domains.
 
 \section{Item-Specific Trajectory Profiles}
 
 \subsection{Public Arts and Cultural Events (12 Items)}
 
-Figure~\ref{fig:arts} displays the model-implied predicted participation trajectories across all 12 cultural event types for each of the three latent classes over the first four collegiate semesters. Lines trace continuous natural cubic spline curves, while discrete geometric markers designate empirical survey wave observations.
+Figure~\ref{fig:arts} displays the model-implied predicted participation trajectories across all 12 cultural event types for each of the three latent classes over the first four collegiate semesters. Lines trace continuous natural cubic spline curves, while discrete geometric markers designate empirical survey wave observations. All trajectory profiles, small-multiple panels, and odds ratio forest plots were visualized using the \texttt{ggplot2} package \citep{wickham2016ggplot2} in \textsf{R} \citep{Rmanual}.
 
 \begin{figure}[htbp]
 \centering
@@ -403,11 +403,15 @@ First, item-level modeling shows that public cultural event participation exhibi
 
 \subsection{Limitations and Suggestions for Future Work}
 
-Several analytical considerations should guide the interpretation of these findings. First, regarding operationalization and measurement, the self-reported binary batteries analyzed here reflect whether an individual engaged in an activity during a given semester, but do not capture the frequency of repeated visits, the financial expenditures incurred, or the subjective evaluations associated with each event. Future research would benefit from pairing survey inventories with passive digital trace data, such as ticketing records or reading tracking applications, to examine the micro-level frequency of cultural encounters.
+Several analytical considerations should guide the interpretation of these findings. First, regarding operationalization and measurement constraints, the self-reported binary batteries analyzed here record whether an individual engaged in an expressive activity or endorsed a musical genre during a given semester, but do not capture the intensive margin of engagement, such as the repeated frequency of attendance, financial expenditures, or the subjective depth of aesthetic experience. Furthermore, discrete item batteries are bounded by fixed survey inventories that omit emerging, decentralized digital cultural forms. Future research would benefit from pairing longitudinal survey instruments with multimodal digital trace data, such as streaming platform logs, electronic ticketing records, or mobile reading tracking applications, to capture the continuous volume and affective valence of cultural encounters.
 
-Second, regarding causal inference and contextual confounding, the NetSense cohort reflects the specific environment of a selective, residential private university. Unobserved campus opportunity structures---such as campus-subsidized museum excursions, specialized student theater productions, or course reading requirements---may facilitate participation among students who would otherwise disengage. Comparative studies across diverse institutional contexts, particularly non-residential public universities and community colleges, are essential to establish the institutional generalizability of these findings.
+Second, regarding threats to causal inference and contextual confounding, our observational design models endogenous sorting into developmental pathways rather than exogenous causal interventions. Unmeasured contextual factors, such as campus-subsidized cultural excursions, department-specific course reading requirements, or variations in financial aid packages that alter disposable leisure income, could confound the relationship between collegiate major, academic capital, and taste trajectories. While our multivariable concomitant specifications control for key pre-collegiate and socioeconomic background attributes, future studies could leverage natural experiments, such as randomized housing assignments or lottery-based course enrollments, to isolate institutional treatment effects from pre-existing student self-selection.
 
-Third, regarding temporal granularity and network dynamics, our analysis evaluates semester-level transitions. While semester waves capture major institutional milestones such as changing class rank and declaring academic majors, they cannot observe weekly interpersonal influence. Integrating multivariate binary mixture models with continuous-time stochastic actor-oriented models will allow future research to unpack how peer network churn and cultural taste co-evolve throughout higher education.
+Third, regarding directionality, selection, and reciprocal feedback loops, cultural taste trajectories likely co-evolve alongside interpersonal social networks and collegiate friendship circles. Students may select peers who share similar aesthetic preferences, while peer networks simultaneously reinforce or broaden existing cultural repertoires through social contagion. Our person-level latent class formulation treats class membership as an enduring developmental archetype rather than modeling bidirectional dynamic feedback over time. Future investigations should integrate multivariate binary mixture models with continuous-time stochastic actor-oriented models or cross-lagged panel models to unpack how peer tie formation and taste diversification dynamically influence each other across the collegiate life course.
+
+Fourth, regarding temporal granularity and panel attrition, our panel tracks participants across semester-length intervals over two to three collegiate years. While semester-spaced waves effectively capture macro-level institutional rhythms, such as transitioning between academic years and declaring majors, they cannot detect short-term micro-churn in media consumption or fleeting aesthetic fads. Moreover, although our analytic samples were restricted to complete-case respondents with high longitudinal compliance, panel studies over multiple collegiate years remain vulnerable to selective attrition, particularly among students experiencing academic distress or social isolation. Implementing ecological momentary assessment (EMA) or frequent micro-surveys would enable researchers to observe micro-level taste shifts while tracking non-response dynamics across extended developmental windows.
+
+Fifth, regarding institutional scope conditions and generalizability, the NetSense cohort is situated within a single selective, private, highly residential research university with a distinctive collegiate culture and a predominantly high-SES student body. The institutional opportunity structures present on this campus---including active campus performing arts centers, subsidized student programming, and a strong residential hall system---differ markedly from those found in large public institutions, commuter campuses, or community colleges. Comparative research across diverse organizational settings, regional ecologies, and cross-national higher education systems is essential to determine whether the sophomore slump in public arts and the persistence of private genre boundaries observed here constitute general features of emerging adulthood or institutionally contingent collegiate dynamics.
 
 \subsection{Implications: Repertoires, Institutions, and the Collegiate Habitus}
 
