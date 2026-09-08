@@ -13,6 +13,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage[authoryear,round]{natbib}
+\usepackage{xcolor}
 \usepackage{hyperref}
 \hypersetup{
   colorlinks=true,
@@ -66,76 +67,77 @@ Across all three domains, cultural items are measured as binary indicators ($Y_{
 
 To explain sorting into latent taste trajectories, we include nine baseline predictors measured at freshman entry:
 \begin{itemize}
-\item \textbf{Demographic Identity}: Gender identity ($1 = \text{Woman}, 0 = \text{Man}$); racial identification ($1 = \text{White}, 0 = \text{Students of Color}$); and religious preference ($1 = \text{Roman Catholic}, 0 = \text{Non-Catholic}$).
+\item \textbf{Demographic Identity}: Gender identity (1 = Woman, 0 = Man); racial identification (1 = White, 0 = Students of Color); and religious preference (1 = Roman Catholic, 0 = Non-Catholic).
 \item \textbf{Family Socioeconomic Status}: Parental household pretax annual income, converted from 14 survey brackets to category midpoints in thousands of dollars (range: \$5,000 to \$300,000); and parental educational attainment, measured as the maximum years of schooling completed between mother and father (range: 10 to 18 years).
-\item \textbf{Pre-Collegiate Scholastic Capital}: High school academic achievement ($1 = \text{Mostly A or A- grades}, 0 = \text{B+ or lower}$); and advanced degree aspirations ($1 = \text{Plans to pursue Master's, Ph.D., M.D., or J.D.}, 0 = \text{Bachelor's degree only}$).
-\item \textbf{Institutional and Collegiate Context}: Declared undergraduate major ($1 = \text{Science, Technology, Engineering, or Mathematics}, 0 = \text{Arts, Humanities, or Business}$); and hometown urbanicity (6-point scale from rural farm to major metropolitan area).
+\item \textbf{Pre-Collegiate Scholastic Capital}: High school academic achievement (1 = Mostly A or A- grades, 0 = B+ or lower); and advanced degree aspirations (1 = Plans to pursue Master's, Ph.D., M.D., or J.D., 0 = Bachelor's degree only).
+\item \textbf{Institutional and Collegiate Context}: Declared undergraduate major (1 = Science, Technology, Engineering, or Mathematics, 0 = Arts, Humanities, or Business); and hometown urbanicity (6-point scale from rural farm to major metropolitan area).
 \end{itemize}
 Missing values on baseline covariates (each under 6\% missingness) were handled via single predictive mean matching imputation in \texttt{mice} \citep{buuren2011mice}. Table~\ref{tab:descriptives} presents comprehensive descriptive statistics for all baseline covariates and cultural item batteries.
 
 \begin{table}[htbp]
 \centering
-\small
-\setlength{\tabcolsep}{4pt}
+\footnotesize
+\setlength{\tabcolsep}{1.8pt}
+\renewcommand{\arraystretch}{0.92}
 \caption{Descriptive Statistics for Baseline Covariates and Cultural Participation Batteries}
 \label{tab:descriptives}
-\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}llccc@{}}
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}llcc@{}}
 \toprule
-Variable & NetSense Survey Item & Distribution & Mean / \% & SD / Range \\
+Variable / Cultural Item & Operationalization & Mean / \% & SD / Wave Trend \\
 \midrule
-\multicolumn{5}{l}{\textbf{Panel A: Baseline Covariates ($N = 201$)}} \\
-\quad Gender Identity & Woman / Man & 46.7\% Woman & 46.7\% & $n = 93$ \\
-\quad Racial Identity & White / Students of Color & 67.8\% White & 67.8\% & $n = 135$ \\
-\quad Religion & Roman Catholic / Other & 69.5\% Catholic & 69.5\% & $n = 137$ \\
-\quad Parental Income & Annual pretax bracket midpoints & Continuous (\$1,000s) & \$121.4k & SD = 80.4 \\
-\quad Parental Education & Highest parental schooling & Continuous (Years) & 16.6 & SD = 1.8 \\
-\quad High School Grades & Mostly A or A- vs. B+ or lower & 74.4\% Mostly A's & 74.4\% & $n = 148$ \\
-\quad Degree Aspirations & Post-BA (MA, PhD, MD, JD) & 91.5\% Post-BA & 91.5\% & $n = 182$ \\
-\quad Academic Major & STEM vs. Non-STEM field & 45.2\% STEM & 45.2\% & $n = 90$ \\
-\quad Hometown Urbanicity & Rural (1) to Metropolitan (6) & 6-point scale & 5.49 & SD = 0.76 \\
+\multicolumn{4}{l}{\textbf{Panel A: Baseline Covariates ($N = 201$)}} \\
+\quad Gender Identity & Woman (vs. Man) & 46.7\% & $n = 93$ \\
+\quad Racial Identity & White (vs. Students of Color) & 67.8\% & $n = 135$ \\
+\quad Religion & Roman Catholic (vs. Other) & 69.5\% & $n = 137$ \\
+\quad Parental Income & Pretax bracket midpoint (\$1,000s) & \$121.4k & $\text{SD} = \$80.4\text{k}$ \\
+\quad Parental Education & Highest parental schooling & 16.6 yrs & $\text{SD} = 1.8\text{ yrs}$ \\
+\quad High School Grades & Mostly A or A- (vs. $\le$ B+) & 74.4\% & $n = 148$ \\
+\quad Degree Aspirations & Post-BA (vs. BA only) & 91.5\% & $n = 182$ \\
+\quad Academic Major & STEM Field (vs. Non-STEM) & 45.2\% & $n = 90$ \\
+\quad Hometown Urbanicity & 6-point scale ($1 = \text{Rural}, 6 = \text{Metro}$) & 5.49 & $\text{SD} = 0.76$ \\
 \addlinespace[3pt]
-\multicolumn{5}{l}{\textbf{Panel B: Public Arts \& Cultural Events (12 Items, Waves 1--4, $N = 199$)}} \\
-\quad Art Museum / Gallery & Attended in past semester & Binary (0/1) & 44.4\% & W1: 59.7\% $\rightarrow$ W4: 48.5\% \\
-\quad Science / History Museum & Attended in past semester & Binary (0/1) & 40.9\% & W1: 57.9\% $\rightarrow$ W4: 39.9\% \\
-\quad Musical Theater / Broadway & Attended in past semester & Binary (0/1) & 39.8\% & W1: 68.9\% $\rightarrow$ W4: 36.7\% \\
-\quad Stage Play / Drama & Attended in past semester & Binary (0/1) & 34.9\% & W1: 54.8\% $\rightarrow$ W4: 24.7\% \\
-\quad Classical Music / Symphony & Attended in past semester & Binary (0/1) & 29.9\% & W1: 35.8\% $\rightarrow$ W4: 25.7\% \\
-\quad Comedy Club / Stand-up & Attended in past semester & Binary (0/1) & 29.5\% & W1: 48.4\% $\rightarrow$ W4: 33.9\% \\
-\quad Rock / Pop Concert & Attended in past semester & Binary (0/1) & 29.3\% & W1: 55.1\% $\rightarrow$ W4: 30.6\% \\
-\quad Movie in Cinema & Attended in past semester & Binary (0/1) & 24.8\% & W1: 37.2\% $\rightarrow$ W4: 31.6\% \\
-\quad Ballet / Modern Dance & Attended in past semester & Binary (0/1) & 16.4\% & W1: 20.9\% $\rightarrow$ W4: 16.6\% \\
-\quad Latin / Salsa Performance & Attended in past semester & Binary (0/1) & 13.6\% & W1: 12.0\% $\rightarrow$ W4: 15.4\% \\
-\quad Jazz Performance & Attended in past semester & Binary (0/1) & 13.3\% & W1: 20.9\% $\rightarrow$ W4: 13.1\% \\
-\quad Opera & Attended in past semester & Binary (0/1) & 10.1\% & W1: 7.6\% $\rightarrow$ W4: 13.6\% \\
+\multicolumn{4}{l}{\textbf{Panel B: Public Arts \& Cultural Events (Waves 1--4, $N = 199$)}} \\
+\quad Art Museum / Gallery & Attended in past semester & 44.4\% & W1: 59.7\% $\rightarrow$ W4: 48.5\% \\
+\quad Science / History Museum & Attended in past semester & 40.9\% & W1: 57.9\% $\rightarrow$ W4: 39.9\% \\
+\quad Musical Theater / Broadway & Attended in past semester & 39.8\% & W1: 68.9\% $\rightarrow$ W4: 36.7\% \\
+\quad Stage Play / Drama & Attended in past semester & 34.9\% & W1: 54.8\% $\rightarrow$ W4: 24.7\% \\
+\quad Classical Music / Symphony & Attended in past semester & 29.9\% & W1: 35.8\% $\rightarrow$ W4: 25.7\% \\
+\quad Comedy Club / Stand-up & Attended in past semester & 29.5\% & W1: 48.4\% $\rightarrow$ W4: 33.9\% \\
+\quad Rock / Pop Concert & Attended in past semester & 29.3\% & W1: 55.1\% $\rightarrow$ W4: 30.6\% \\
+\quad Movie in Cinema & Attended in past semester & 24.8\% & W1: 37.2\% $\rightarrow$ W4: 31.6\% \\
+\quad Ballet / Modern Dance & Attended in past semester & 16.4\% & W1: 20.9\% $\rightarrow$ W4: 16.6\% \\
+\quad Latin / Salsa Performance & Attended in past semester & 13.6\% & W1: 12.0\% $\rightarrow$ W4: 15.4\% \\
+\quad Jazz Performance & Attended in past semester & 13.3\% & W1: 20.9\% $\rightarrow$ W4: 13.1\% \\
+\quad Opera & Attended in past semester & 10.1\% & W1: 7.6\% $\rightarrow$ W4: 13.6\% \\
 \addlinespace[3pt]
-\multicolumn{5}{l}{\textbf{Panel C: Leisure Book Reading Types (9 Items, Waves 1--6, $N = 201$)}} \\
-\quad Science Fiction / Fantasy & Read for leisure in past semester & Binary (0/1) & 56.1\% & W1: 58.8\% $\rightarrow$ W6: 52.6\% \\
-\quad Mysteries / Detective & Read for leisure in past semester & Binary (0/1) & 53.5\% & W1: 54.3\% $\rightarrow$ W6: 48.1\% \\
-\quad General / Literary Fiction & Read for leisure in past semester & Binary (0/1) & 53.4\% & W1: 56.8\% $\rightarrow$ W6: 51.9\% \\
-\quad Thrillers / Suspense & Read for leisure in past semester & Binary (0/1) & 42.8\% & W1: 42.7\% $\rightarrow$ W6: 43.7\% \\
-\quad Biography / Memoir & Read for leisure in past semester & Binary (0/1) & 35.3\% & W1: 45.7\% $\rightarrow$ W6: 31.1\% \\
-\quad Self-Help / Development & Read for leisure in past semester & Binary (0/1) & 34.5\% & W1: 38.2\% $\rightarrow$ W6: 40.7\% \\
-\quad Romance & Read for leisure in past semester & Binary (0/1) & 33.1\% & W1: 33.2\% $\rightarrow$ W6: 32.6\% \\
-\quad General Non-Fiction / Science & Read for leisure in past semester & Binary (0/1) & 24.2\% & W1: 31.2\% $\rightarrow$ W6: 20.0\% \\
-\quad History / Politics / Current & Read for leisure in past semester & Binary (0/1) & 15.9\% & W1: 18.1\% $\rightarrow$ W6: 17.0\% \\
+\multicolumn{4}{l}{\textbf{Panel C: Leisure Book Reading Types (Waves 1--6, $N = 201$)}} \\
+\quad Science Fiction / Fantasy & Read for leisure & 56.1\% & W1: 58.8\% $\rightarrow$ W6: 52.6\% \\
+\quad Mysteries / Detective & Read for leisure & 53.5\% & W1: 54.3\% $\rightarrow$ W6: 48.1\% \\
+\quad General / Literary Fiction & Read for leisure & 53.4\% & W1: 56.8\% $\rightarrow$ W6: 51.9\% \\
+\quad Thrillers / Suspense & Read for leisure & 42.8\% & W1: 42.7\% $\rightarrow$ W6: 43.7\% \\
+\quad Biography / Memoir & Read for leisure & 35.3\% & W1: 45.7\% $\rightarrow$ W6: 31.1\% \\
+\quad Self-Help / Development & Read for leisure & 34.5\% & W1: 38.2\% $\rightarrow$ W6: 40.7\% \\
+\quad Romance & Read for leisure & 33.1\% & W1: 33.2\% $\rightarrow$ W6: 32.6\% \\
+\quad General Non-Fiction / Science & Read for leisure & 24.2\% & W1: 31.2\% $\rightarrow$ W6: 20.0\% \\
+\quad History / Politics / Current & Read for leisure & 15.9\% & W1: 18.1\% $\rightarrow$ W6: 17.0\% \\
 \addlinespace[3pt]
-\multicolumn{5}{l}{\textbf{Panel D: Musical Genre Preferences (Top 10 Genres, Waves 1--6, $N = 201$)}} \\
-\quad Classical Music & Likes to listen to genre & Binary (0/1) & 54.5\% & W1: 58.3\% $\rightarrow$ W6: 47.4\% \\
-\quad Dance / Electronica / EDM & Likes to listen to genre & Binary (0/1) & 51.7\% & W1: 50.3\% $\rightarrow$ W6: 46.7\% \\
-\quad Country / Western & Likes to listen to genre & Binary (0/1) & 50.7\% & W1: 44.2\% $\rightarrow$ W6: 53.3\% \\
-\quad Alternative / Modern Rock & Likes to listen to genre & Binary (0/1) & 33.2\% & W1: 31.2\% $\rightarrow$ W6: 36.3\% \\
-\quad Classic Rock & Likes to listen to genre & Binary (0/1) & 28.8\% & W1: 27.1\% $\rightarrow$ W6: 28.9\% \\
-\quad Broadway / Show Tunes & Likes to listen to genre & Binary (0/1) & 19.5\% & W1: 19.1\% $\rightarrow$ W6: 17.0\% \\
-\quad Pop / Top 40 & Likes to listen to genre & Binary (0/1) & 15.7\% & W1: 22.6\% $\rightarrow$ W6: 8.9\% \\
-\quad Jazz & Likes to listen to genre & Binary (0/1) & 14.3\% & W1: 15.1\% $\rightarrow$ W6: 12.6\% \\
-\quad Folk / Singer-Songwriter & Likes to listen to genre & Binary (0/1) & 13.1\% & W1: 11.1\% $\rightarrow$ W6: 12.6\% \\
-\quad Rap / Hip-Hop & Likes to listen to genre & Binary (0/1) & 7.8\% & W1: 7.0\% $\rightarrow$ W6: 6.7\% \\
+\multicolumn{4}{l}{\textbf{Panel D: Musical Genre Preferences (Waves 1--6, $N = 201$)}} \\
+\quad Classical Music & Likes to listen & 54.5\% & W1: 58.3\% $\rightarrow$ W6: 47.4\% \\
+\quad Dance / Electronica / EDM & Likes to listen & 51.7\% & W1: 50.3\% $\rightarrow$ W6: 46.7\% \\
+\quad Country / Western & Likes to listen & 50.7\% & W1: 44.2\% $\rightarrow$ W6: 53.3\% \\
+\quad Alternative / Modern Rock & Likes to listen & 33.2\% & W1: 31.2\% $\rightarrow$ W6: 36.3\% \\
+\quad Classic Rock & Likes to listen & 28.8\% & W1: 27.1\% $\rightarrow$ W6: 28.9\% \\
+\quad Broadway / Show Tunes & Likes to listen & 19.5\% & W1: 19.1\% $\rightarrow$ W6: 17.0\% \\
+\quad Pop / Top 40 & Likes to listen & 15.7\% & W1: 22.6\% $\rightarrow$ W6: 8.9\% \\
+\quad Jazz & Likes to listen & 14.3\% & W1: 15.1\% $\rightarrow$ W6: 12.6\% \\
+\quad Folk / Singer-Songwriter & Likes to listen & 13.1\% & W1: 11.1\% $\rightarrow$ W6: 12.6\% \\
+\quad Rap / Hip-Hop & Likes to listen & 7.8\% & W1: 7.0\% $\rightarrow$ W6: 6.7\% \\
 \bottomrule
 \end{tabular*}
 \begin{minipage}{\linewidth}
 \vspace{4pt}
 \footnotesize
-\textit{Note:} Descriptive statistics computed across analytical cohorts ($N = 201$ complete cases in Books and Music; $N = 199$ complete cases in Arts). Panel A shows baseline values before single stochastic imputation for missing items (each $< 6\%$ missingness). Panels B, C, and D report the pooled longitudinal prevalence across all waves, alongside initial Wave 1 and final wave (Wave 4 for Arts, Wave 6 for Books and Music) empirical participation proportions.
+\textit{Note:} Descriptive statistics computed across analytical cohorts ($N = 201$ complete cases in Books and Music; $N = 199$ complete cases in Arts). Panel A shows baseline values before single stochastic imputation for missing items (each $< 6\%$ missingness). Panels B, C, and D report pooled longitudinal prevalence across all waves alongside initial Wave 1 and final wave (Wave 4 for Arts, Wave 6 for Books and Music) empirical participation proportions.
 \end{minipage}
 \end{table}
 
@@ -173,10 +175,10 @@ To avoid the classification error and attenuation inherent in two-step estimatio
 \end{equation}
 where $\boldsymbol{\gamma}_1 = \mathbf{0}$ sets Class 1 as the reference baseline. Across all three domains, the exact same battery of nine baseline predictors is included:
 \begin{itemize}
-\item \textbf{Sociodemographic Background}: Gender identity ($1 = \text{Woman}, 0 = \text{Man}$), racial identification ($1 = \text{White}, 0 = \text{Non-White}$), and religious affiliation ($1 = \text{Catholic}, 0 = \text{Non-Catholic}$).
+\item \textbf{Sociodemographic Background}: Gender identity (1 = Woman, 0 = Man), racial identification (1 = White, 0 = Non-White), and religious affiliation (1 = Catholic, 0 = Non-Catholic).
 \item \textbf{Family Socioeconomic Status}: Parental household income in thousands and parental educational attainment in years of schooling.
-\item \textbf{Pre-Collegiate Scholastic Capital}: High school academic achievement ($1 = \text{Mostly A or A- grades}, 0 = \text{B+ or lower}$) and advanced degree aspirations ($1 = \text{Plans to pursue Master's, Ph.D., M.D., or J.D.}, 0 = \text{Bachelor's only}$).
-\item \textbf{Institutional and Geographic Context}: Collegiate field of study ($1 = \text{STEM Field}, 0 = \text{Non-STEM Field}$) and hometown urbanicity.
+\item \textbf{Pre-Collegiate Scholastic Capital}: High school academic achievement (1 = Mostly A or A- grades, 0 = B+ or lower) and advanced degree aspirations (1 = Plans to pursue Master's, Ph.D., M.D., or J.D., 0 = Bachelor's only).
+\item \textbf{Institutional and Geographic Context}: Collegiate field of study (1 = STEM Field, 0 = Non-STEM Field) and hometown urbanicity.
 \end{itemize}
 
 \section{Latent Class Selection Across Domains}
@@ -185,34 +187,34 @@ We evaluate candidate specifications from one through five latent classes ($K = 
 
 \begin{table}[htbp]
 \centering
-\small
+\footnotesize
 \setlength{\tabcolsep}{3.5pt}
-\caption{Model Fit Statistics and Class Distributions across Candidate Specifications ($K = 1 \dots 5$)}
+\caption{Model Fit Statistics and Class Proportions across Candidate Specifications ($K = 1 \dots 5$)}
 \label{tab:selection}
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lccccccr@{}}
 \toprule
-Model & LogLik & Par & AIC & BIC & Stepwise $\chi^2$ ($df$) & $p$ & Class Distribution ($n$, \%) \\
+Model & LogLik & Par & AIC & BIC & Stepwise $\chi^2$ ($df$) & $p$ & Class Proportions (\%) \\
 \midrule
 \multicolumn{8}{l}{\textbf{Panel A: Arts \& Cultural Events (12 Items, Waves 1--4, $N = 199$)}} \\
-$K = 1$ & -4031.1 & 36 & 8134.2 & 8295.6 & --- & --- & 199 (100\%) \\
-$K = 2$ & -3716.5 & 73 & 7579.0 & 7906.3 & 629.2 (37) & $< .001$ & 74 (37.2\%) / 125 (62.8\%) \\
-$K = 3$ & -3646.8 & 110 & 7513.6 & 8006.8 & 139.4 (37) & $< .001$ & 48 (24.1\%) / 93 (46.7\%) / 58 (29.1\%) \\
-$K = 4$ & -3587.2 & 147 & 7468.5 & 8127.5 & 119.1 (37) & $< .001$ & 73 (36.7\%) / 36 (18.1\%) / 66 (33.2\%) / 24 (12.1\%) \\
-$K = 5$ & -3537.1 & 184 & 7442.3 & 8267.1 & 100.2 (37) & $< .001$ & 22 (11.1\%) / 33 (16.6\%) / 91 (45.7\%) / 32 (16.1\%) / 21 (10.6\%) \\
+$K = 1$ & -4031.1 & 36 & 8134.2 & 8295.6 & --- & --- & 100\% \\
+$K = 2$ & -3716.5 & 73 & 7579.0 & 7906.3 & 629.2 (37) & $< .001$ & 37.2\% / 62.8\% \\
+$K = 3$ & -3646.8 & 110 & 7513.6 & 8006.8 & 139.4 (37) & $< .001$ & 24.1\% / 46.7\% / 29.1\% \\
+$K = 4$ & -3587.2 & 147 & 7468.5 & 8127.5 & 119.1 (37) & $< .001$ & 36.7\% / 18.1\% / 33.2\% / 12.1\% \\
+$K = 5$ & -3537.1 & 184 & 7442.3 & 8267.1 & 100.2 (37) & $< .001$ & 11.1\% / 16.6\% / 45.7\% / 16.1\% / 10.6\% \\
 \addlinespace[3pt]
 \multicolumn{8}{l}{\textbf{Panel B: Book Reading Types (9 Items, Waves 1--6, $N = 201$)}} \\
-$K = 1$ & -5688.1 & 27 & 11430.2 & 11562.8 & --- & --- & 201 (100\%) \\
-$K = 2$ & -5282.5 & 55 & 10675.0 & 10945.2 & 811.2 (28) & $< .001$ & 92 (45.8\%) / 109 (54.2\%) \\
-$K = 3$ & -5015.5 & 83 & 10197.1 & 10604.9 & 533.9 (28) & $< .001$ & 60 (29.9\%) / 79 (39.3\%) / 62 (30.8\%) \\
-$K = 4$ & -4849.1 & 111 & 9920.1 & 10465.5 & 333.0 (28) & $< .001$ & 43 (21.4\%) / 44 (21.9\%) / 60 (29.9\%) / 54 (26.9\%) \\
-$K = 5$ & -4721.6 & 139 & 9721.3 & 10404.3 & 254.9 (28) & $< .001$ & 45 (22.4\%) / 33 (16.4\%) / 46 (22.9\%) / 24 (11.9\%) / 53 (26.4\%) \\
+$K = 1$ & -5688.1 & 27 & 11430.2 & 11562.8 & --- & --- & 100\% \\
+$K = 2$ & -5282.5 & 55 & 10675.0 & 10945.2 & 811.2 (28) & $< .001$ & 45.8\% / 54.2\% \\
+$K = 3$ & -5015.5 & 83 & 10197.1 & 10604.9 & 533.9 (28) & $< .001$ & 29.9\% / 39.3\% / 30.8\% \\
+$K = 4$ & -4849.1 & 111 & 9920.1 & 10465.5 & 333.0 (28) & $< .001$ & 21.4\% / 21.9\% / 29.9\% / 26.9\% \\
+$K = 5$ & -4721.6 & 139 & 9721.3 & 10404.3 & 254.9 (28) & $< .001$ & 22.4\% / 16.4\% / 22.9\% / 11.9\% / 26.4\% \\
 \addlinespace[3pt]
 \multicolumn{8}{l}{\textbf{Panel C: Music Genre Preferences (10 Genres, Waves 1--6, $N = 201$)}} \\
-$K = 1$ & -6262.8 & 30 & 12585.6 & 12733.0 & --- & --- & 201 (100\%) \\
-$K = 2$ & -5783.4 & 61 & 11688.8 & 11988.6 & 958.8 (31) & $< .001$ & 97 (48.3\%) / 104 (51.7\%) \\
-$K = 3$ & -5555.6 & 92 & 11295.1 & 11747.2 & 455.6 (31) & $< .001$ & 91 (45.3\%) / 47 (23.4\%) / 63 (31.3\%) \\
-$K = 4$ & -5407.6 & 123 & 11061.1 & 11665.5 & 296.0 (31) & $< .001$ & 38 (18.9\%) / 45 (22.4\%) / 76 (37.8\%) / 42 (20.9\%) \\
-$K = 5$ & -5276.7 & 154 & 10861.4 & 11618.2 & 261.8 (31) & $< .001$ & 17 (8.5\%) / 45 (22.4\%) / 34 (16.9\%) / 61 (30.3\%) / 44 (21.9\%) \\
+$K = 1$ & -6262.8 & 30 & 12585.6 & 12733.0 & --- & --- & 100\% \\
+$K = 2$ & -5783.4 & 61 & 11688.8 & 11988.6 & 958.8 (31) & $< .001$ & 48.3\% / 51.7\% \\
+$K = 3$ & -5555.6 & 92 & 11295.1 & 11747.2 & 455.6 (31) & $< .001$ & 45.3\% / 23.4\% / 31.3\% \\
+$K = 4$ & -5407.6 & 123 & 11061.1 & 11665.5 & 296.0 (31) & $< .001$ & 18.9\% / 22.4\% / 37.8\% / 20.9\% \\
+$K = 5$ & -5276.7 & 154 & 10861.4 & 11618.2 & 261.8 (31) & $< .001$ & 8.5\% / 22.4\% / 16.9\% / 30.3\% / 21.9\% \\
 \bottomrule
 \end{tabular*}
 \begin{minipage}{\linewidth}
