@@ -73,7 +73,10 @@ test_blocks <- function(df_ego, domain_name) {
       b_pred <- b
       v_pred <- v
     }
-    wald_stat <- as.numeric(t(b_pred) %*% solve(v_pred) %*% b_pred)
+    wald_stat <- tryCatch(
+      as.numeric(t(b_pred) %*% solve(v_pred) %*% b_pred),
+      error = function(e) as.numeric(t(b_pred) %*% MASS::ginv(v_pred) %*% b_pred)
+    )
     wald_p <- 1 - pchisq(wald_stat, length(b_pred))
     
     res[[nm]] <- data.frame(
@@ -91,22 +94,55 @@ test_blocks <- function(df_ego, domain_name) {
   bind_rows(res)
 }
 
-# 1. Arts Data
+# 1. Arts Data (Revised 9 Items: Classical & Opera combined; Rock/Pop & Folk/Country combined; Science Museum removed)
 cult_cols <- grep("^egoid|^culturalevents[0-9]+_[1-6]$", names(demo_data), value = TRUE)
 df_arts_comp <- demo_data %>% 
-  select(all_of(cult_cols)) %>%
+  dplyr::select(all_of(cult_cols)) %>%
   pivot_longer(cols = starts_with("culturalevents"), names_to = c("event_type", "wave"), names_pattern = "culturalevents([0-9]+)_([1-6])", values_to = "preference") %>%
   mutate(wave = as.numeric(wave), time = wave - 1, pref_binary = case_when(preference == "Yes" ~ 1, preference == "No" ~ 0, TRUE ~ NA_real_), event_clean = paste0("event_", event_type)) %>%
   filter(!is.na(pref_binary)) %>% 
-  select(egoid, wave, time, event_clean, pref_binary) %>%
+  dplyr::select(egoid, wave, time, event_clean, pref_binary) %>%
   pivot_wider(names_from = event_clean, values_from = pref_binary) %>% 
-  filter(complete.cases(.)) %>% 
+  filter(complete.cases(.)) %>%
+  mutate(
+    art_classical_opera = as.numeric(event_2 == 1 | event_4 == 1),
+    art_rock_folk_country = as.numeric(event_1 == 1 | event_3 == 1),
+    art_ballet_dance = event_5,
+    art_jazz_blues = event_6,
+    art_musical_theater = event_7,
+    art_stage_play = event_8,
+    art_comedy_club = event_9,
+    art_art_museum = event_10,
+    art_cinema = event_12
+  ) %>%
+  dplyr::select(
+    egoid, wave, time,
+    art_classical_opera,
+    art_rock_folk_country,
+    art_ballet_dance,
+    art_jazz_blues,
+    art_musical_theater,
+    art_stage_play,
+    art_comedy_club,
+    art_art_museum,
+    art_cinema
+  ) %>%
   arrange(egoid, time)
 
-art_cols <- grep("^event_", names(df_arts_comp), value = TRUE)
+art_cols <- c(
+  "art_classical_opera",
+  "art_rock_folk_country",
+  "art_ballet_dance",
+  "art_jazz_blues",
+  "art_musical_theater",
+  "art_stage_play",
+  "art_comedy_club",
+  "art_art_museum",
+  "art_cinema"
+)
 specs_arts <- lapply(art_cols, function(col) FLXMRglm(as.formula(paste0("cbind(", col, ", 1 - ", col, ") ~ ns(time, df = 2)")), family = "binomial"))
 set.seed(2026)
-m_arts <- flexmix(as.formula(paste0("cbind(", paste(art_cols, collapse=", "), ") ~ ns(time, df = 2) | egoid")), data = df_arts_comp, k = 3, model = specs_arts, control = list(iter.max = 200, minprior = 0.04))
+m_arts <- flexmix(as.formula(paste0("cbind(", paste(art_cols, collapse=", "), ") ~ ns(time, df = 2) | egoid")), data = df_arts_comp, k = 3, model = specs_arts, control = list(iter.max = 250, minprior = 0.04))
 df_arts_ego <- get_ego_classes(m_arts, df_arts_comp)
 
 # 2. Books Data

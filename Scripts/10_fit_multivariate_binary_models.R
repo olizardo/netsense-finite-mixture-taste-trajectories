@@ -92,28 +92,26 @@ extract_concom <- function(mod, df_comp, domain_name, ref_level = "1") {
 }
 
 # =============================================================================
-# A. ARTS & CULTURAL EVENTS (All 12 Items, Waves 1 to 4)
+# A. ARTS & CULTURAL EVENTS (Revised 9 Items, Waves 1 to 4)
 # =============================================================================
-cat("\n--> [1/3] Estimating Arts Multivariate Binary Model (12 Events)...\n")
+cat("\n--> [1/3] Estimating Arts Multivariate Binary Model (9 Events)...\n")
 
 event_clean_labels <- c(
-  "event_1" = "Rock/Pop Concert",
-  "event_2" = "Classical Concert",
-  "event_3" = "Folk/Country Concert",
-  "event_4" = "Opera",
-  "event_5" = "Ballet/Modern Dance",
-  "event_6" = "Jazz/Blues Concert",
-  "event_7" = "Musical Stage Play",
-  "event_8" = "Stage Play (Non-Musical)",
-  "event_9" = "Comedy Club",
-  "event_10" = "Art Museum/Gallery",
-  "event_11" = "Science/History Museum",
-  "event_12" = "Movies at Cinema"
+  "art_classical_opera"   = "Classical Concert or Opera",
+  "art_rock_folk_country" = "Rock, Pop, Folk, or Country",
+  "art_ballet_dance"       = "Ballet or Modern Dance",
+  "art_jazz_blues"         = "Jazz or Blues Performance",
+  "art_musical_theater"    = "Musical Stage Play",
+  "art_stage_play"         = "Stage Play (Non-Musical)",
+  "art_comedy_club"        = "Comedy Club",
+  "art_art_museum"         = "Art Museum or Gallery",
+  "art_cinema"             = "Cinema or Movie Theater"
 )
+art_cols <- names(event_clean_labels)
 
 cult_cols <- grep("^egoid|^culturalevents[0-9]+_[1-6]$", names(demo_data), value = TRUE)
 df_arts_comp <- demo_data %>% 
-  select(all_of(cult_cols)) %>%
+  dplyr::select(all_of(cult_cols)) %>%
   pivot_longer(
     cols = starts_with("culturalevents"),
     names_to = c("event_type", "wave"),
@@ -127,13 +125,27 @@ df_arts_comp <- demo_data %>%
     event_clean = paste0("event_", event_type)
   ) %>%
   filter(!is.na(pref_binary)) %>%
-  select(egoid, wave, time, event_clean, pref_binary) %>%
+  dplyr::select(egoid, wave, time, event_clean, pref_binary) %>%
   pivot_wider(names_from = event_clean, values_from = pref_binary) %>%
   filter(complete.cases(.)) %>%
+  mutate(
+    art_classical_opera   = as.numeric(event_2 == 1 | event_4 == 1),
+    art_rock_folk_country = as.numeric(event_1 == 1 | event_3 == 1),
+    art_ballet_dance       = event_5,
+    art_jazz_blues         = event_6,
+    art_musical_theater    = event_7,
+    art_stage_play         = event_8,
+    art_comedy_club        = event_9,
+    art_art_museum         = event_10,
+    art_cinema             = event_12
+  ) %>%
+  dplyr::select(
+    egoid, wave, time,
+    all_of(art_cols)
+  ) %>%
   inner_join(covs, by = "egoid") %>%
   arrange(egoid, time)
 
-art_cols <- grep("^event_", names(df_arts_comp), value = TRUE)
 specs_arts <- lapply(art_cols, function(col) {
   FLXMRglm(as.formula(paste0("cbind(", col, ", 1 - ", col, ") ~ ns(time, df = 2)")), family = "binomial")
 })
@@ -155,14 +167,14 @@ eval_points_arts <- predict(basis_arts, t_points_arts)
 
 params_arts <- parameters(mod_arts_final)
 arts_labels_map <- c(
-  "1" = "Class 1: Omnivorous Cultural Enthusiasts",
-  "2" = "Class 2: Museum & Performing Arts Regulars",
-  "3" = "Class 3: Selective / Low Attendance"
+  "1" = "Omnivores",
+  "2" = "Traditionalists",
+  "3" = "Minimalists"
 )
 
 # Build smooth lines
 arts_smooth_list <- list()
-for (ev_idx in 1:12) {
+for (ev_idx in 1:length(art_cols)) {
   col <- art_cols[ev_idx]
   ev_label <- event_clean_labels[col]
   for (c_idx in 1:3) {
@@ -180,7 +192,7 @@ df_arts_smooth <- bind_rows(arts_smooth_list)
 
 # Build discrete wave points
 arts_points_list <- list()
-for (ev_idx in 1:12) {
+for (ev_idx in 1:length(art_cols)) {
   col <- art_cols[ev_idx]
   ev_label <- event_clean_labels[col]
   for (c_idx in 1:3) {
@@ -251,9 +263,9 @@ params_books <- parameters(mod_books_final)
 # Comp 2: High Sci-Fi & Thrillers
 # Comp 3: Low / Selective Readers
 books_labels_map <- c(
-  "1" = "Class 1: Non-Fiction, History & Biography",
-  "2" = "Class 2: Popular Genre Fiction (Sci-Fi, Thrillers)",
-  "3" = "Class 3: Low / Selective Leisure Readers"
+  "1" = "Nonfictionists",
+  "2" = "Fictionists",
+  "3" = "Minimalists"
 )
 
 books_smooth_list <- list()
@@ -347,9 +359,9 @@ eval_points_music <- predict(basis_music, t_points_music)
 params_music <- parameters(mod_music_final)
 
 music_labels_map <- c(
-  "1" = "Class 1: High Musical Omnivores",
-  "2" = "Class 2: Rock & Heavy Metal Aficionados",
-  "3" = "Class 3: Mainstream Hits (Rap, Dance, Country)"
+  "1" = "Omnivores",
+  "2" = "Rockers",
+  "3" = "Mainstreamers"
 )
 
 music_smooth_list <- list()

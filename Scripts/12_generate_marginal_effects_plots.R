@@ -2,7 +2,7 @@
 #'
 #' Computes model-implied marginal predicted class probabilities and 95% simulation
 #' confidence intervals for statistically significant predictor blocks from Table 3
-#' across all three cultural taste domains (Arts, Books, and Music).
+#' across all three cultural taste domains (Arts [9 items], Books [9 items], and Music [10 genres]).
 #' Follows the visualization architecture from predicting-degree-trajectories-NetHealth.
 #'
 #' @author Omar Lizardo & AI Assistant
@@ -38,21 +38,66 @@ form_full <- ~ is_woman + is_white + is_catholic + income_num + parent_ed_years 
 # A. PREPARE ESTIMATION DATASETS
 # -----------------------------------------------------------------------------
 
-# Arts
+# Arts (Revised 9 Items)
 cult_cols <- grep("^egoid|^culturalevents[0-9]+_[1-6]$", names(demo_data), value = TRUE)
 df_arts_comp <- demo_data %>% 
   dplyr::select(all_of(cult_cols)) %>%
-  pivot_longer(cols = starts_with("culturalevents"), names_to = c("event_type", "wave"), names_pattern = "culturalevents([0-9]+)_([1-6])", values_to = "preference") %>%
-  mutate(wave = as.numeric(wave), time = wave - 1, pref_binary = case_when(preference == "Yes" ~ 1, preference == "No" ~ 0, TRUE ~ NA_real_), event_clean = paste0("event_", event_type)) %>%
-  filter(!is.na(pref_binary)) %>% 
+  pivot_longer(
+    cols = starts_with("culturalevents"),
+    names_to = c("event_type", "wave"),
+    names_pattern = "culturalevents([0-9]+)_([1-6])",
+    values_to = "preference"
+  ) %>%
+  mutate(
+    wave = as.numeric(wave),
+    time = wave - 1,
+    pref_binary = case_when(preference == "Yes" ~ 1, preference == "No" ~ 0, TRUE ~ NA_real_),
+    event_clean = paste0("event_", event_type)
+  ) %>%
+  filter(!is.na(pref_binary)) %>%
   dplyr::select(egoid, wave, time, event_clean, pref_binary) %>%
-  pivot_wider(names_from = event_clean, values_from = pref_binary) %>% 
-  filter(complete.cases(.)) %>% 
+  pivot_wider(names_from = event_clean, values_from = pref_binary) %>%
+  filter(complete.cases(.)) %>%
+  mutate(
+    art_classical_opera   = as.numeric(event_2 == 1 | event_4 == 1),
+    art_rock_folk_country = as.numeric(event_1 == 1 | event_3 == 1),
+    art_ballet_dance       = event_5,
+    art_jazz_blues         = event_6,
+    art_musical_theater    = event_7,
+    art_stage_play         = event_8,
+    art_comedy_club        = event_9,
+    art_art_museum         = event_10,
+    art_cinema             = event_12
+  ) %>%
+  dplyr::select(
+    egoid, wave, time,
+    art_classical_opera,
+    art_rock_folk_country,
+    art_ballet_dance,
+    art_jazz_blues,
+    art_musical_theater,
+    art_stage_play,
+    art_comedy_club,
+    art_art_museum,
+    art_cinema
+  ) %>%
   inner_join(covs, by = "egoid") %>%
   arrange(egoid, time)
 
-art_cols <- grep("^event_", names(df_arts_comp), value = TRUE)
-specs_arts <- lapply(art_cols, function(col) FLXMRglm(as.formula(paste0("cbind(", col, ", 1 - ", col, ") ~ ns(time, df = 2)")), family = "binomial"))
+art_cols <- c(
+  "art_classical_opera",
+  "art_rock_folk_country",
+  "art_ballet_dance",
+  "art_jazz_blues",
+  "art_musical_theater",
+  "art_stage_play",
+  "art_comedy_club",
+  "art_art_museum",
+  "art_cinema"
+)
+specs_arts <- lapply(art_cols, function(col) {
+  FLXMRglm(as.formula(paste0("cbind(", col, ", 1 - ", col, ") ~ ns(time, df = 2)")), family = "binomial")
+})
 
 # Books
 df_books_comp <- books_long %>% 
@@ -64,7 +109,9 @@ df_books_comp <- books_long %>%
   arrange(egoid, time)
 
 book_cols <- grep("^book_", names(df_books_comp), value = TRUE)
-specs_books <- lapply(book_cols, function(col) FLXMRglm(as.formula(paste0("cbind(", col, ", 1 - ", col, ") ~ ns(time, df = 2)")), family = "binomial"))
+specs_books <- lapply(book_cols, function(col) {
+  FLXMRglm(as.formula(paste0("cbind(", col, ", 1 - ", col, ") ~ ns(time, df = 2)")), family = "binomial")
+})
 
 # Music
 top10_genres_order <- c("Rap/Hip-hop", "Classic rock/Oldies", "Dance music", "Rock/Heavy metal", "Country", "Broadway/Show tunes", "Classical/Chamber", "Mood/Easy listening", "Folk music", "Jazz")
@@ -78,7 +125,9 @@ df_music_wide <- music_long %>%
   arrange(egoid, time)
 
 music_cols <- grep("^(rap|classic|dance|rock|country|broadway|classical|mood|folk|jazz)", names(df_music_wide), value = TRUE)
-specs_music <- lapply(music_cols, function(col) FLXMRglm(as.formula(paste0("cbind(", col, ", 1 - ", col, ") ~ ns(time, df = 2)")), family = "binomial"))
+specs_music <- lapply(music_cols, function(col) {
+  FLXMRglm(as.formula(paste0("cbind(", col, ", 1 - ", col, ") ~ ns(time, df = 2)")), family = "binomial")
+})
 
 # -----------------------------------------------------------------------------
 # B. FIT FLEXMIX MODELS WITH CONCOMITANTS AND EXTRACT MNL
@@ -183,7 +232,6 @@ simulate_marginal_probs <- function(model, newdata, n_draws = 2000, class_names 
 # -----------------------------------------------------------------------------
 cat("--> Generating predictions for statistically significant predictor blocks...\n")
 
-# Base profiles with covariates at reference levels/means
 df_covs_base <- res_arts$data %>%
   summarize(
     is_woman = 0,
@@ -286,9 +334,9 @@ cat("   Saved: Cache/summaries/marginal_effects_summary.rds\n")
 # -----------------------------------------------------------------------------
 cat("--> Generating publication-grade figures...\n")
 
-palette_arts  <- c("Omnivores" = "#0072B2", "Traditionalists" = "#D55E00", "Minimalists" = "#56B4E9")
-palette_books <- c("Nonfictionists" = "#009E73", "Fictionists" = "#0072B2", "Minimalists" = "#D55E00")
-palette_music <- c("Omnivores" = "#0072B2", "Rockers" = "#D55E00", "Mainstreamers" = "#E69F00")
+PALETTE_ARTS  <- c("Omnivores" = "#0072B2", "Traditionalists" = "#D55E00", "Minimalists" = "#56B4E9")
+PALETTE_BOOKS <- c("Nonfictionists" = "#009E73", "Fictionists" = "#0072B2", "Minimalists" = "#D55E00")
+PALETTE_MUSIC <- c("Omnivores" = "#0072B2", "Rockers" = "#D55E00", "Mainstreamers" = "#E69F00")
 
 theme_facet_pub <- function(base_size = 10) {
   theme_minimal(base_size = base_size) +
@@ -314,7 +362,7 @@ p_arts <- ggplot(df_plot_arts, aes(x = Mean, y = Condition, color = Class)) +
   geom_vline(xintercept = 1/3, linetype = "dashed", color = "grey65", linewidth = 0.4) +
   geom_pointrange(aes(xmin = pmax(0, Low), xmax = pmin(1, High)), size = 0.45, linewidth = 0.75) +
   facet_wrap(~ Class, ncol = 3) +
-  scale_color_manual(values = palette_arts) +
+  scale_color_manual(values = PALETTE_ARTS) +
   scale_x_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
   labs(
     title = "Panel A: Public Arts & Cultural Events (N = 199)",
@@ -328,7 +376,7 @@ p_books <- ggplot(df_plot_books, aes(x = Mean, y = Condition, color = Class)) +
   geom_vline(xintercept = 1/3, linetype = "dashed", color = "grey65", linewidth = 0.4) +
   geom_pointrange(aes(xmin = pmax(0, Low), xmax = pmin(1, High)), size = 0.45, linewidth = 0.75) +
   facet_wrap(~ Class, ncol = 3) +
-  scale_color_manual(values = palette_books) +
+  scale_color_manual(values = PALETTE_BOOKS) +
   scale_x_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
   labs(
     title = "Panel B: Leisure Book Reading Types (N = 201)",
@@ -342,7 +390,7 @@ p_music <- ggplot(df_plot_music, aes(x = Mean, y = Condition, color = Class)) +
   geom_vline(xintercept = 1/3, linetype = "dashed", color = "grey65", linewidth = 0.4) +
   geom_pointrange(aes(xmin = pmax(0, Low), xmax = pmin(1, High)), size = 0.45, linewidth = 0.75) +
   facet_wrap(~ Class, ncol = 3) +
-  scale_color_manual(values = palette_music) +
+  scale_color_manual(values = PALETTE_MUSIC) +
   scale_x_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
   labs(
     title = "Panel C: Musical Genre Preferences (N = 201)",

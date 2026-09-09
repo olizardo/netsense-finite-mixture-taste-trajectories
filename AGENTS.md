@@ -850,7 +850,7 @@ scale_fill_manual(values = COLOR_CREDIBILITY, name = "Directional Credibility")
 - **GitHub Remote:** `https://github.com/olizardo/netsense-finite-mixture-taste-trajectories.git`
 - **Data Source:** NetSense Study (University of Notre Dame, undergraduate cohort matriculating Fall 2011).
 - **Analytic Samples:**
-  - *Public Arts & Cultural Events:* $N = 199$ complete cases across Waves 1--4 (12 items).
+  - *Public Arts & Cultural Events:* $N = 199$ complete cases across Waves 1--4 (9 items).
   - *Leisure Book Reading Types:* $N = 201$ complete cases across Waves 1--6 (9 items).
   - *Musical Genre Preferences:* $N = 201$ complete cases across Waves 1--6 (top 10 genres).
 
@@ -858,11 +858,11 @@ scale_fill_manual(values = COLOR_CREDIBILITY, name = "Directional Credibility")
 1. **Multivariate Binary Mixture Modeling with Natural Cubic Splines**:
    - Simultaneously estimates individual binary trajectories across all battery items using `flexmix` \citep{grun2008flexmix} in \textsf{R} \citep{Rmanual}, parameterized via orthogonal natural cubic splines (`splines::ns(time, df = 2)`).
    - Eliminates polynomial runaway boundary tails while capturing non-linear collegiate rhythms (freshman baseline, sophomore slump, and junior recovery).
-2. **Substantive 3-Class Typologies (Single-Word Labels, Zero Slashes)**:
-   - **Arts & Cultural Events (12 Items, Waves 1--4, $N = 199$)**:
-     * **Omnivores** ($n = 48, 24.1\%$): Elevated attendance across all 12 venues; cultivated monotonic rise in opera (+27.7 pp).
-     * **Traditionalists** ($n = 93, 46.7\%$): Concentrated in institutional high-arts (museums, ballet, stage plays); deep sophomore slump in museums (-49.3 pp in art museums).
-     * **Minimalists** ($n = 58, 29.1\%$): Low baseline attendance with participation dropping near zero by sophomore year.
+2. **Substantive 3-Class Typologies (Short & Punchy Single-Word Labels)**:
+   - **Arts & Cultural Events (9 Items, Waves 1--4, $N = 199$)**:
+     * **Omnivores** ($n = 38, 19.1\%$): High engagement across all nine expressive activities; monotonic rise in classical concert/opera (+27.8 pp).
+     * **Traditionalists** ($n = 70, 35.2\%$): Concentrated in institutional high-arts (ballet, stage plays, museums, comedy); deep sophomore slump in museums (-42.8 pp) and comedy clubs (-40.1 pp).
+     * **Minimalists** ($n = 91, 45.7\%$): Low baseline attendance with participation dropping near zero across live music and theatrical venues.
    - **Leisure Book Reading Types (9 Items, Waves 1--6, $N = 201$)**:
      * **Nonfictionists** ($n = 60, 29.9\%$): Analytical non-fiction readers (history/politics, biography/memoir, general non-fiction). Reallocate reading from political volumes to personal biographies (+23.3 pp).
      * **Fictionists** ($n = 79, 39.3\%$): Narrative genre fiction readers (sci-fi/fantasy, thrillers, mysteries, general fiction).
@@ -874,8 +874,8 @@ scale_fill_manual(values = COLOR_CREDIBILITY, name = "Directional Credibility")
 3. **Endogenous Concomitant Models (`FLXPmultinom`)**:
    - Single-step joint estimation of class sorting as a function of 9 baseline covariates.
    - Pre-collegiate scholastic capital (high school GPA) universally predicts omnivorousness across domains ($\text{OR} = 0.15\text{--}0.29$ for non-omnivorous pathways).
-   - Gender identity sorts women away from Minimalist arts ($\text{OR} = 0.24$) and away from Rockers in music ($\text{OR} = 0.19$).
-   - Declared STEM majors are 2.66 times more likely to sort into Rockers ($\text{OR} = 2.66, p = 0.024$).
+   - Gender identity sorts women away from Minimalist arts ($\text{OR} = 0.23$) and away from Rockers in music ($\text{OR} = 0.19$).
+   - Declared STEM majors are 2.66 times more likely to sort into Rockers ($\text{OR} = 2.66, p = 0.024$) and 1.81 times more likely to sort into Fictionists.
    - Parental SES (household income and education) is completely statistically null across all domains ($p > 0.10$).
 4. **Extensive vs. Intensive Margin Distinction**:
    - Multilevel growth curve moderation models (`lme4::glmer` \citep{bates2015fitting}) confirm that within-class demographic slope moderation is statistically null ($p > 0.10$).
@@ -886,7 +886,7 @@ scale_fill_manual(values = COLOR_CREDIBILITY, name = "Directional Credibility")
 - **Table 2**: Latent Class Model Selection and Fit Statistics across Candidate Specifications ($K = 1 \dots 5$) (`tab:selection`)
 - **Table 3**: Model Fit and Predictive Power of Theoretical Variable Blocks across Expressive Domains (`tab:blocks`)
 - **Table A1**: Multinomial Logistic Parameter Estimates and Odds Ratios from Full Multivariable Endogenous Concomitant Models (Appendix, vertically stacked panels) (`tab:app_coefs`)
-- **Figure 1**: Latent participation trajectories across 12 Arts and Cultural Events from the 3-class multivariate binary model (`Plots/fig1_arts_12_events_by_class.png`, `fig:arts`)
+- **Figure 1**: Latent participation trajectories across 9 Public Arts and Cultural Events from the 3-class multivariate binary model (`Plots/fig1_arts_9_events_by_class.png`, `fig:arts`)
 - **Figure 2**: Latent trajectories across 9 Book Reading Types from the 3-class multivariate binary model (`Plots/fig2_books_9_items_by_class.png`, `fig:books`)
 - **Figure 3**: Latent trajectories across the Top 10 Music Genres from the 3-class multivariate binary model (`Plots/fig3_music_10_genres_by_class.png`, `fig:music`)
 - **Figure 4**: Model-implied marginal predicted class probabilities with 95\% simulation confidence intervals across statistically significant predictor blocks from Table 3 across Arts, Books, and Music (`Plots/fig4_marginal_effects_all_domains.png`, `fig:marginal`)

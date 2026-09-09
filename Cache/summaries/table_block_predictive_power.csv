@@ -1,10 +1,10 @@
 "Domain","Block","LRT_Chi2","Wald_Chi2","df","p_val","AIC","BIC"
-"Arts & Cultural Events","Block 1: Demographic Identity (Gender, Race, Religion)",12.0058434646092,15.6301780932595,6,0.0618385707984802,418.83032182134,445.176760419135
-"Arts & Cultural Events","Block 2: Family Socioeconomic Status (Income, Education)",7.10608126039386,7920869.47651864,4,0.130387388248274,419.730084025555,439.489912973902
-"Arts & Cultural Events","Block 3: Pre-Collegiate Scholastic Capital (GPA, Degree Aspirations)",7.89109799519582,23.5626349253364,4,0.0956498627574709,418.945067290753,438.7048962391
-"Arts & Cultural Events","Block 4: Collegiate Context (STEM Major, Hometown Urbanicity)",4.88446361046806,1328.71846825771,4,0.299358997993398,421.951701675481,441.711530623828
-"Arts & Cultural Events","Block 1+2: Combined Sociodemographics (Demographics + SES)",18.0715106761076,113964.997682577,10,0.053769272502224,420.764654609841,460.284312506535
-"Arts & Cultural Events","Full Multivariable Model (All Blocks Combined)",32.5536925088298,935379.537715194,18,0.0188892007974902,422.282472777119,488.148569271609
+"Arts & Cultural Events","Block 1: Demographic Identity (Gender, Race, Religion)",16.7103811174995,10.6947408652612,6,0.0104086940944073,413.802627046206,440.149065644002
+"Arts & Cultural Events","Block 2: Family Socioeconomic Status (Income, Education)",3.75335997681265,4488873.67773343,4,0.440412654242451,422.759648186893,442.51947713524
+"Arts & Cultural Events","Block 3: Pre-Collegiate Scholastic Capital (GPA, Degree Aspirations)",3.80279828473505,20.1463779525917,4,0.433351518705576,422.710209878971,442.470038827318
+"Arts & Cultural Events","Block 4: Collegiate Context (STEM Major, Hometown Urbanicity)",5.87039239794848,1610.13967079092,4,0.209038787443999,420.642615765758,440.402444714104
+"Arts & Cultural Events","Block 1+2: Combined Sociodemographics (Demographics + SES)",20.1294153112131,287700.014280721,10,0.0280521269954019,418.383592852493,457.903250749187
+"Arts & Cultural Events","Full Multivariable Model (All Blocks Combined)",27.7211166031149,571613.649279631,18,0.0664279654029813,426.791891560591,492.657988055081
 "Book Reading Types","Block 1: Demographic Identity (Gender, Race, Religion)",94.6420263957984,221.689942704025,6,0,360.283646688388,386.71008595286
 "Book Reading Types","Block 2: Family Socioeconomic Status (Income, Education)",0.888179514568435,939370.010907353,4,0.926250502407922,450.037493569617,469.857323017972
 "Book Reading Types","Block 3: Pre-Collegiate Scholastic Capital (GPA, Degree Aspirations)",5.78944321817528,399.777571563643,4,0.215434274594567,445.136229866011,464.956059314365

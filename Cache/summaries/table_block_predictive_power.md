@@ -1,12 +1,12 @@
 | Domain & Predictor Block | Wald $\chi^2$ | LRT $\chi^2$ | $df$ | $p$-value | AIC | BIC |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|
 | **Arts & Cultural Events** | | | | | | |
-| Block 1: Demographic Identity (Gender, Race, Religion) | 15.63 | 12.01 | 6 | 0.062 | 418.8 | 445.2 |
-| Block 2: Family Socioeconomic Status (Income, Education) | 7920869.48 | 7.11 | 4 | 0.130 | 419.7 | 439.5 |
-| Block 3: Pre-Collegiate Scholastic Capital (GPA, Degree Aspirations) | 23.56 | 7.89 | 4 | 0.096 | 418.9 | 438.7 |
-| Block 4: Collegiate Context (STEM Major, Hometown Urbanicity) | 1328.72 | 4.88 | 4 | 0.299 | 422.0 | 441.7 |
-| Block 1+2: Combined Sociodemographics (Demographics + SES) | 113965.00 | 18.07 | 10 | 0.054 | 420.8 | 460.3 |
-| Full Multivariable Model (All Blocks Combined) | 935379.54 | 32.55 | 18 | 0.019 | 422.3 | 488.1 |
+| Block 1: Demographic Identity (Gender, Race, Religion) | 10.69 | 16.71 | 6 | 0.010 | 413.8 | 440.1 |
+| Block 2: Family Socioeconomic Status (Income, Education) | 4488873.68 | 3.75 | 4 | 0.440 | 422.8 | 442.5 |
+| Block 3: Pre-Collegiate Scholastic Capital (GPA, Degree Aspirations) | 20.15 | 3.80 | 4 | 0.433 | 422.7 | 442.5 |
+| Block 4: Collegiate Context (STEM Major, Hometown Urbanicity) | 1610.14 | 5.87 | 4 | 0.209 | 420.6 | 440.4 |
+| Block 1+2: Combined Sociodemographics (Demographics + SES) | 287700.01 | 20.13 | 10 | 0.028 | 418.4 | 457.9 |
+| Full Multivariable Model (All Blocks Combined) | 571613.65 | 27.72 | 18 | 0.066 | 426.8 | 492.7 |
 | **Book Reading Types** | | | | | | |
 | Block 1: Demographic Identity (Gender, Race, Religion) | 221.69 | 94.64 | 6 | < .001 | 360.3 | 386.7 |
 | Block 2: Family Socioeconomic Status (Income, Education) | 939370.01 | 0.89 | 4 | 0.926 | 450.0 | 469.9 |
