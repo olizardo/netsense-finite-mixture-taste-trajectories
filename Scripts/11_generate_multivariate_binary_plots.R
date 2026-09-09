@@ -139,9 +139,9 @@ ggsave("Plots/fig2_music_10_genres_by_class.png", p_music, width = 6.5, height =
 cat("   Saved: Plots/fig2_music_10_genres_by_class.png\n")
 
 # -----------------------------------------------------------------------------
-# Figure 3: Activity Time Trend Shifts Within Latent Classes (K = 4)
+# Figure 3 & 4: Trajectory Shifts Split by Domain (Books & Music, K = 4)
 # -----------------------------------------------------------------------------
-cat("--> Generating Figure 3: Activity Time Trend Shifts Within Classes (K = 4)...\n")
+cat("--> Generating Figures 3 & 4: Trajectory Shifts Split by Domain (K = 4)...\n")
 
 df_books_chg <- books_data$points %>%
   filter(wave %in% c(1, 6)) %>%
@@ -149,7 +149,7 @@ df_books_chg <- books_data$points %>%
   tidyr::pivot_wider(names_from = wave, values_from = prob, names_prefix = "W") %>%
   mutate(
     Delta = (W6 - W1) * 100, 
-    Domain = "Book Reading Types (Waves 1--6)"
+    Direction = ifelse(Delta >= 0, "Expansion (+)", "Contraction (-)")
   )
 
 df_music_chg <- music_data$points %>%
@@ -158,55 +158,114 @@ df_music_chg <- music_data$points %>%
   tidyr::pivot_wider(names_from = wave, values_from = prob, names_prefix = "W") %>%
   mutate(
     Delta = (W6 - W1) * 100, 
-    Domain = "Music Genre Preferences (Waves 1--6)"
+    Direction = ifelse(Delta >= 0, "Expansion (+)", "Contraction (-)")
   )
 
-all_chg <- bind_rows(df_books_chg, df_music_chg) %>%
-  mutate(
-    Domain = factor(Domain, levels = c("Book Reading Types (Waves 1--6)", "Music Genre Preferences (Waves 1--6)")),
-    Class_Clean = factor(case_when(
-      Class %in% c("Genre Specialists", "Classic Rockers")      ~ "Class 1\n(Genre Spec / Classic Rock)",
-      Class %in% c("Romance Readers", "Mainstreamers")          ~ "Class 2\n(Romance / Mainstream)",
-      Class %in% c("Nonfictionists", "Contemporary Rockers")    ~ "Class 3\n(Nonfiction / Contemp Rock)",
-      Class %in% c("Omnivorous Fictionists", "Omnivores")       ~ "Class 4\n(Omniv Fiction / Omnivores)"
-    ), levels = c(
-      "Class 1\n(Genre Spec / Classic Rock)",
-      "Class 2\n(Romance / Mainstream)",
-      "Class 3\n(Nonfiction / Contemp Rock)",
-      "Class 4\n(Omniv Fiction / Omnivores)"
-    )),
-    Direction = ifelse(Delta >= 0, "Expansion (+)", "Contraction (-)"),
-    Activity = factor(Activity)
-  )
+# Order items by mean shift across classes for clean display
+book_order <- df_books_chg %>%
+  group_by(Activity) %>%
+  summarize(m = mean(Delta), .groups = "drop") %>%
+  arrange(m) %>%
+  pull(Activity)
 
-book_acts <- all_chg %>% filter(grepl("Book", Domain)) %>% group_by(Activity) %>% summarize(m = mean(Delta)) %>% arrange(m) %>% pull(Activity)
-music_acts <- all_chg %>% filter(grepl("Music", Domain)) %>% group_by(Activity) %>% summarize(m = mean(Delta)) %>% arrange(m) %>% pull(Activity)
-all_chg$Activity <- factor(all_chg$Activity, levels = c(book_acts, music_acts))
+df_books_chg$Activity <- factor(df_books_chg$Activity, levels = book_order)
+df_books_chg$Class <- factor(df_books_chg$Class, levels = c("Genre Specialists", "Romance Readers", "Nonfictionists", "Omnivorous Fictionists"))
 
-theme_pub_shift <- theme_minimal(base_size = 9.5) +
+music_order <- df_music_chg %>%
+  group_by(Activity) %>%
+  summarize(m = mean(Delta), .groups = "drop") %>%
+  arrange(m) %>%
+  pull(Activity)
+
+df_music_chg$Activity <- factor(df_music_chg$Activity, levels = music_order)
+df_music_chg$Class <- factor(df_music_chg$Class, levels = c("Omnivores", "Classic Rockers", "Contemporary Rockers", "Mainstreamers"))
+
+theme_pub_shift_split <- theme_minimal(base_size = 9.5) +
   theme(
     text = element_text(family = "sans", color = "#222222"),
     plot.title = element_text(face = "bold", size = rel(1.05), hjust = 0, margin = margin(b = 4)),
     plot.subtitle = element_text(color = "gray30", size = rel(0.85), margin = margin(b = 8)),
     axis.title.x = element_text(face = "bold", size = rel(0.82), margin = margin(t = 6)),
     axis.title.y = element_blank(),
-    axis.text.y = element_text(size = rel(0.78), color = "black"),
+    axis.text.y = element_text(size = rel(0.80), color = "black"),
     axis.text.x = element_text(size = rel(0.75)),
     panel.grid.minor = element_blank(),
     panel.grid.major = element_line(color = "gray92", linewidth = 0.35),
     legend.position = "bottom",
     legend.title = element_blank(),
     legend.text = element_text(size = rel(0.80), face = "bold"),
-    panel.spacing = unit(0.5, "lines"),
-    strip.text = element_text(face = "bold", size = rel(0.75)),
-    strip.background = element_rect(fill = "grey95", color = NA)
+    legend.margin = margin(t = -2, b = 2),
+    panel.spacing = unit(0.6, "lines"),
+    strip.text = element_text(face = "bold", size = rel(0.82)),
+    strip.background = element_rect(fill = "grey95", color = NA),
+    plot.margin = margin(t = 6, r = 6, b = 6, l = 6)
+  )
+
+# Figure 3: Books Shifts
+p_shift_books <- ggplot(df_books_chg, aes(x = Delta, y = Activity, color = Direction)) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray50", linewidth = 0.5) +
+  geom_segment(aes(x = 0, xend = Delta, y = Activity, yend = Activity), linewidth = 0.75) +
+  geom_point(size = 2.0) +
+  facet_wrap(~ Class, ncol = 4) +
+  scale_color_manual(values = c("Expansion (+)" = "#0072B2", "Contraction (-)" = "#D55E00")) +
+  scale_x_continuous(
+    labels = function(x) paste0(ifelse(x > 0, "+", ""), round(x), " pp"),
+    breaks = seq(-40, 40, 20),
+    limits = c(-45, 45)
+  ) +
+  labs(
+    title = "Net Trajectory Shifts in Book Reading Types (K = 4)",
+    subtitle = "Percentage point shift (Wave 6 - Wave 1) by reading type across latent classes",
+    x = "Net Percentage Point Shift (Wave 6 - Wave 1)"
+  ) +
+  theme_pub_shift_split
+
+ggsave("Plots/fig3_books_trajectory_shifts.png", p_shift_books, width = 6.5, height = 4.4, dpi = 300)
+cat("   Saved: Plots/fig3_books_trajectory_shifts.png\n")
+
+# Figure 4: Music Shifts
+p_shift_music <- ggplot(df_music_chg, aes(x = Delta, y = Activity, color = Direction)) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray50", linewidth = 0.5) +
+  geom_segment(aes(x = 0, xend = Delta, y = Activity, yend = Activity), linewidth = 0.75) +
+  geom_point(size = 2.0) +
+  facet_wrap(~ Class, ncol = 4) +
+  scale_color_manual(values = c("Expansion (+)" = "#0072B2", "Contraction (-)" = "#D55E00")) +
+  scale_x_continuous(
+    labels = function(x) paste0(ifelse(x > 0, "+", ""), round(x), " pp"),
+    breaks = seq(-40, 40, 20),
+    limits = c(-45, 45)
+  ) +
+  labs(
+    title = "Net Trajectory Shifts in Music Genre Preferences (K = 4)",
+    subtitle = "Percentage point shift (Wave 6 - Wave 1) by musical genre across latent classes",
+    x = "Net Percentage Point Shift (Wave 6 - Wave 1)"
+  ) +
+  theme_pub_shift_split
+
+ggsave("Plots/fig4_music_trajectory_shifts.png", p_shift_music, width = 6.5, height = 4.6, dpi = 300)
+cat("   Saved: Plots/fig4_music_trajectory_shifts.png\n")
+
+# Legacy / compound shift plot
+all_chg <- bind_rows(
+  df_books_chg %>% mutate(Domain = "Book Reading Types (Waves 1--6)"),
+  df_music_chg %>% mutate(Domain = "Music Genre Preferences (Waves 1--6)")
+) %>%
+  mutate(
+    Domain = factor(Domain, levels = c("Book Reading Types (Waves 1--6)", "Music Genre Preferences (Waves 1--6)")),
+    Class_Clean = factor(case_when(
+      Class %in% c("Genre Specialists", "Omnivores")            ~ "Class 1",
+      Class %in% c("Romance Readers", "Classic Rockers")        ~ "Class 2",
+      Class %in% c("Nonfictionists", "Contemporary Rockers")    ~ "Class 3",
+      Class %in% c("Omnivorous Fictionists", "Mainstreamers")   ~ "Class 4"
+    )),
+    Activity = factor(Activity, levels = c(book_order, music_order))
   )
 
 p_chg <- ggplot(all_chg, aes(x = Delta, y = Activity, color = Direction)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "gray50", linewidth = 0.5) +
   geom_segment(aes(x = 0, xend = Delta, y = Activity, yend = Activity), linewidth = 0.75) +
   geom_point(size = 2.0) +
-  facet_grid(Domain ~ Class_Clean, scales = "free_y", space = "free_y") +
+  facet_grid(Domain ~ Class, scales = "free", space = "free_y") +
   scale_color_manual(values = c("Expansion (+)" = "#0072B2", "Contraction (-)" = "#D55E00")) +
   scale_x_continuous(
     labels = function(x) paste0(ifelse(x > 0, "+", ""), round(x), " pp"),
@@ -217,10 +276,10 @@ p_chg <- ggplot(all_chg, aes(x = Delta, y = Activity, color = Direction)) +
     subtitle = "Percentage point shift (Wave 6 - Wave 1) across Book Reading Types and Music Genres",
     x = "Net Percentage Point Shift (Wave 6 - Wave 1)"
   ) +
-  theme_pub_shift
+  theme_pub_shift_split
 
 ggsave("Plots/fig3_activity_time_trend_shifts.png", p_chg, width = 6.5, height = 6.2, dpi = 300)
-cat("   Saved: Plots/fig3_activity_time_trend_shifts.png\n")
+cat("   Saved: Plots/fig3_activity_time_trend_shifts.png (Fallback)\n")
 
 cat("\n====================================================================\n")
 cat("Plot Generation Complete!\n")

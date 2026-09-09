@@ -23,6 +23,9 @@ renv/cache/
 # Heavy cache archives
 Cache/Archive_Legacy_*/
 Cache/summaries/Archive/
+Cache/mod_*.rds
+Cache/bivariate_mod*.rds
+Cache/bivariate_omnivorousness_panel.rds
 Logs/Archive/
 Submissions/Archive/
 Scripts/Archive/

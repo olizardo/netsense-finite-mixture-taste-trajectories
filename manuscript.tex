@@ -143,15 +143,13 @@ Consider a concrete sociological example. Imagine two incoming first-year studen
 
 \subsection{Harmonized Natural Spline Time Parameterization}
 
-To achieve temporal flexibility without imposing the rigid symmetry or boundary instability of quadratic polynomials, the probability of endorsing item $j$ at time $t$ in class $k$ is parameterized via an inverse logit link using a natural cubic spline with two degrees of freedom, implemented via the \texttt{splines} package \citep{venables2002modern} in \textsf{R} \citep{Rmanual}
-:
+To achieve temporal flexibility without imposing the rigid symmetry or boundary instability of quadratic polynomials, the probability of endorsing item $j$ at time $t$ in class $k$ is parameterized via an inverse logit link using a natural cubic spline with interior knots placed evenly across the collegiate career at Wave 2 and Wave 4, implemented via the \texttt{splines} package \citep{venables2002modern} in \textsf{R} \citep{Rmanual}:
 \begin{equation}
-\text{logit}(\mu_{iktj}) = \beta_{0kj} + \beta_{1kj} \text{ns}_1(t) + \beta_{2kj} \text{ns}_2(t)
+\text{logit}(\mu_{iktj}) = \beta_{0kj} + \beta_{1kj} \text{ns}_1(t) + \beta_{2kj} \text{ns}_2(t) + \beta_{3kj} \text{ns}_3(t)
 \end{equation}
+where $\text{Time}_{it} = \text{Wave}_{it} - 1$ centers time at collegiate matriculation ($t = 0$), and $\text{ns}_1(t)$, $\text{ns}_2(t)$, and $\text{ns}_3(t)$ represent orthogonalized natural spline basis functions with linear boundary constraints.
 
-where $\text{Time}_{it} = \text{Wave}_{it} - 1$ centers time at collegiate matriculation ($t = 0$), and $\text{ns}_1(t)$ and $\text{ns}_2(t)$ represent orthogonalized natural spline basis functions with linear boundary constraints.
-
-Across both cultural domains, students are observed over six consecutive semesters ($t \in \{0, \dots, 5\}$). Boundary knots are placed at $t = 0$ (Wave 1) and $t = 5$ (Wave 6), with an internal knot placed at the collegiate midpoint ($t = 2.5$, between sophomore fall and sophomore spring). This formulation captures developmental transitions across emerging adulthood while maintaining identical parametric complexity (three parameters per item per class) and enforcing linear boundary constraints at matriculation and junior year.
+Across both cultural domains, students are observed over six consecutive semesters ($t \in \{0, \dots, 5\}$). Boundary knots are placed at $t = 0$ (Wave 1, freshman fall) and $t = 5$ (Wave 6, junior spring), with interior knots placed evenly across the survey waves at Wave 2 ($t = 1$, freshman spring) and Wave 4 ($t = 3$, sophomore spring). Placing knots at these pivotal institutional transitions allows the spline functions to flexibly capture rate adjustments and inflection points corresponding to the completion of first-year general education requirements and second-year major declarations, while preserving linear boundary constraints at matriculation and upperclassman years.
 
 \subsection{Endogenous Multinomial Concomitant Models}
 
@@ -195,7 +193,7 @@ $K = 5$ & -5276.7 & 154 & 10861.4 & 11618.2 & 261.8 (31) & $< .001$ & 8.5\% / 22
 \begin{minipage}{\linewidth}
 \vspace{4pt}
 \footnotesize
-\textit{Note:} Models estimated in \texttt{flexmix} using natural cubic splines with 2 degrees of freedom (\texttt{splines::ns(time, df = 2)}). LogLik = maximized log-likelihood; Par = number of estimated free parameters; AIC = Akaike Information Criterion; BIC = Bayesian Information Criterion; Stepwise $\chi^2$ evaluates improvement over $K - 1$ specification.
+\textit{Note:} Models estimated in \texttt{flexmix} using natural cubic splines with interior knots placed evenly at Wave 2 and Wave 4 (\texttt{splines::ns(time, knots = c(1, 3), Boundary.knots = c(0, 5))}). LogLik = maximized log-likelihood; Par = number of estimated free parameters; AIC = Akaike Information Criterion; BIC = Bayesian Information Criterion; Stepwise $\chi^2$ evaluates improvement over $K - 1$ specification.
 \end{minipage}
 \end{table}
 
@@ -205,42 +203,49 @@ Across both cultural domains, moving from a single homogeneous growth curve ($K 
 
 \subsection{Leisure Book Reading}
 
-Figure~\ref{fig:books} illustrates the model-implied reading trajectories across all nine book categories for each of the four latent classes over all six collegiate semesters. Lines trace continuous natural cubic spline curves, while discrete geometric markers designate empirical survey wave observations. All trajectory profiles and small-multiple panels were visualized using the \texttt{ggplot2} package \citep{wickham2016ggplot2} in \textsf{R} \citep{Rmanual}.
+Figure~\ref{fig:books} illustrates the model-implied reading trajectories across all nine book categories for each of the four latent classes over all six collegiate semesters. Lines trace continuous natural cubic spline curves with interior knots at Wave 2 and Wave 4, while discrete geometric markers designate empirical survey wave observations. All trajectory profiles and small-multiple panels were visualized using the \texttt{ggplot2} package \citep{wickham2016ggplot2} in \textsf{R} \citep{Rmanual}.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{Plots/fig1_books_9_items_by_class.png}
-\caption{Latent trajectories across 9 Book Reading Types from the 4-class multivariate binary model (Waves 1 to 6). Circles and blue curves indicate Class 1 (``Genre Specialists''), diamonds and purple curves indicate Class 2 (``Romance Readers''), triangles and green curves indicate Class 3 (``Nonfictionists''), and squares and vermillion curves indicate Class 4 (``Omnivorous Fictionists'').}
+\caption{Latent trajectories across 9 Book Reading Types from the 4-class multivariate binary model (Waves 1 to 6). Blue curves and circles indicate ``Genre Specialists'' ($n = 63, 31.3\%$), purple curves and diamonds indicate ``Romance Readers'' ($n = 57, 28.4\%$), green curves and triangles indicate ``Nonfictionists'' ($n = 42, 20.9\%$), and vermillion curves and squares indicate ``Omnivorous Fictionists'' ($n = 39, 19.4\%$).}
 \label{fig:books}
 \end{figure}
 
-The item-specific reading trajectories show that collegiate reading is structured by distinct aesthetic genre specializations rather than an undifferentiated continuum of reading volume. The first class, ``Class 1: Genre Specialists'' ($n = 97, 48.3\%$), represents the largest plurality: its members concentrate heavily in narrative genres including science fiction and fantasy (78.4\%), mysteries (61.5\%), thrillers (57.4\%), and history/politics (43.0\%), while completely avoiding romance fiction (4.3\%). The second group, ``Class 2: Romance Readers'' ($n = 40, 19.9\%$), displays high engagement with romance (78.8\%) and general fiction (58.0\%), alongside moderate mystery reading (48.1\%), but low engagement with science fiction (13.7\%) or history (18.4\%). The third group, ``Class 3: Nonfictionists'' ($n = 32, 15.9\%$), exhibits an analytical non-fiction profile: its members lead in reading history and politics (64.5\%), biographies and memoirs (55.3\%), and other non-fiction (42.1\%), while reporting near-zero reading of mysteries (5.9\%), thrillers (1.3\%), romance (1.3\%), or science fiction (8.6\%). Finally, ``Class 4: Omnivorous Fictionists'' ($n = 32, 15.9\%$) reads avidly across virtually all fiction categories: science fiction (89.1\%), romance (82.3\%), mysteries (80.0\%), general fiction (63.4\%), and thrillers (60.6\%), while reporting low interest in history and politics (9.7\%). Across all four classes, reading trajectories remain stable across all six semesters, showing that literary orientations are established early and persist throughout college.
+The item-specific reading trajectories show that collegiate reading is structured by distinct aesthetic genre specializations rather than an undifferentiated continuum of reading volume. The first class, ``Genre Specialists'' ($n = 63, 31.3\%$), represents the modal plurality: its members concentrate heavily in speculative and narrative fiction including science fiction and fantasy (64.3\% to 69.1\%), other fiction (49.0\% to 50.2\%), and thrillers (33.8\% to 39.9\%), while completely avoiding romance fiction (1.2\% to 2.1\%). The second group, ``Romance Readers'' ($n = 57, 28.4\%$), displays elevated engagement with romance (81.2\% to 93.3\%) and other general fiction (61.5\% to 63.4\%), alongside moderate mystery reading (49.1\% to 61.2\%), but low engagement with history (8.2\% to 16.4\%) or science fiction (38.1\% to 50.9\%). The third group, ``Nonfictionists'' ($n = 42, 20.9\%$), exhibits a dedicated analytical non-fiction profile: its members lead in reading history and politics (77.8\% to 91.2\%), biographies and memoirs (70.6\% to 84.1\%), and other non-fiction (41.2\% to 61.1\%), while reporting low engagement with romance (11.8\% to 14.1\%) and thrillers (7.4\% to 22.8\%). Finally, ``Omnivorous Fictionists'' ($n = 39, 19.4\%$) reads avidly across all fiction categories: science fiction (90.2\% to 97.4\%), thrillers (82.1\% to 91.8\%), mysteries (84.9\% to 90.7\%), and general fiction (53.3\% to 76.1\%), alongside moderate biography engagement (32.8\% to 45.1\%). Across all four classes, reading trajectories remain remarkably stable across all six semesters, demonstrating that literary orientations are established early and persist throughout college.
 
-\subsection{Musical Taste Preferences (Top 10 Genres, K = 4)}
+\subsection{Musical Taste Preferences}
 
 Figure~\ref{fig:music} illustrates the model-implied preference trajectories across the top 10 musical genres for each of the four latent classes over all six collegiate semesters.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{Plots/fig2_music_10_genres_by_class.png}
-\caption{Latent trajectories across the Top 10 Music Genres from the 4-class multivariate binary model (Waves 1 to 6). Circles and blue curves denote Class 1 (``Omnivores''), triangles and vermillion curves denote Class 2 (``Classic Rockers''), squares and orange curves denote Class 3 (``Contemporary Rockers''), and diamonds and green curves denote Class 4 (``Mainstreamers'').}
+\caption{Latent trajectories across the Top 10 Music Genres from the 4-class multivariate binary model (Waves 1 to 6). Blue curves and circles denote ``Omnivores'' ($n = 52, 25.9\%$), vermillion curves and triangles denote ``Classic Rockers'' ($n = 34, 16.9\%$), orange curves and squares denote ``Contemporary Rockers'' ($n = 51, 25.4\%$), and green curves and diamonds denote ``Mainstreamers'' ($n = 64, 31.8\%$).}
 \label{fig:music}
 \end{figure}
 
-Examining the item-level music trajectories shows how genre boundaries define distinct student taste cultures. The first class, ``Class 4: Omnivores'' ($n = 53, 26.4\%$), maintains high preference probabilities across all 10 genres simultaneously, embracing country (89.4\%), rap/hip-hop (80.3\%), classic rock (78.1\%), Broadway show tunes (69.3\%), dance music (67.9\%), rock/heavy metal (63.5\%), and classical music (41.2\%). The second group, ``Class 1: Classic Rockers'' ($n = 40, 19.9\%$), exhibits an aesthetic blend of classic rock and traditional highbrow forms: members report near-universal preference for classic rock (84.8\%) and rock/heavy metal (82.4\%) alongside elevated classical music (52.5\%), Broadway (43.1\%), and jazz (32.4\%), while actively rejecting country music (9.8\%) and rap (33.3\%). The third group, ``Class 3: Contemporary Rockers'' ($n = 48, 23.9\%$), combines rock with contemporary commercial rhythms: they listen actively to rap/hip-hop (81.8\%), rock/heavy metal (73.2\%), classic rock (52.3\%), and dance music (53.6\%), but report zero Broadway attendance (1.4\%) and minimal classical listening (12.3\%). The fourth group, ``Class 2: Mainstreamers'' ($n = 60, 29.9\%$), concentrates strictly on commercial popular music: rap/hip-hop (57.8\%), dance music (48.1\%), and country (47.1\%), while almost completely rejecting rock/heavy metal (5.5\%), classic rock (14.9\%), or classical music (14.0\%).
+Examining the item-level music trajectories shows how genre boundaries define distinct student taste cultures. The first class, ``Omnivores'' ($n = 52, 25.9\%$), maintains high preference probabilities across all 10 genres simultaneously, embracing country (77.9\% to 97.0\%), classic rock (73.8\% to 78.4\%), Broadway show tunes (67.2\% to 80.1\%), rap/hip-hop (74.2\% to 77.1\%), dance music (62.1\% to 66.3\%), and classical music (37.1\% to 43.8\%). The second group, ``Classic Rockers'' ($n = 34, 16.9\%$), exhibits an aesthetic blend of rock and traditional highbrow forms: members report near-universal preference for classic rock (76.1\% to 91.1\%) and rock/heavy metal (75.4\% to 92.8\%) alongside elevated classical music (55.6\% to 63.5\%), Broadway (38.9\% to 67.2\%), and jazz (32.9\% to 36.3\%), while actively rejecting country music (9.2\% to 13.4\%) and commercial dance music. The third group, ``Contemporary Rockers'' ($n = 51, 25.4\%$), combines rock with contemporary commercial rhythms: they listen actively to rock/heavy metal (62.8\% to 80.4\%), rap/hip-hop (75.8\% to 76.5\%), dance music (39.7\% to 56.6\%), and classic rock (44.1\% to 57.7\%), but report zero Broadway attendance (0.0\% to 3.1\%) and minimal classical listening (8.7\% to 18.9\%). The fourth group, ``Mainstreamers'' ($n = 64, 31.8\%$), concentrates strictly on commercial popular hits: rap/hip-hop (52.1\% to 67.2\%), dance music (37.4\% to 59.2\%), and country (43.1\% to 47.4\%), while almost completely rejecting rock/heavy metal (0.0\% to 20.1\%) or classical music (9.1\% to 18.2\%).
 
 \subsection{Net Trajectory Shifts Within Latent Classes}
 
-To evaluate how participation changes across the entire collegiate life course within each latent class, Figure~\ref{fig:shifts} displays the net percentage point shift ($\Delta = P(W_6) - P(W_1)$) for every cultural item across all four latent classes.
+To evaluate how participation changes across the entire collegiate life course within each latent class, Figures~\ref{fig:shifts_books} and~\ref{fig:shifts_music} display the net percentage point shifts ($\Delta = P(W_6) - P(W_1)$) for Book Reading Types and Music Genre Preferences, respectively, across all four latent classes. Splitting these developmental trajectories into domain-specific figures allows each latent class to be displayed with its distinct sociological typology without confounding labels across domains.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{Plots/fig3_activity_time_trend_shifts.png}
-\caption{Net trajectory shifts by cultural item within latent classes across Book Reading Types and Music Genres from the 4-class models. Markers and connecting segments indicate the net percentage point shift ($\Delta = P(W_6) - P(W_1)$) from baseline matriculation to junior spring. Blue markers denote positive expansion; orange markers denote contraction.}
-\label{fig:shifts}
+\includegraphics[width=\linewidth]{Plots/fig3_books_trajectory_shifts.png}
+\caption{Net trajectory shifts by book reading type within latent classes from the 4-class model (Waves 1 to 6). Markers and connecting segments indicate the net percentage point shift ($\Delta = P(W_6) - P(W_1)$) from baseline matriculation to junior spring. Blue markers denote positive expansion; vermillion markers denote contraction.}
+\label{fig:shifts_books}
 \end{figure}
 
-Examining net trajectory shifts reveals that collegiate cultural change is characterized by targeted reallocation within existing repertoires rather than wholesale aesthetic drift. In books, Class 3 Nonfictionists substantially expand personal biography and memoir reading (+23.3 percentage points) while pruning dense historical and political reading (-11.7 to -18.9 percentage points). In contrast, Class 1 Genre Specialists and Class 4 Omnivorous Fictionists maintain stable or expanding reading rates across sci-fi/fantasy and thrillers, while Class 2 Romance Readers exhibit targeted contractions across dense non-fiction. In musical taste, Class 4 Omnivores uniquely expand country music adoption (+23.7 percentage points) alongside modest expansions in dance music (+3.6 pp) and classical music (+1.3 pp). In contrast, Class 1 Classic Rockers contract commercial pop and rap footprints, while Class 2 Mainstreamers and Class 3 Contemporary Rockers contract highbrow classical and jazz. These net shifts show that latent classes function as distinct developmental environments where students selectively reinforce specific aesthetic boundaries over time.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{Plots/fig4_music_trajectory_shifts.png}
+\caption{Net trajectory shifts by musical genre within latent classes from the 4-class model (Waves 1 to 6). Markers and connecting segments indicate the net percentage point shift ($\Delta = P(W_6) - P(W_1)$) from baseline matriculation to junior spring. Blue markers denote positive expansion; vermillion markers denote contraction.}
+\label{fig:shifts_music}
+\end{figure}
+
+Examining net trajectory shifts reveals that collegiate cultural change is characterized by targeted reallocation within existing repertoires rather than wholesale aesthetic drift. In books (Figure~\ref{fig:shifts_books}), Romance Readers substantially expand general fiction (+11.2 percentage points) and biography reading (+6.6 pp) while pruning speculative fiction (-14.4 pp) and romance (-14.1 pp). In contrast, Genre Specialists maintain stable speculative and biography reading while pruning historical and political non-fiction (-14.4 pp), and Omnivorous Fictionists expand thrillers (+6.9 pp) while contracting history (-23.7 pp). In musical taste (Figure~\ref{fig:shifts_music}), Omnivores uniquely expand country music adoption (+24.0 percentage points), folk music (+11.8 pp), and Broadway show tunes (+10.6 pp). Similarly, Classic Rockers expand Broadway (+24.7 pp), folk (+8.9 pp), and classical music (+7.9 pp) while contracting rock/heavy metal (-16.8 pp) and dance music (-8.6 pp). Meanwhile, Contemporary Rockers expand dance music (+23.4 pp) and country (+16.1 pp), while Mainstreamers contract across multiple genres, most notably dance music (-26.1 pp) and classic rock (-22.5 pp). These net shifts show that latent classes function as distinct developmental environments where students selectively reinforce specific aesthetic boundaries over time.
 
 \section{Predicting Trajectory Class Membership}
 
@@ -292,14 +297,14 @@ While Table~\ref{tab:blocks} evaluates the overall predictive power of theoretic
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth,height=0.65\textheight,keepaspectratio]{Plots/fig4_marginal_effects_books_music.png}
-\caption{Model-implied marginal predicted trajectory class probabilities with 95\% simulation confidence intervals across statistically significant predictor blocks from Table~\ref{tab:blocks} ($K = 4$). Panel A displays predicted probabilities for Leisure Book Reading Types across Gender Identity, Religion, and Undergraduate Major. Panel B displays predicted probabilities for Musical Genre Preferences across High School Academic Grades, Gender Identity, and Undergraduate Major. Dashed vertical reference lines indicate the equal random allocation baseline ($25\%$).}
+\includegraphics[width=\linewidth,height=0.65\textheight,keepaspectratio]{Plots/fig5_marginal_effects_books_music.png}
+\caption{Model-implied marginal predicted trajectory class probabilities with 95\% simulation confidence intervals across statistically significant predictor blocks from Table~\ref{tab:blocks} ($K = 4$). Panel A displays predicted probabilities for Leisure Book Reading Types across Gender Identity, Religion, and Undergraduate Major. Panel B displays predicted probabilities for Musical Genre Preferences across High School Academic Grades, Gender Identity, and Undergraduate Major. The horizontal axes are freed across panels to optimize visibility of parameter spreads, while dashed vertical reference lines indicate the overall empirical class prevalence for each respective trajectory class (Books: Genre Specialists 31.3\%, Romance Readers 28.4\%, Nonfictionists 20.9\%, Omnivorous Fictionists 19.4\%; Music: Omnivores 25.9\%, Classic Rockers 16.9\%, Contemporary Rockers 25.4\%, Mainstreamers 31.8\%).}
 \label{fig:marginal}
 \end{figure}
 
 In Panel A, Leisure Book Reading Types reveals that genre specializations are sharply divided by gender identity, religious affiliation, and undergraduate field of study. Gender identity produces pronounced sorting into reading styles: women exhibit higher probabilities of sorting into Romance Readers and Omnivorous Fictionists, whereas men concentrate in Genre Specialists (Sci-Fi and Thrillers). Religious identity also channels students into distinct reading trajectories: Roman Catholic students sort heavily into Genre Specialists and Nonfictionists. Collegiate major also sorts students into distinct literary spheres: declared STEM majors exhibit higher probabilities of belonging to Genre Specialists compared to non-STEM students, who concentrate instead in Romance Reading and Non-Fiction.
 
-In Panel B, Musical Genre Preferences illustrates the strong sorting power of pre-collegiate scholastic capital alongside gender identity and academic context. Earning mostly A/A- grades in high school serves as a primary sorting gateway into musical omnivorousness: high-achieving students have significantly elevated probabilities of entering Class 4 Omnivores and Class 1 Classic Rockers, whereas students entering with lower high school performance sort heavily into Class 2 Mainstreamers and Class 3 Contemporary Rockers. Gender identity sharply differentiates rock subcultures: men are significantly more likely to sort into Classic Rockers and Contemporary Rockers, whereas women concentrate instead in Omnivores and Mainstreamers. Finally, undergraduate major reinforces aesthetic boundaries: declared STEM majors are 3.5 times more likely to enter the Classic Rocker pathway ($\text{OR} = 3.47, p = 0.010$) than non-STEM majors, showing that collegiate fields of study cultivate distinct musical taste cultures.
+In Panel B, Musical Genre Preferences illustrates the strong sorting power of pre-collegiate scholastic capital alongside gender identity and academic context. Earning mostly A/A- grades in high school serves as a primary sorting gateway into musical omnivorousness: high-achieving students have significantly elevated probabilities of entering Class 4 Omnivores and Class 1 Classic Rockers, whereas students entering with lower high school performance sort heavily into Class 2 Mainstreamers and Class 3 Contemporary Rockers. Gender identity sharply differentiates rock subcultures: men are significantly more likely to sort into Classic Rockers and Contemporary Rockers, whereas women concentrate instead in Omnivores and Mainstreamers. Finally, undergraduate major reinforces aesthetic boundaries: declared STEM majors are 3.4 times more likely to enter the Classic Rocker pathway ($\text{OR} = 3.40, p = 0.019$) than non-STEM majors, showing that collegiate fields of study cultivate distinct musical taste cultures.
 
 Across both domains, parental socioeconomic status (income and parental education) displays negligible direct sorting power once prior academic achievement and demographic characteristics are controlled. This apparent absence of parental background effects warrants an important substantive and methodological qualification. Rather than indicating that family cultural reproduction has ceased to matter in emerging adulthood, the lack of explanatory power for parental socioeconomic status and cultural capital is likely a consequence of the highly selected nature of the sample. Matriculating at a selective, elite private research university acts as an upstream institutional filter that homogenizes student family backgrounds around high levels of economic and cultural capital. By truncating the variance of parental income and parental education relative to the general population, this institutional selection mechanism attenuates the observed statistical associations between family origin and collegiate cultural sorting, allowing proximate individual characteristics---such as prior academic performance and field of study---to dominate observed taste differentiation on campus.
 
@@ -351,7 +356,7 @@ Figure~\ref{fig:bivariate} illustrates the model-implied and empirical trajector
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{Plots/fig5_bivariate_omnivorousness_trajectories.png}
+\includegraphics[width=\linewidth]{Plots/fig6_bivariate_omnivorousness_trajectories.png}
 \caption{Bivariate latent trajectories of cultural omnivorousness across college from the 4-class Poisson growth mixture model (Waves 1 to 6, $N = 201$). Blue solid curves and circular markers denote Musical Omnivorousness (total genre count endorsed out of the Top 10 genres); orange dashed curves and triangular markers denote Literature Omnivorousness (total book genres read for leisure out of 9 items). Shaded ribbons indicate 95\% confidence intervals around empirical wave means.}
 \label{fig:bivariate}
 \end{figure}
@@ -424,29 +429,29 @@ Predictor Variable & \multicolumn{2}{c}{\textbf{Class 2}} & \multicolumn{2}{c}{\
 \midrule
 \multicolumn{7}{l}{\textbf{Panel A: Book Reading Types (Ref: Class 1 Genre Specialists, $N = 201$)}} \\
 \multicolumn{1}{r}{} & \multicolumn{2}{c}{\textit{Class 2: Romance Readers}} & \multicolumn{2}{c}{\textit{Class 3: Nonfictionists}} & \multicolumn{2}{c}{\textit{Class 4: Omniv Fiction}} \\
-Constant & -10.10* (4.59) & 0.00 & -12.82*** (1.34) & 0.00 & 1.11 (3.38) & 3.04 \\
-Woman (ref: Man) & 6.14*** (1.18) & 462.18 & 1.29* (0.53) & 3.62 & 3.98*** (0.68) & 53.58 \\
-White (ref: Non-White) & 1.47 (0.77) & 4.37 & 0.37 (0.63) & 1.44 & 0.96 (0.74) & 2.62 \\
-Catholic (ref: Non-Catholic) & -0.24 (0.67) & 0.78 & -0.74 (0.50) & 0.48 & -0.13 (0.65) & 0.88 \\
-Parent Income (\$1,000s) & 0.00 (0.00) & 1.00 & 0.00 (0.00) & 1.00 & 0.00 (0.00) & 1.00 \\
-Parent Education (Years) & -0.04 (0.19) & 0.96 & -0.28* (0.13) & 0.75 & -0.38* (0.16) & 0.68 \\
-High School GPA (A/A-) & -2.12** (0.68) & 0.12 & -0.85 (0.52) & 0.43 & 0.88 (0.91) & 2.42 \\
-Aspires to Advanced Degree & 0.48 (0.94) & 1.62 & 14.91*** (1.34) & $> 1000$ & 0.39 (0.93) & 1.48 \\
-STEM Major (ref: Non-STEM) & -0.83 (0.60) & 0.43 & -0.98* (0.47) & 0.38 & -0.61 (0.55) & 0.54 \\
-Hometown Urbanicity & 1.21** (0.44) & 3.35 & 0.37 (0.29) & 1.45 & 0.16 (0.33) & 1.17 \\
+Constant & -19.34*** (1.75) & 0.00 & -15.85*** (1.31) & 0.00 & -3.44 (3.07) & 0.03 \\
+Woman (ref: Man) & 19.64*** (1.75) & > 1000 & 0.82 (0.51) & 2.27 & 0.25 (0.54) & 1.28 \\
+White (ref: Non-White) & 1.19 (0.67) & 3.29 & 0.77 (0.60) & 2.17 & 0.62 (0.62) & 1.86 \\
+Catholic (ref: Non-Catholic) & 0.25 (0.58) & 1.29 & -0.10 (0.47) & 0.91 & 0.58 (0.53) & 1.79 \\
+Parent Income (\$1,000s) & -0.00 (0.00) & 1.00 & 0.00 (0.00) & 1.00 & -0.01 (0.00) & 0.99 \\
+Parent Education (Years) & -0.17 (0.17) & 0.84 & -0.20 (0.12) & 0.82 & 0.14 (0.15) & 1.16 \\
+High School GPA (A/A-) & -0.25 (0.57) & 0.78 & 0.83 (0.54) & 2.30 & 0.59 (0.51) & 1.80 \\
+Aspires to Advanced Degree & 1.07 (0.78) & 2.92 & 16.19*** (1.31) & > 1000 & -0.35 (0.66) & 0.71 \\
+STEM Major (ref: Non-STEM) & -0.09 (0.53) & 0.91 & -0.50 (0.44) & 0.60 & 0.06 (0.44) & 1.07 \\
+Hometown Urbanicity & 0.52 (0.31) & 1.69 & 0.27 (0.30) & 1.30 & 0.02 (0.29) & 1.02 \\
 \addlinespace[3pt]
 \multicolumn{7}{l}{\textbf{Panel B: Music Genre Preferences (Ref: Class 4 Omnivores, $N = 201$)}} \\
 \multicolumn{1}{r}{} & \multicolumn{2}{c}{\textit{Class 1: Classic Rockers}} & \multicolumn{2}{c}{\textit{Class 2: Mainstreamers}} & \multicolumn{2}{c}{\textit{Class 3: Contemp Rock}} \\
-Constant & -7.64*** (1.58) & 0.00 & 4.84 (3.08) & 126.41 & 5.01 (3.32) & 150.41 \\
-Woman (ref: Man) & -1.90*** (0.53) & 0.15 & -0.16 (0.46) & 0.85 & -2.45*** (0.52) & 0.09 \\
-White (ref: Non-White) & -0.99 (0.69) & 0.37 & -1.22* (0.58) & 0.29 & -0.69 (0.66) & 0.50 \\
-Catholic (ref: Non-Catholic) & -0.36 (0.61) & 0.70 & -0.80 (0.53) & 0.45 & -1.34* (0.56) & 0.26 \\
-Parent Income (\$1,000s) & 0.00 (0.00) & 1.00 & 0.01 (0.00) & 1.01 & 0.01 (0.00) & 1.01 \\
-Parent Education (Years) & -0.21 (0.15) & 0.81 & -0.11 (0.14) & 0.89 & -0.12 (0.15) & 0.89 \\
-High School GPA (A/A-) & -1.81** (0.68) & 0.16 & -2.02*** (0.60) & 0.13 & -1.48* (0.67) & 0.23 \\
-Aspires to Advanced Degree & 14.80*** (1.58) & $> 1000$ & -0.75 (0.67) & 0.47 & -0.33 (0.81) & 0.72 \\
-STEM Major (ref: Non-STEM) & 1.24* (0.50) & 3.47 & 0.18 (0.44) & 1.20 & -0.11 (0.47) & 0.90 \\
-Hometown Urbanicity & -0.28 (0.32) & 0.76 & 0.04 (0.28) & 1.04 & 0.04 (0.33) & 1.05 \\
+Constant & -7.32*** (1.59) & 0.00 & 4.58 (2.99) & 97.18 & 3.21 (3.41) & 24.89 \\
+Woman (ref: Man) & -1.62** (0.54) & 0.20 & -0.29 (0.45) & 0.75 & -2.80*** (0.55) & 0.06 \\
+White (ref: Non-White) & -0.80 (0.70) & 0.45 & -1.00 (0.56) & 0.37 & -0.32 (0.66) & 0.73 \\
+Catholic (ref: Non-Catholic) & -0.56 (0.61) & 0.57 & -0.92 (0.51) & 0.40 & -0.98 (0.57) & 0.38 \\
+Parent Income (\$1,000s) & 0.00 (0.00) & 1.00 & 0.00 (0.00) & 1.00 & 0.01* (0.00) & 1.01 \\
+Parent Education (Years) & -0.20 (0.15) & 0.82 & -0.08 (0.13) & 0.92 & -0.10 (0.15) & 0.90 \\
+High School GPA (A/A-) & -1.42* (0.72) & 0.24 & -1.91** (0.60) & 0.15 & -1.87** (0.66) & 0.15 \\
+Aspires to Advanced Degree & 14.27*** (1.59) & > 1000 & -0.69 (0.66) & 0.50 & -0.17 (0.82) & 0.85 \\
+STEM Major (ref: Non-STEM) & 1.22* (0.52) & 3.40 & 0.24 (0.43) & 1.27 & -0.30 (0.47) & 0.74 \\
+Hometown Urbanicity & -0.37 (0.33) & 0.69 & 0.01 (0.28) & 1.01 & 0.27 (0.35) & 1.31 \\
 \bottomrule
 \end{tabular*}
 \begin{minipage}{\linewidth}

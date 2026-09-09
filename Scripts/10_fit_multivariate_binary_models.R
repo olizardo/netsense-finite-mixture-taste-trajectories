@@ -1,6 +1,7 @@
 #' Fit Multivariate Binary Trajectory Models for Books and Music (K = 4)
 #'
-#' Implements multivariate binary mixture models using natural cubic splines (`ns(time, df = 2)`):
+#' Implements multivariate binary mixture models using natural cubic splines with interior
+#' knots placed evenly across survey waves at W2 and W4 (`ns(time, knots = c(1, 3), Boundary.knots = c(0, 5))`):
 #' 1. Book Reading Types: All 9 binary book genres across Waves 1 to 6 (K = 4).
 #' 2. Music Genre Preferences: Top 10 musical genres across Waves 1 to 6 (K = 4).
 #' Includes endogenous multinomial concomitants (`FLXPmultinom`).
@@ -71,12 +72,12 @@ df_books_comp <- books_long %>%
 
 book_cols <- grep("^book_", names(df_books_comp), value = TRUE)
 specs_books <- lapply(book_cols, function(col) {
-  FLXMRglm(as.formula(paste0("cbind(", col, ", 1 - ", col, ") ~ ns(time, df = 2)")), family = "binomial")
+  FLXMRglm(as.formula(paste0("cbind(", col, ", 1 - ", col, ") ~ ns(time, knots = c(1, 3), Boundary.knots = c(0, 5))")), family = "binomial")
 })
 
 set.seed(2026)
 mod_books_final4 <- flexmix(
-  as.formula(paste0("cbind(", paste(book_cols, collapse=", "), ") ~ ns(time, df = 2) | egoid")),
+  as.formula(paste0("cbind(", paste(book_cols, collapse=", "), ") ~ ns(time, knots = c(1, 3), Boundary.knots = c(0, 5)) | egoid")),
   data = df_books_comp, k = 4, model = specs_books,
   concomitant = FLXPmultinom(form_full),
   control = list(iter.max = 300, minprior = 0.02)
@@ -86,21 +87,21 @@ saveRDS(mod_books_final4, "Cache/mod_books_k4_fit.rds")
 
 t_smooth_books <- seq(0, 5, length.out = 80)
 t_points_books <- 0:5
-basis_books <- ns(df_books_comp$time, df = 2)
+basis_books <- ns(df_books_comp$time, knots = c(1, 3), Boundary.knots = c(0, 5))
 eval_smooth_books <- predict(basis_books, t_smooth_books)
 eval_points_books <- predict(basis_books, t_points_books)
 
 params_books <- parameters(mod_books_final4)
 
 # Class profiles:
-# Comp 1 (n=97, 48.3%): Genre Specialists (Sci-Fi, Thrillers, Mysteries, History)
-# Comp 2 (n=40, 19.9%): Romance Readers (High Romance & Other Fiction)
-# Comp 3 (n=32, 15.9%): Nonfictionists (High History, Biography, Non-Fiction)
-# Comp 4 (n=32, 15.9%): Omnivorous Fictionists (High Across All Fiction Categories)
+# Comp 1 (n=42, 20.9%): Nonfictionists (High History, Biography, Non-Fiction)
+# Comp 2 (n=57, 28.4%): Romance Readers (High Romance & Other Fiction)
+# Comp 3 (n=63, 31.3%): Genre Specialists (Sci-Fi, Mysteries, Thrillers)
+# Comp 4 (n=39, 19.4%): Omnivorous Fictionists (High Across All Fiction Categories)
 books_labels_map <- c(
-  "1" = "Genre Specialists",
+  "1" = "Nonfictionists",
   "2" = "Romance Readers",
-  "3" = "Nonfictionists",
+  "3" = "Genre Specialists",
   "4" = "Omnivorous Fictionists"
 )
 
@@ -110,7 +111,7 @@ for (bk_idx in 1:9) {
   bk_label <- book_clean_labels[col]
   for (c_idx in 1:4) {
     b <- params_books[[bk_idx]][, c_idx]
-    eta <- b[1] + b[2] * eval_smooth_books[, 1] + b[3] * eval_smooth_books[, 2]
+    eta <- b[1] + as.vector(eval_smooth_books %*% b[-1])
     books_smooth_list[[paste(bk_idx, c_idx, sep="_")]] <- data.frame(
       Book_Type = bk_label,
       Class = books_labels_map[as.character(c_idx)],
@@ -127,7 +128,7 @@ for (bk_idx in 1:9) {
   bk_label <- book_clean_labels[col]
   for (c_idx in 1:4) {
     b <- params_books[[bk_idx]][, c_idx]
-    eta <- b[1] + b[2] * eval_points_books[, 1] + b[3] * eval_points_books[, 2]
+    eta <- b[1] + as.vector(eval_points_books %*% b[-1])
     books_points_list[[paste(bk_idx, c_idx, sep="_")]] <- data.frame(
       Book_Type = bk_label,
       Class = books_labels_map[as.character(c_idx)],
@@ -175,12 +176,12 @@ df_music_wide <- music_long %>%
 
 music_cols <- grep("^(rap|classic|dance|rock|country|broadway|classical|mood|folk|jazz)", names(df_music_wide), value = TRUE)
 specs_music <- lapply(music_cols, function(col) {
-  FLXMRglm(as.formula(paste0("cbind(", col, ", 1 - ", col, ") ~ ns(time, df = 2)")), family = "binomial")
+  FLXMRglm(as.formula(paste0("cbind(", col, ", 1 - ", col, ") ~ ns(time, knots = c(1, 3), Boundary.knots = c(0, 5))")), family = "binomial")
 })
 
 set.seed(2026)
 mod_music_final4 <- flexmix(
-  as.formula(paste0("cbind(", paste(music_cols, collapse=", "), ") ~ ns(time, df = 2) | egoid")),
+  as.formula(paste0("cbind(", paste(music_cols, collapse=", "), ") ~ ns(time, knots = c(1, 3), Boundary.knots = c(0, 5)) | egoid")),
   data = df_music_wide, k = 4, model = specs_music,
   concomitant = FLXPmultinom(form_full),
   control = list(iter.max = 300, minprior = 0.02)
@@ -190,17 +191,17 @@ saveRDS(mod_music_final4, "Cache/mod_music_k4_fit.rds")
 
 t_smooth_music <- seq(0, 5, length.out = 80)
 t_points_music <- 0:5
-basis_music <- ns(df_music_wide$time, df = 2)
+basis_music <- ns(df_music_wide$time, knots = c(1, 3), Boundary.knots = c(0, 5))
 eval_smooth_music <- predict(basis_music, t_smooth_music)
 eval_points_music <- predict(basis_music, t_points_music)
 
 params_music <- parameters(mod_music_final4)
 
 # Class profiles:
-# Comp 1 (n=40, 19.9%): Classic Rockers (Classic Rock, Rock, Classical, Broadway, Jazz)
-# Comp 2 (n=60, 29.9%): Mainstreamers (Rap, Dance, Country; no Rock)
-# Comp 3 (n=48, 23.9%): Contemporary Rockers (Rap, Rock, Classic Rock, Dance; no Broadway/Classical)
-# Comp 4 (n=53, 26.4%): Omnivores (High Across All 10 Genres)
+# Comp 1 (n=34, 16.9%): Classic Rockers (Classic Rock, Rock, Classical, Broadway, Jazz)
+# Comp 2 (n=64, 31.8%): Mainstreamers (Rap, Dance, Country; no Rock)
+# Comp 3 (n=51, 25.4%): Contemporary Rockers (Rap, Rock, Classic Rock, Dance; no Broadway/Classical)
+# Comp 4 (n=52, 25.9%): Omnivores (High Across All 10 Genres)
 music_labels_map <- c(
   "1" = "Classic Rockers",
   "2" = "Mainstreamers",
@@ -214,7 +215,7 @@ for (m_idx in 1:10) {
   m_label <- genre_clean_labels[col]
   for (c_idx in 1:4) {
     b <- params_music[[m_idx]][, c_idx]
-    eta <- b[1] + b[2] * eval_smooth_music[, 1] + b[3] * eval_smooth_music[, 2]
+    eta <- b[1] + as.vector(eval_smooth_music %*% b[-1])
     music_smooth_list[[paste(m_idx, c_idx, sep="_")]] <- data.frame(
       Genre = m_label,
       Class = music_labels_map[as.character(c_idx)],
@@ -231,7 +232,7 @@ for (m_idx in 1:10) {
   m_label <- genre_clean_labels[col]
   for (c_idx in 1:4) {
     b <- params_music[[m_idx]][, c_idx]
-    eta <- b[1] + b[2] * eval_points_music[, 1] + b[3] * eval_points_music[, 2]
+    eta <- b[1] + as.vector(eval_points_music %*% b[-1])
     music_points_list[[paste(m_idx, c_idx, sep="_")]] <- data.frame(
       Genre = m_label,
       Class = music_labels_map[as.character(c_idx)],

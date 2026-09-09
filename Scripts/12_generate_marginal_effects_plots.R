@@ -71,9 +71,9 @@ specs_music <- lapply(music_cols, function(col) {
 # -----------------------------------------------------------------------------
 
 books_labels_map <- c(
-  "1" = "Genre Specialists",
+  "1" = "Nonfictionists",
   "2" = "Romance Readers",
-  "3" = "Nonfictionists",
+  "3" = "Genre Specialists",
   "4" = "Omnivorous Fictionists"
 )
 
@@ -280,13 +280,31 @@ theme_facet_pub <- function(base_size = 9.5) {
     )
 }
 
-# 1. Books Plot (4 panels)
+# Reference lines: overall probability of falling in each class
+ref_books <- df_plot_books %>%
+  distinct(Class) %>%
+  left_join(
+    res_books$data %>% count(class_name) %>% mutate(ref_prob = n / sum(n)),
+    by = c("Class" = "class_name")
+  )
+
+ref_music <- df_plot_music %>%
+  distinct(Class) %>%
+  left_join(
+    res_music$data %>% count(class_name) %>% mutate(ref_prob = n / sum(n)),
+    by = c("Class" = "class_name")
+  )
+
+# 1. Books Plot (4 panels, free x-axis, class-specific reference line)
 p_books <- ggplot(df_plot_books, aes(x = Mean, y = Condition, color = Class)) +
-  geom_vline(xintercept = 0.25, linetype = "dashed", color = "grey65", linewidth = 0.4) +
+  geom_vline(data = ref_books, aes(xintercept = ref_prob), linetype = "dashed", color = "grey55", linewidth = 0.45) +
   geom_pointrange(aes(xmin = pmax(0, Low), xmax = pmin(1, High)), size = 0.4, linewidth = 0.7) +
-  facet_wrap(~ Class, ncol = 4) +
+  facet_wrap(~ Class, ncol = 4, scales = "free_x") +
   scale_color_manual(values = PALETTE_BOOKS4) +
-  scale_x_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
+  scale_x_continuous(
+    labels = scales::percent_format(accuracy = 1),
+    expand = expansion(mult = c(0.06, 0.08))
+  ) +
   labs(
     title = "Panel A: Leisure Book Reading Types (K = 4, N = 201)",
     subtitle = "Adjusted predicted class probabilities with 95% simulation CIs across Gender, Religion, and Academic Major",
@@ -294,13 +312,16 @@ p_books <- ggplot(df_plot_books, aes(x = Mean, y = Condition, color = Class)) +
   ) +
   theme_facet_pub()
 
-# 2. Music Plot (4 panels)
+# 2. Music Plot (4 panels, free x-axis, class-specific reference line)
 p_music <- ggplot(df_plot_music, aes(x = Mean, y = Condition, color = Class)) +
-  geom_vline(xintercept = 0.25, linetype = "dashed", color = "grey65", linewidth = 0.4) +
+  geom_vline(data = ref_music, aes(xintercept = ref_prob), linetype = "dashed", color = "grey55", linewidth = 0.45) +
   geom_pointrange(aes(xmin = pmax(0, Low), xmax = pmin(1, High)), size = 0.4, linewidth = 0.7) +
-  facet_wrap(~ Class, ncol = 4) +
+  facet_wrap(~ Class, ncol = 4, scales = "free_x") +
   scale_color_manual(values = PALETTE_MUSIC4) +
-  scale_x_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
+  scale_x_continuous(
+    labels = scales::percent_format(accuracy = 1),
+    expand = expansion(mult = c(0.06, 0.08))
+  ) +
   labs(
     title = "Panel B: Musical Genre Preferences (K = 4, N = 201)",
     subtitle = "Adjusted predicted class probabilities with 95% simulation CIs across High School GPA, Gender, and Academic Major",
@@ -308,7 +329,7 @@ p_music <- ggplot(df_plot_music, aes(x = Mean, y = Condition, color = Class)) +
   ) +
   theme_facet_pub()
 
-# Save Unified Compound Figure 4
+# Save Unified Compound Figure (as both fig4 and fig5 for backwards compatibility)
 png("Plots/fig4_marginal_effects_books_music.png", width = 6.5, height = 6.0, units = "in", res = 300)
 grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(2, 1, heights = grid::unit(c(1, 1), "null"))))
@@ -316,4 +337,11 @@ print(p_books, vp = grid::viewport(layout.pos.row = 1, layout.pos.col = 1))
 print(p_music, vp = grid::viewport(layout.pos.row = 2, layout.pos.col = 1))
 dev.off()
 
-cat("Figure 4 generated successfully: Plots/fig4_marginal_effects_books_music.png\n")
+png("Plots/fig5_marginal_effects_books_music.png", width = 6.5, height = 6.0, units = "in", res = 300)
+grid::grid.newpage()
+grid::pushViewport(grid::viewport(layout = grid::grid.layout(2, 1, heights = grid::unit(c(1, 1), "null"))))
+print(p_books, vp = grid::viewport(layout.pos.row = 1, layout.pos.col = 1))
+print(p_music, vp = grid::viewport(layout.pos.row = 2, layout.pos.col = 1))
+dev.off()
+
+cat("Figure saved successfully: Plots/fig4_marginal_effects_books_music.png and Plots/fig5_marginal_effects_books_music.png\n")
