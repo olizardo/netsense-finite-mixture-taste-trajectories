@@ -97,12 +97,12 @@ params_books <- parameters(mod_books_final4)
 # Comp 1 (n=42, 20.9%): Nonfictionists (High History, Biography, Non-Fiction)
 # Comp 2 (n=57, 28.4%): Romance Readers (High Romance & Other Fiction)
 # Comp 3 (n=63, 31.3%): Genre Specialists (Sci-Fi, Mysteries, Thrillers)
-# Comp 4 (n=39, 19.4%): Omnivorous Fictionists (High Across All Fiction Categories)
+# Comp 4 (n=39, 19.4%): Fictionists (High Across All Fiction Categories)
 books_labels_map <- c(
   "1" = "Nonfictionists",
   "2" = "Romance Readers",
   "3" = "Genre Specialists",
-  "4" = "Omnivorous Fictionists"
+  "4" = "Fictionists"
 )
 
 books_smooth_list <- list()
@@ -200,12 +200,12 @@ params_music <- parameters(mod_music_final4)
 # Class profiles:
 # Comp 1 (n=34, 16.9%): Classic Rockers (Classic Rock, Rock, Classical, Broadway, Jazz)
 # Comp 2 (n=64, 31.8%): Mainstreamers (Rap, Dance, Country; no Rock)
-# Comp 3 (n=51, 25.4%): Contemporary Rockers (Rap, Rock, Classic Rock, Dance; no Broadway/Classical)
+# Comp 3 (n=51, 25.4%): Modern Rockers (Rap, Rock, Classic Rock, Dance; no Broadway/Classical)
 # Comp 4 (n=52, 25.9%): Omnivores (High Across All 10 Genres)
 music_labels_map <- c(
   "1" = "Classic Rockers",
   "2" = "Mainstreamers",
-  "3" = "Contemporary Rockers",
+  "3" = "Modern Rockers",
   "4" = "Omnivores"
 )
 
@@ -260,7 +260,7 @@ extract_concom4 <- function(mod, df_comp, domain_name, labels_map, ref_level = "
   m_mnl <- multinom(
     class_label ~ is_woman + is_white + is_catholic + income_num + parent_ed_years + 
       high_hs_grade + aims_advanced_degree + is_stem_major + hometown,
-    data = df_ego, trace = FALSE
+    data = df_ego, decay = 0.05, trace = FALSE
   )
   
   coef_mat <- summary(m_mnl)$coefficients

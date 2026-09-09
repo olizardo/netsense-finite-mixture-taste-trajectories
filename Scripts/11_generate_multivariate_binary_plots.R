@@ -48,17 +48,17 @@ theme_publication <- function(base_size = 9.5) {
 cat("--> Generating Figure 1: Book Reading Types with Wave Markers (K = 4)...\n")
 
 PALETTE_BOOKS4 <- c(
-  "Genre Specialists"      = "#0072B2", # Deep Blue
-  "Romance Readers"        = "#CC79A7", # Reddish Purple
-  "Nonfictionists"         = "#009E73", # Bluish Green
-  "Omnivorous Fictionists" = "#D55E00"  # Vermillion
+  "Genre Specialists" = "#0072B2", # Deep Blue
+  "Romance Readers"   = "#CC79A7", # Reddish Purple
+  "Nonfictionists"    = "#009E73", # Bluish Green
+  "Fictionists"       = "#D55E00"  # Vermillion
 )
 
 SHAPES_BOOKS4 <- c(
-  "Genre Specialists"      = 16, # Circle
-  "Romance Readers"        = 18, # Diamond
-  "Nonfictionists"         = 17, # Triangle
-  "Omnivorous Fictionists" = 15  # Square
+  "Genre Specialists" = 16, # Circle
+  "Romance Readers"   = 18, # Diamond
+  "Nonfictionists"    = 17, # Triangle
+  "Fictionists"       = 15  # Square
 )
 
 p_books <- ggplot() +
@@ -96,17 +96,17 @@ cat("   Saved: Plots/fig1_books_9_items_by_class.png\n")
 cat("--> Generating Figure 2: Music Genre Preferences with Wave Markers (K = 4)...\n")
 
 PALETTE_MUSIC4 <- c(
-  "Omnivores"            = "#0072B2", # Deep Blue
-  "Classic Rockers"      = "#D55E00", # Vermillion
-  "Contemporary Rockers" = "#E69F00", # Orange
-  "Mainstreamers"        = "#009E73"  # Bluish Green
+  "Omnivores"       = "#0072B2", # Deep Blue
+  "Classic Rockers" = "#D55E00", # Vermillion
+  "Modern Rockers"  = "#E69F00", # Orange
+  "Mainstreamers"   = "#009E73"  # Bluish Green
 )
 
 SHAPES_MUSIC4 <- c(
-  "Omnivores"            = 16, # Circle
-  "Classic Rockers"      = 17, # Triangle
-  "Contemporary Rockers" = 15, # Square
-  "Mainstreamers"        = 18  # Diamond
+  "Omnivores"       = 16, # Circle
+  "Classic Rockers" = 17, # Triangle
+  "Modern Rockers"  = 15, # Square
+  "Mainstreamers"   = 18  # Diamond
 )
 
 p_music <- ggplot() +
@@ -169,7 +169,7 @@ book_order <- df_books_chg %>%
   pull(Activity)
 
 df_books_chg$Activity <- factor(df_books_chg$Activity, levels = book_order)
-df_books_chg$Class <- factor(df_books_chg$Class, levels = c("Genre Specialists", "Romance Readers", "Nonfictionists", "Omnivorous Fictionists"))
+df_books_chg$Class <- factor(df_books_chg$Class, levels = c("Genre Specialists", "Romance Readers", "Nonfictionists", "Fictionists"))
 
 music_order <- df_music_chg %>%
   group_by(Activity) %>%
@@ -178,7 +178,7 @@ music_order <- df_music_chg %>%
   pull(Activity)
 
 df_music_chg$Activity <- factor(df_music_chg$Activity, levels = music_order)
-df_music_chg$Class <- factor(df_music_chg$Class, levels = c("Omnivores", "Classic Rockers", "Contemporary Rockers", "Mainstreamers"))
+df_music_chg$Class <- factor(df_music_chg$Class, levels = c("Omnivores", "Classic Rockers", "Modern Rockers", "Mainstreamers"))
 
 theme_pub_shift_split <- theme_minimal(base_size = 9.5) +
   theme(

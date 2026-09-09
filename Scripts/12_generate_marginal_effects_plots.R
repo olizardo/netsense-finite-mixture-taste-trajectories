@@ -74,13 +74,13 @@ books_labels_map <- c(
   "1" = "Nonfictionists",
   "2" = "Romance Readers",
   "3" = "Genre Specialists",
-  "4" = "Omnivorous Fictionists"
+  "4" = "Fictionists"
 )
 
 music_labels_map <- c(
   "1" = "Classic Rockers",
   "2" = "Mainstreamers",
-  "3" = "Contemporary Rockers",
+  "3" = "Modern Rockers",
   "4" = "Omnivores"
 )
 
@@ -96,7 +96,7 @@ fit_concom_model4 <- function(mod, df_comp, labels_map, ref_level) {
   m_mnl <- multinom(
     class_name ~ is_woman + is_white + is_catholic + income_num + parent_ed_years + 
       high_hs_grade + aims_advanced_degree + is_stem_major + hometown,
-    data = df_ego, trace = FALSE
+    data = df_ego, decay = 0.05, trace = FALSE
   )
   return(list(model = m_mnl, data = df_ego))
 }
@@ -142,12 +142,14 @@ simulate_marginal_probs <- function(model, newdata, n_draws = 2000, class_names 
     }
   }
   
-  if (is.null(class_names)) class_names <- paste0("Class ", 1:K)
+  # Always align with model levels
+  actual_class_names <- model$lev
   
   res_list <- list()
   for (k in 1:K) {
-    res_list[[class_names[k]]] <- tibble(
-      Class  = class_names[k],
+    cls_k <- actual_class_names[k]
+    res_list[[cls_k]] <- tibble(
+      Class  = cls_k,
       Mean   = apply(prob_draws[, k, ], 1, mean),
       Median = apply(prob_draws[, k, ], 1, median),
       Low    = apply(prob_draws[, k, ], 1, quantile, probs = 0.025),
@@ -158,20 +160,20 @@ simulate_marginal_probs <- function(model, newdata, n_draws = 2000, class_names 
 }
 
 # -----------------------------------------------------------------------------
-# D. GENERATE PREDICTIONS FOR SIGNIFICANT BLOCKS
+# D. GENERATE PREDICTIONS FOR SIGNIFICANT BLOCKS (EVALUATED AT SAMPLE MEANS)
 # -----------------------------------------------------------------------------
 cat("--> Generating predictions for statistically significant predictor blocks...\n")
 
 df_covs_base <- res_books$data %>%
   summarize(
-    is_woman = 0,
-    is_white = 1,
-    is_catholic = 1,
+    is_woman = mean(is_woman),
+    is_white = mean(is_white),
+    is_catholic = mean(is_catholic),
     income_num = mean(income_num),
     parent_ed_years = mean(parent_ed_years),
-    high_hs_grade = 1,
-    aims_advanced_degree = 1,
-    is_stem_major = 0,
+    high_hs_grade = mean(high_hs_grade),
+    aims_advanced_degree = mean(aims_advanced_degree),
+    is_stem_major = mean(is_stem_major),
     hometown = mean(hometown)
   )
 
@@ -189,53 +191,66 @@ grid_stem_books <- bind_rows(
   df_covs_base %>% mutate(is_stem_major = 1, Condition = "STEM Major")
 )
 
-book_classes <- c("Genre Specialists", "Romance Readers", "Nonfictionists", "Omnivorous Fictionists")
+book_classes_order <- c("Genre Specialists", "Romance Readers", "Nonfictionists", "Fictionists")
 
-ci_gender_books <- simulate_marginal_probs(res_books$model, grid_gender_books, class_names = book_classes) %>%
+ci_gender_books <- simulate_marginal_probs(res_books$model, grid_gender_books) %>%
   mutate(Condition = rep(grid_gender_books$Condition, 4), Predictor = "Gender Identity")
 
-ci_relig_books <- simulate_marginal_probs(res_books$model, grid_relig_books, class_names = book_classes) %>%
+ci_relig_books <- simulate_marginal_probs(res_books$model, grid_relig_books) %>%
   mutate(Condition = rep(grid_relig_books$Condition, 4), Predictor = "Religious Identity")
 
-ci_stem_books <- simulate_marginal_probs(res_books$model, grid_stem_books, class_names = book_classes) %>%
+ci_stem_books <- simulate_marginal_probs(res_books$model, grid_stem_books) %>%
   mutate(Condition = rep(grid_stem_books$Condition, 4), Predictor = "Undergraduate Major")
 
 df_plot_books <- bind_rows(ci_gender_books, ci_relig_books, ci_stem_books) %>%
   mutate(
     Domain = "Leisure Book Reading Types",
-    Class = factor(Class, levels = book_classes),
+    Class = factor(Class, levels = book_classes_order),
     Condition = factor(Condition, levels = rev(c("Men", "Women", "Roman Catholic", "Non-Catholic", "Non-STEM Major", "STEM Major")))
   )
 
 # Music Predictors: High School GPA, Gender, Major
+df_covs_base_music <- res_music$data %>%
+  summarize(
+    is_woman = mean(is_woman),
+    is_white = mean(is_white),
+    is_catholic = mean(is_catholic),
+    income_num = mean(income_num),
+    parent_ed_years = mean(parent_ed_years),
+    high_hs_grade = mean(high_hs_grade),
+    aims_advanced_degree = mean(aims_advanced_degree),
+    is_stem_major = mean(is_stem_major),
+    hometown = mean(hometown)
+  )
+
 grid_gpa_music <- bind_rows(
-  df_covs_base %>% mutate(high_hs_grade = 0, Condition = "B+ or Lower GPA"),
-  df_covs_base %>% mutate(high_hs_grade = 1, Condition = "Mostly A/A- GPA")
+  df_covs_base_music %>% mutate(high_hs_grade = 0, Condition = "B+ or Lower GPA"),
+  df_covs_base_music %>% mutate(high_hs_grade = 1, Condition = "Mostly A/A- GPA")
 )
 grid_gender_music <- bind_rows(
-  df_covs_base %>% mutate(is_woman = 0, Condition = "Men"),
-  df_covs_base %>% mutate(is_woman = 1, Condition = "Women")
+  df_covs_base_music %>% mutate(is_woman = 0, Condition = "Men"),
+  df_covs_base_music %>% mutate(is_woman = 1, Condition = "Women")
 )
 grid_stem_music <- bind_rows(
-  df_covs_base %>% mutate(is_stem_major = 0, Condition = "Non-STEM Major"),
-  df_covs_base %>% mutate(is_stem_major = 1, Condition = "STEM Major")
+  df_covs_base_music %>% mutate(is_stem_major = 0, Condition = "Non-STEM Major"),
+  df_covs_base_music %>% mutate(is_stem_major = 1, Condition = "STEM Major")
 )
 
-music_classes <- c("Omnivores", "Classic Rockers", "Contemporary Rockers", "Mainstreamers")
+music_classes_order <- c("Omnivores", "Classic Rockers", "Modern Rockers", "Mainstreamers")
 
-ci_gpa_music <- simulate_marginal_probs(res_music$model, grid_gpa_music, class_names = music_classes) %>%
+ci_gpa_music <- simulate_marginal_probs(res_music$model, grid_gpa_music) %>%
   mutate(Condition = rep(grid_gpa_music$Condition, 4), Predictor = "High School Grades")
 
-ci_gender_music <- simulate_marginal_probs(res_music$model, grid_gender_music, class_names = music_classes) %>%
+ci_gender_music <- simulate_marginal_probs(res_music$model, grid_gender_music) %>%
   mutate(Condition = rep(grid_gender_music$Condition, 4), Predictor = "Gender Identity")
 
-ci_stem_music <- simulate_marginal_probs(res_music$model, grid_stem_music, class_names = music_classes) %>%
+ci_stem_music <- simulate_marginal_probs(res_music$model, grid_stem_music) %>%
   mutate(Condition = rep(grid_stem_music$Condition, 4), Predictor = "Undergraduate Major")
 
 df_plot_music <- bind_rows(ci_gpa_music, ci_gender_music, ci_stem_music) %>%
   mutate(
     Domain = "Music Genre Preferences",
-    Class = factor(Class, levels = music_classes),
+    Class = factor(Class, levels = music_classes_order),
     Condition = factor(Condition, levels = rev(c("B+ or Lower GPA", "Mostly A/A- GPA", "Men", "Women", "Non-STEM Major", "STEM Major")))
   )
 
@@ -248,17 +263,17 @@ saveRDS(list(books = df_plot_books, music = df_plot_music), "Cache/summaries/mar
 cat("--> Generating publication-grade figures (K = 4)...\n")
 
 PALETTE_BOOKS4 <- c(
-  "Genre Specialists"      = "#0072B2",
-  "Romance Readers"        = "#CC79A7",
-  "Nonfictionists"         = "#009E73",
-  "Omnivorous Fictionists" = "#D55E00"
+  "Genre Specialists" = "#0072B2",
+  "Romance Readers"   = "#CC79A7",
+  "Nonfictionists"    = "#009E73",
+  "Fictionists"       = "#D55E00"
 )
 
 PALETTE_MUSIC4 <- c(
-  "Omnivores"            = "#0072B2",
-  "Classic Rockers"      = "#D55E00",
-  "Contemporary Rockers" = "#E69F00",
-  "Mainstreamers"        = "#009E73"
+  "Omnivores"       = "#0072B2",
+  "Classic Rockers" = "#D55E00",
+  "Modern Rockers"  = "#E69F00",
+  "Mainstreamers"   = "#009E73"
 )
 
 theme_facet_pub <- function(base_size = 9.5) {

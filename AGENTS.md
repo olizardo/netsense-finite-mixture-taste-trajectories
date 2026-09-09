@@ -835,25 +835,27 @@ scale_fill_manual(values = COLOR_CREDIBILITY, name = "Directional Credibility")
 
 ### 2. Theoretical Grounding & Empirical Design
 1. **Multivariate Binary Mixture Modeling with Natural Cubic Splines**:
-   - Simultaneously estimates individual binary trajectories across all battery items using `flexmix` \citep{grun2008flexmix} in \textsf{R} \citep{Rmanual}, parameterized via orthogonal natural cubic splines (`splines::ns(time, df = 2)`).
-   - Centers time at collegiate matriculation ($t \in \{0, \dots, 5\}$) with linear boundary constraints and an internal knot at midpoint ($t = 2.5$).
+   - Simultaneously estimates individual binary trajectories across all battery items using `flexmix` \citep{grun2008flexmix} in \textsf{R} \citep{Rmanual}, parameterized via natural cubic splines (`splines::ns(time, knots = c(1, 3), Boundary.knots = c(0, 5))`).
+   - Centers time at collegiate matriculation ($t \in \{0, \dots, 5\}$) with linear boundary constraints at W1 ($t = 0$) and W6 ($t = 5$) and interior knots placed evenly across collegiate milestones at Wave 2 ($t = 1$, freshman spring) and Wave 4 ($t = 3$, sophomore spring).
 2. **Substantive 4-Class Typologies (Short & Punchy Single-Word Labels)**:
    - **Leisure Book Reading Types (9 Items, Waves 1--6, $N = 201, 1,006$ obs)**:
-     * **Genre Specialists** ($n = 97, 48.3\%$): Sci-fi, mysteries, thrillers, history; zero romance.
-     * **Romance Readers** ($n = 40, 19.9\%$): Romance and general fiction; low sci-fi/thrillers.
-     * **Nonfictionists** ($n = 32, 15.9\%$): Analytical history, biography, memoirs; zero fiction.
-     * **Omnivorous Fictionists** ($n = 32, 15.9\%$): High across all fiction categories simultaneously.
+     * **Genre Specialists** ($n = 63, 31.3\%$): Speculative and narrative fiction (sci-fi/fantasy, thrillers, other fiction); zero romance.
+     * **Romance Readers** ($n = 57, 28.4\%$): High romance and general fiction; low history/sci-fi.
+     * **Nonfictionists** ($n = 42, 20.9\%$): Dedicated analytical history, biography, memoirs; low fiction.
+     * **Fictionists** ($n = 39, 19.4\%$): Avid cross-genre fiction reading across mysteries, thrillers, sci-fi, romance, and general fiction.
    - **Music Genre Preferences (10 Genres, Waves 1--6, $N = 201, 1,006$ obs)**:
-     * **Omnivores** ($n = 53, 26.4\%$): High preference across all 10 genres simultaneously; monotonic expansion of country music.
-     * **Contemporary Rockers** ($n = 48, 23.9\%$): Rock/metal and classic rock paired with rap/hip-hop and dance music; zero Broadway/classical.
-     * **Mainstreamers** ($n = 60, 29.9\%$): Commercial mainstream hits (rap/hip-hop, dance music, country); zero rock or classical.
-     * **Classic Rockers** ($n = 40, 19.9\%$): Classic rock, heavy metal, classical music, Broadway, and jazz; rejects country and rap.
-3. **Endogenous Concomitant Models (`FLXPmultinom`)**:
+     * **Omnivores** ($n = 52, 25.9\%$): High preference across all 10 genres simultaneously; monotonic expansion of country music.
+     * **Classic Rockers** ($n = 34, 16.9\%$): Classic rock, heavy metal, classical music, Broadway, and jazz; rejects country and commercial dance music.
+     * **Modern Rockers** ($n = 51, 25.4\%$): Rock/metal and classic rock paired with rap/hip-hop and dance music; zero Broadway/classical.
+     * **Mainstreamers** ($n = 64, 31.8\%$): Commercial mainstream hits (rap/hip-hop, dance music, country); zero rock or classical.
+3. **Endogenous Concomitant Models & Regularization (`FLXPmultinom`)**:
    - Single-step joint estimation of class sorting as a function of 9 baseline covariates.
-   - Pre-collegiate scholastic capital (high school GPA) universally predicts omnivorousness across domains.
-   - Gender identity sorts women away from rock subcultures toward omnivorous and mainstream pathways.
-   - Declared STEM majors are significantly more likely to sort into Classic Rockers ($\text{OR} = 3.47, p = 0.010$) and Genre Specialists.
-   - Parental SES (household income and education) is completely statistically null across all domains ($p > 0.10$).
+   - Applies regularized estimation (weight decay $\lambda = 0.05$) to resolve quasi-complete separation on sparse demographic cells (such as zero men in Romance Readers), ensuring stable finite estimates and realistic confidence envelopes.
+   - Counterfactual marginal class probabilities are evaluated at empirical sample means with freed horizontal axes (`scales = "free_x"`) and class prevalence reference lines.
+   - Pre-collegiate scholastic capital (high school GPA) strongly predicts omnivorousness across domains (34.4% vs 10.7%).
+   - Gender identity sorts women away from rock subcultures toward romance reading and mainstream music.
+   - Declared STEM majors are significantly more likely to sort into Classic Rockers ($\text{OR} = 3.38, p = 0.017$) and Genre Specialists.
+   - Parental SES (household income and education) is completely statistically null across all domains ($p > 0.15$).
 4. **Extensive vs. Intensive Margin Distinction**:
    - Multilevel growth curve moderation models (`lme4::glmer` \citep{bates2015fitting}) confirm that within-class demographic slope moderation is statistically null ($p > 0.10$).
    - Sociodemographics operate purely as between-class sorting gates (extensive margin) rather than within-class slope modifiers (intensive margin).
@@ -862,28 +864,16 @@ scale_fill_manual(values = COLOR_CREDIBILITY, name = "Directional Credibility")
 - **Table 1**: Descriptive Statistics for Baseline Covariates, Book Reading Types, and Music Genres ($N = 201$, $1,006$ obs) (`tab:descriptives`)
 - **Table 2**: Latent Class Model Selection and Fit Statistics across Candidate Specifications ($K = 1 \dots 5$) for Books and Music (`tab:selection`)
 - **Table 3**: Model Fit and Predictive Power of Theoretical Variable Blocks across Cultural Domains ($K = 4, N = 201$) (`tab:blocks`)
-- **Table 4**: Bivariate Poisson Latent Class Growth Models of Cultural Omnivorousness ($K = 4, N = 201$) (`tab:bivariate`)
 - **Table A1**: Multinomial Logistic Parameter Estimates and Odds Ratios from Item-Level Multivariate Binary Models ($K = 4$, Books and Music) (`tab:app_coefs`)
-- **Table A2**: Multinomial Logistic Parameter Estimates and Odds Ratios from the Four-Class Bivariate Cultural Omnivorousness Model ($K = 4$, Appendix) (`tab:app_coefs_biv`)
 - **Figure 1**: Latent trajectories across 9 Book Reading Types from the 4-class multivariate binary model (`Plots/fig1_books_9_items_by_class.png`, `fig:books`)
 - **Figure 2**: Latent trajectories across the Top 10 Music Genres from the 4-class multivariate binary model (`Plots/fig2_music_10_genres_by_class.png`, `fig:music`)
-- **Figure 3**: Net trajectory shifts by cultural item within latent classes across Book Reading Types and Music Genres from the 4-class models (`Plots/fig3_activity_time_trend_shifts.png`, `fig:shifts`)
-- **Figure 4**: Model-implied marginal predicted class probabilities with 95\% simulation confidence intervals across statistically significant predictor blocks from Table 3 for the 4-class models (`Plots/fig4_marginal_effects_books_music.png`, `fig:marginal`)
-- **Figure 5**: Bivariate latent trajectories of cultural omnivorousness across college from the 4-class Poisson growth mixture model (`Plots/fig5_bivariate_omnivorousness_trajectories.png`, `fig:bivariate`)
+- **Figure 3**: Net trajectory shifts by cultural item within latent classes across Book Reading Types (`Plots/fig3_books_trajectory_shifts.png`, `fig:shifts_books`)
+- **Figure 4**: Net trajectory shifts by cultural item within latent classes across Music Genre Preferences (`Plots/fig4_music_trajectory_shifts.png`, `fig:shifts_music`)
+- **Figure 5**: Model-implied marginal predicted class probabilities with 95\% simulation confidence intervals across statistically significant predictor blocks from Table 3 for the 4-class models (`Plots/fig5_marginal_effects_books_music.png`, `fig:marginal`)
 
-### 4. Bivariate Poisson Omnivorousness Trajectories (K = 4 Solution) & Upstream Selection Qualification
-1. **Joint Co-Evolution of Cultural Repertoires (Top 10 Music Genres & 9 Book Reading Types)**:
-   - Simultaneously models Musical Omnivorousness Count ($Y_{1, it} \in \{0, \dots, 10\}$ across top 10 focal genres) and Literature Omnivorousness Count ($Y_{2, it} \in \{0, \dots, 9\}$) over all six waves ($N = 201, 1,006$ obs) using `flexmix`.
-   - Adopts $K = 4$ specification based on lowest AIC ($7759.7$ vs. $7777.9$ for $K = 3$), significant likelihood ratio test ($\chi^2 = 32.2, df = 7, p < 0.001$), and superior sociological interpretability:
-     * **Class 1: High Dual Omnivores** ($n = 49, 24.4\%$): Sustained high volume across both music ($6.04 \to 6.52$) and books ($4.57 \to 4.98$).
-     * **Class 2: Moderate Eclectics** ($n = 92, 45.8\%$): Modal pathway, stable bounded breadth (~4.0 music genres, ~3.2 book types).
-     * **Class 3: Literary Readers / Music Winnowers** ($n = 28, 13.9\%$): Domain-asymmetric specialists maintaining elevated reading ($4.79 \to 3.30$) while experiencing steep musical collapse ($-54.4\%$, dropping from $3.43$ to $1.57$). Over $71\%$ non-STEM majors ($\text{OR} = 0.513$ for STEM).
-     * **Class 4: Univores** ($n = 32, 15.9\%$): Persistently low and winnowing across both spheres ($2.28 \to 1.59$ in music; $2.47 \to 1.77$ in books).
-   - Concomitants: Scholastic capital (high school GPA) is the primary sorting engine ($\text{LRT } \chi^2 = 21.76, p = 0.001$), increasing odds of entering High Dual Omnivorousness over eight-fold relative to Literary Winnowers ($\text{OR} = 8.26, p = 0.002$) and Univores ($\text{OR} = 7.46, p = 0.002$), and $3.5$-fold relative to Moderate Eclectics ($\text{OR} = 3.47, p = 0.037$). Roman Catholic affiliation is protective across all three comparisons ($\text{OR} = 0.22\text{--}0.32, p < 0.05$).
-   - Family SES is statistically null ($\text{LRT } \chi^2 = 1.89, p = 0.930$), and Full Multivariable Model is decisive ($\text{LRT } \chi^2 = 49.70, p = 0.005$).
-2. **Upstream Institutional Selection & Restriction of Range Qualification**:
-   - The lack of explanatory power for parental socioeconomic status and cultural capital is explicitly qualified as an artifact of sample selection at a selective, elite private university.
-   - Admissions filters homogenize student family backgrounds around high levels of economic and cultural capital, compressing parental SES variance and attenuating statistical associations, allowing proximate collegiate factors (prior GPA, major, collegiate habitus) to emerge as the primary visible sorting channels.
+### 4. Standalone Bivariate Omnivorousness Module (`bivariate_poisson_omnivorousness.tex`)
+- The joint bivariate Poisson latent class growth model has been decoupled from the primary journal article and serialized into `bivariate_poisson_omnivorousness.tex` as a standalone manuscript.
+- Features joint co-evolution of Musical Omnivorousness Count ($Y_{1} \in \{0, \dots, 10\}$) and Literature Omnivorousness Count ($Y_{2} \in \{0, \dots, 9\}$) across the 4 pathways: High Dual Omnivores ($24.4\%$), Moderate Eclectics ($45.8\%$), Literary Readers / Music Winnowers ($13.9\%$), and Univores ($15.9\%$), with complete tables and Figure asset (`Plots/fig6_bivariate_omnivorousness_trajectories.png`).
 
 ### 5. Overleaf Git Synchronization & Zero Local Compilation Protocol
 - **Zero Local Compilation Rule (CRITICAL):**
