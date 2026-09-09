@@ -770,6 +770,9 @@ scale_fill_manual(values = COLOR_CREDIBILITY, name = "Directional Credibility")
 - **Word Choice Standards ("Show" vs. "Demonstrate", "Use" vs. "Utilize")**:
   - Strictly use **"show"**, **"shows"**, **"showing"**, and **"shown"** rather than **"demonstrate"**, **"demonstrates"**, **"demonstrating"**, or **"demonstrated"** across all analytical prose, empirical write-ups, hypothesis descriptions, and theoretical discussions.
   - Strictly use **"use"**, **"uses"**, **"using"**, and **"used"** rather than **"utilize"**, **"utilizes"**, **"utilizing"**, **"utilized"**, or **"utilization"**.
+- **Prohibition of "Archetypes" / "Archetype"**:
+  - Don't use the word "archetypes" or "archetype" when you could use words such as **class**, **classes**, **types**, **categories**, **clusters**, **profiles**, or **pathways**.
+  - Strictly use **"classes"**, **"latent classes"**, **"types"**, **"categories"**, **"profiles"**, **"typologies"**, or **"developmental pathways"** instead (e.g., *“distinct developmental pathways”* rather than *“developmental archetypes”*; *“latent classes”* rather than *“latent archetypes”*).
 - **Prohibition of "Modern" for Statistical Methods and Approaches**:
   - Strictly do **NOT** use the word **"modern"** to refer to statistical methods, models, frameworks, techniques, or analytical approaches.
   - Strictly use **"recent"** or **"recently developed"** instead (e.g., *“recent age-period-cohort methods”*, *“recently developed partial identification frameworks”*, *“recent APC bounding techniques”*).
