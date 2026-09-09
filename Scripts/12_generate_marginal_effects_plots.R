@@ -2,7 +2,7 @@
 #'
 #' Computes model-implied marginal predicted class probabilities and 95% simulation
 #' confidence intervals for statistically significant predictor blocks from Table 3
-#' across all three cultural taste domains (Arts [9 items], Books [9 items], and Music [10 genres]).
+#' across Leisure Book Reading Types (9 items) and Musical Genre Preferences (10 genres).
 #' Follows the visualization architecture from predicting-degree-trajectories-NetHealth.
 #'
 #' @author Omar Lizardo & AI Assistant
@@ -24,7 +24,6 @@ cat("Generating Model-Implied Marginal Class Probability Plots            \n")
 cat("====================================================================\n")
 
 # 1. Load Data
-demo_data  <- readRDS("demographics_longitudinal_clean.rds")
 music_long <- readRDS("Cache/music_long_clean.rds")
 books_long <- readRDS("Cache/books_long_clean.rds")
 covs       <- readRDS("Cache/covariates_imputed.rds")
@@ -37,67 +36,6 @@ form_full <- ~ is_woman + is_white + is_catholic + income_num + parent_ed_years 
 # -----------------------------------------------------------------------------
 # A. PREPARE ESTIMATION DATASETS
 # -----------------------------------------------------------------------------
-
-# Arts (Revised 9 Items)
-cult_cols <- grep("^egoid|^culturalevents[0-9]+_[1-6]$", names(demo_data), value = TRUE)
-df_arts_comp <- demo_data %>% 
-  dplyr::select(all_of(cult_cols)) %>%
-  pivot_longer(
-    cols = starts_with("culturalevents"),
-    names_to = c("event_type", "wave"),
-    names_pattern = "culturalevents([0-9]+)_([1-6])",
-    values_to = "preference"
-  ) %>%
-  mutate(
-    wave = as.numeric(wave),
-    time = wave - 1,
-    pref_binary = case_when(preference == "Yes" ~ 1, preference == "No" ~ 0, TRUE ~ NA_real_),
-    event_clean = paste0("event_", event_type)
-  ) %>%
-  filter(!is.na(pref_binary)) %>%
-  dplyr::select(egoid, wave, time, event_clean, pref_binary) %>%
-  pivot_wider(names_from = event_clean, values_from = pref_binary) %>%
-  filter(complete.cases(.)) %>%
-  mutate(
-    art_classical_opera   = as.numeric(event_2 == 1 | event_4 == 1),
-    art_rock_folk_country = as.numeric(event_1 == 1 | event_3 == 1),
-    art_ballet_dance       = event_5,
-    art_jazz_blues         = event_6,
-    art_musical_theater    = event_7,
-    art_stage_play         = event_8,
-    art_comedy_club        = event_9,
-    art_art_museum         = event_10,
-    art_cinema             = event_12
-  ) %>%
-  dplyr::select(
-    egoid, wave, time,
-    art_classical_opera,
-    art_rock_folk_country,
-    art_ballet_dance,
-    art_jazz_blues,
-    art_musical_theater,
-    art_stage_play,
-    art_comedy_club,
-    art_art_museum,
-    art_cinema
-  ) %>%
-  inner_join(covs, by = "egoid") %>%
-  arrange(egoid, time)
-
-art_cols <- c(
-  "art_classical_opera",
-  "art_rock_folk_country",
-  "art_ballet_dance",
-  "art_jazz_blues",
-  "art_musical_theater",
-  "art_stage_play",
-  "art_comedy_club",
-  "art_art_museum",
-  "art_cinema"
-)
-specs_arts <- lapply(art_cols, function(col) {
-  FLXMRglm(as.formula(paste0("cbind(", col, ", 1 - ", col, ") ~ ns(time, df = 2)")), family = "binomial")
-})
 
 # Books
 df_books_comp <- books_long %>% 
@@ -149,15 +87,6 @@ fit_concom_model <- function(mod, df_comp, ref_level = "1") {
   )
   return(list(model = m_mnl, data = df_ego))
 }
-
-set.seed(2026)
-mod_arts <- flexmix(
-  as.formula(paste0("cbind(", paste(art_cols, collapse=", "), ") ~ ns(time, df = 2) | egoid")),
-  data = df_arts_comp, k = 3, model = specs_arts,
-  concomitant = FLXPmultinom(form_full),
-  control = list(iter.max = 300, minprior = 0.04)
-)
-res_arts <- fit_concom_model(mod_arts, df_arts_comp)
 
 set.seed(2026)
 mod_books <- flexmix(
@@ -232,7 +161,7 @@ simulate_marginal_probs <- function(model, newdata, n_draws = 2000, class_names 
 # -----------------------------------------------------------------------------
 cat("--> Generating predictions for statistically significant predictor blocks...\n")
 
-df_covs_base <- res_arts$data %>%
+df_covs_base <- res_books$data %>%
   summarize(
     is_woman = 0,
     is_white = 1,
@@ -245,29 +174,7 @@ df_covs_base <- res_arts$data %>%
     hometown = mean(hometown)
   )
 
-# 1. Arts Predictions: Gender Identity & Degree Aspirations
-grid_gender_arts <- bind_rows(
-  df_covs_base %>% mutate(is_woman = 0, Condition = "Men"),
-  df_covs_base %>% mutate(is_woman = 1, Condition = "Women")
-)
-ci_gender_arts <- simulate_marginal_probs(res_arts$model, grid_gender_arts, class_names = c("Omnivores", "Traditionalists", "Minimalists")) %>%
-  mutate(Condition = rep(grid_gender_arts$Condition, 3), Predictor = "Gender Identity")
-
-grid_deg_arts <- bind_rows(
-  df_covs_base %>% mutate(aims_advanced_degree = 0, Condition = "BA Only"),
-  df_covs_base %>% mutate(aims_advanced_degree = 1, Condition = "Post-BA Aspirations")
-)
-ci_deg_arts <- simulate_marginal_probs(res_arts$model, grid_deg_arts, class_names = c("Omnivores", "Traditionalists", "Minimalists")) %>%
-  mutate(Condition = rep(grid_deg_arts$Condition, 3), Predictor = "Degree Aspirations")
-
-df_plot_arts <- bind_rows(ci_gender_arts, ci_deg_arts) %>%
-  mutate(
-    Domain = "Arts & Cultural Events",
-    Class = factor(Class, levels = c("Omnivores", "Traditionalists", "Minimalists")),
-    Condition = factor(Condition, levels = rev(c("Men", "Women", "BA Only", "Post-BA Aspirations")))
-  )
-
-# 2. Books Predictions: Gender, Religion, and Collegiate Major
+# 1. Books Predictions: Gender, Religion, and Collegiate Major
 grid_gender_books <- bind_rows(
   df_covs_base %>% mutate(is_woman = 0, Condition = "Men"),
   df_covs_base %>% mutate(is_woman = 1, Condition = "Women")
@@ -296,7 +203,7 @@ df_plot_books <- bind_rows(ci_gender_books, ci_rel_books, ci_stem_books) %>%
     Condition = factor(Condition, levels = rev(c("Men", "Women", "Non-Catholic", "Roman Catholic", "Non-STEM Major", "STEM Major")))
   )
 
-# 3. Music Predictions: High School GPA, Gender, and Collegiate Major
+# 2. Music Predictions: High School GPA, Gender, and Collegiate Major
 grid_gpa_music <- bind_rows(
   df_covs_base %>% mutate(high_hs_grade = 0, Condition = "B+ or Lower GPA"),
   df_covs_base %>% mutate(high_hs_grade = 1, Condition = "Mostly A/A- GPA")
@@ -326,7 +233,7 @@ df_plot_music <- bind_rows(ci_gpa_music, ci_gender_music, ci_stem_music) %>%
   )
 
 # Save intermediate tabular summaries
-saveRDS(list(arts = df_plot_arts, books = df_plot_books, music = df_plot_music), "Cache/summaries/marginal_effects_summary.rds")
+saveRDS(list(books = df_plot_books, music = df_plot_music), "Cache/summaries/marginal_effects_summary.rds")
 cat("   Saved: Cache/summaries/marginal_effects_summary.rds\n")
 
 # -----------------------------------------------------------------------------
@@ -334,7 +241,6 @@ cat("   Saved: Cache/summaries/marginal_effects_summary.rds\n")
 # -----------------------------------------------------------------------------
 cat("--> Generating publication-grade figures...\n")
 
-PALETTE_ARTS  <- c("Omnivores" = "#0072B2", "Traditionalists" = "#D55E00", "Minimalists" = "#56B4E9")
 PALETTE_BOOKS <- c("Nonfictionists" = "#009E73", "Fictionists" = "#0072B2", "Minimalists" = "#D55E00")
 PALETTE_MUSIC <- c("Omnivores" = "#0072B2", "Rockers" = "#D55E00", "Mainstreamers" = "#E69F00")
 
@@ -357,21 +263,7 @@ theme_facet_pub <- function(base_size = 10) {
     )
 }
 
-# 1. Arts Plot
-p_arts <- ggplot(df_plot_arts, aes(x = Mean, y = Condition, color = Class)) +
-  geom_vline(xintercept = 1/3, linetype = "dashed", color = "grey65", linewidth = 0.4) +
-  geom_pointrange(aes(xmin = pmax(0, Low), xmax = pmin(1, High)), size = 0.45, linewidth = 0.75) +
-  facet_wrap(~ Class, ncol = 3) +
-  scale_color_manual(values = PALETTE_ARTS) +
-  scale_x_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
-  labs(
-    title = "Panel A: Public Arts & Cultural Events (N = 199)",
-    subtitle = "Adjusted predicted class probabilities with 95% simulation CIs across Gender and Degree Aspirations",
-    x = NULL
-  ) +
-  theme_facet_pub()
-
-# 2. Books Plot
+# 1. Books Plot
 p_books <- ggplot(df_plot_books, aes(x = Mean, y = Condition, color = Class)) +
   geom_vline(xintercept = 1/3, linetype = "dashed", color = "grey65", linewidth = 0.4) +
   geom_pointrange(aes(xmin = pmax(0, Low), xmax = pmin(1, High)), size = 0.45, linewidth = 0.75) +
@@ -379,13 +271,13 @@ p_books <- ggplot(df_plot_books, aes(x = Mean, y = Condition, color = Class)) +
   scale_color_manual(values = PALETTE_BOOKS) +
   scale_x_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
   labs(
-    title = "Panel B: Leisure Book Reading Types (N = 201)",
+    title = "Panel A: Leisure Book Reading Types (N = 201)",
     subtitle = "Adjusted predicted class probabilities with 95% simulation CIs across Gender, Religion, and Academic Major",
     x = NULL
   ) +
   theme_facet_pub()
 
-# 3. Music Plot
+# 2. Music Plot
 p_music <- ggplot(df_plot_music, aes(x = Mean, y = Condition, color = Class)) +
   geom_vline(xintercept = 1/3, linetype = "dashed", color = "grey65", linewidth = 0.4) +
   geom_pointrange(aes(xmin = pmax(0, Low), xmax = pmin(1, High)), size = 0.45, linewidth = 0.75) +
@@ -393,29 +285,26 @@ p_music <- ggplot(df_plot_music, aes(x = Mean, y = Condition, color = Class)) +
   scale_color_manual(values = PALETTE_MUSIC) +
   scale_x_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, 1), breaks = seq(0, 1, 0.25)) +
   labs(
-    title = "Panel C: Musical Genre Preferences (N = 201)",
+    title = "Panel B: Musical Genre Preferences (N = 201)",
     subtitle = "Adjusted predicted class probabilities with 95% simulation CIs across High School GPA, Gender, and Academic Major",
     x = "Model-Implied Predicted Class Probability"
   ) +
   theme_facet_pub()
 
 # Save Standalone Plots
-ggsave("Plots/fig4_marginal_arts.png", p_arts, width = 6.5, height = 2.8, dpi = 300)
 ggsave("Plots/fig5_marginal_books.png", p_books, width = 6.5, height = 3.4, dpi = 300)
 ggsave("Plots/fig6_marginal_music.png", p_music, width = 6.5, height = 3.4, dpi = 300)
 
-# Save Unified Compound Figure 4
-png("Plots/fig4_marginal_effects_all_domains.png", width = 6.5, height = 7.1, units = "in", res = 300)
+# Save Unified Compound Figure 3
+png("Plots/fig3_marginal_effects_books_music.png", width = 6.5, height = 5.8, units = "in", res = 300)
 grid::grid.newpage()
-grid::pushViewport(grid::viewport(layout = grid::grid.layout(3, 1, heights = grid::unit(c(2.0, 2.55, 2.55), "null"))))
-print(p_arts, vp = grid::viewport(layout.pos.row = 1, layout.pos.col = 1))
-print(p_books, vp = grid::viewport(layout.pos.row = 2, layout.pos.col = 1))
-print(p_music, vp = grid::viewport(layout.pos.row = 3, layout.pos.col = 1))
+grid::pushViewport(grid::viewport(layout = grid::grid.layout(2, 1, heights = grid::unit(c(1, 1), "null"))))
+print(p_books, vp = grid::viewport(layout.pos.row = 1, layout.pos.col = 1))
+print(p_music, vp = grid::viewport(layout.pos.row = 2, layout.pos.col = 1))
 dev.off()
 
 cat("All plots generated successfully:\n")
-cat(" - Plots/fig4_marginal_effects_all_domains.png (Unified compound figure)\n")
-cat(" - Plots/fig4_marginal_arts.png\n")
+cat(" - Plots/fig3_marginal_effects_books_music.png (Compound figure)\n")
 cat(" - Plots/fig5_marginal_books.png\n")
 cat(" - Plots/fig6_marginal_music.png\n")
 cat("====================================================================\n")

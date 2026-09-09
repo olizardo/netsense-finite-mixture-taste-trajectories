@@ -31,7 +31,7 @@
 \maketitle
 
 \begin{abstract}
-Does higher education homogenize cultural tastes, or does it preserve and specialize pre-existing aesthetic boundaries? While cross-sectional research links scholastic capital to cultural omnivorousness, how individuals traverse distinct developmental pathways across specific activities during college remains underexplored. Using longitudinal panel data from the NetSense study, we investigate taste trajectories across three expressive domains: public arts attendance (9 items across four waves), leisure book reading (9 genres across six waves), and musical preferences (10 genres across six waves). We estimate multivariate binary latent class growth models in \texttt{flexmix} using natural cubic splines with endogenous multinomial concomitants. Across all three spheres, a three-class specification provides optimal substantive parsimony, distinguishing omnivorous consumers, genre-selective specialists, and disengaged participants. Longitudinal analyses show that while private recorded media tastes remain stratified along parallel, stable tracks, public cultural attendance exhibits a sophomore slump concentrated in commercial venues, whereas high-arts participation displays institutional resilience. Endogenous concomitants indicate that pre-collegiate academic capital universally predicts omnivorousness, whereas gender identity and academic major sort students into distinct subcultures. Finally, within-class growth models indicate that sociodemographics serve primarily as initial sorting gates into developmental pathways rather than moderating trajectory slopes within them.
+Does higher education homogenize cultural tastes, or does it preserve and specialize pre-existing aesthetic boundaries? While cross-sectional research links scholastic capital to cultural omnivorousness, how individuals traverse distinct developmental pathways across specific activities during college remains underexplored. Using longitudinal panel data from the NetSense study, we investigate taste trajectories across two expressive cultural domains: leisure book reading (9 genres across six waves) and musical genre preferences (10 genres across six waves) ($N = 201$). We estimate multivariate binary latent class growth models in \texttt{flexmix} using natural cubic splines with endogenous multinomial concomitants. Across both spheres, a three-class specification provides optimal substantive parsimony, distinguishing omnivorous consumers, genre-selective specialists, and disengaged participants. Longitudinal analyses show that private cultural tastes divide into persistent, parallel developmental tracks with localized reallocations (such as surges in biography reading and country music adoption among omnivores), rather than pervasive collegiate homogenization or aesthetic boundary decay. Endogenous concomitants indicate that pre-collegiate academic capital universally predicts omnivorousness, whereas gender identity and academic major sort students into distinct subcultures. Finally, within-class growth models indicate that sociodemographics serve primarily as initial sorting gates into developmental pathways rather than moderating trajectory slopes within them.
 
 \vspace{0.8em}
 \noindent\textbf{Keywords:} Cultural Taste, Latent Class Growth Analysis, Cultural Omnivorousness, Higher Education, Emerging Adulthood, Finite Mixture Models
@@ -43,7 +43,7 @@ Does higher education homogenize cultural tastes, or does it preserve and specia
 
 The evolution of cultural taste during emerging adulthood represents a central theoretical concern in the sociology of culture and higher education. The collegiate environment is frequently conceptualized as an incubator of aesthetic orientation, providing students with dense social networks, institutional opportunity structures, and exposure to diverse expressive forms. While cross-sectional scholarship has established durable connections between socioeconomic status, scholastic achievement, and cultural omnivorousness \citep{bourdieu1984distinction,peterson1996changing,lizardo2006cultural}, questions remain regarding how individuals traverse distinct developmental trajectories across specific cultural activities over the course of college.
 
-Rather than aggregating participation into summary counts, examining separate binary items simultaneously allows researchers to observe whether taste change is uniform across an entire expressive sphere or driven by specific, institutionalized activities. Using longitudinal survey data from the NetSense study, this investigation models individual developmental pathways across three expressive domains: public arts and cultural event attendance (tracked across 9 distinct events from freshman through sophomore year), private leisure reading choices (tracked across 9 distinct book types from freshman through junior year), and musical genre preferences (tracked across 10 prominent musical genres from freshman through junior year). We implement a multivariate binary latent class growth model using natural cubic splines in the \texttt{flexmix} package \citep{grun2008flexmix} in \textsf{R} \citep{Rmanual}. This approach models individual-level trajectories for each item simultaneously while estimating endogenous multinomial concomitants to identify how sociodemographic background, academic achievement, and collegiate major structure latent class membership.
+Rather than aggregating participation into summary counts, examining separate binary items simultaneously allows researchers to observe whether taste change is uniform across an entire expressive sphere or driven by specific, institutionalized activities. Using longitudinal survey data from the NetSense study, this investigation models individual developmental pathways across two expressive domains: private leisure reading choices (tracked across 9 distinct book types from freshman through junior year) and musical genre preferences (tracked across 10 prominent musical genres from freshman through junior year). We implement a multivariate binary latent class growth model using natural cubic splines in the \texttt{flexmix} package \citep{grun2008flexmix} in \textsf{R} \citep{Rmanual}. This approach models individual-level trajectories for each item simultaneously while estimating endogenous multinomial concomitants to identify how sociodemographic background, academic achievement, and collegiate major structure latent class membership.
 
 \section{Data and Measures}
 
@@ -51,15 +51,13 @@ Rather than aggregating participation into summary counts, examining separate bi
 
 Empirical analyses use longitudinal survey microdata from the NetSense study, a multi-wave panel investigation tracking a cohort of undergraduate students matriculating at the University of Notre Dame in August 2011 \citep{striegel2013lessons}. NetSense recruited an initial cohort of incoming first-year students who were provided with sensor-enabled smartphones and surveyed repeatedly at each semester boundary across their undergraduate careers. Surveys captured detailed social networks, academic performance, sociodemographic backgrounds, and extensive inventories of expressive cultural practices.
 
-Because survey modules varied in their longitudinal administration across waves, our analytical samples are defined by complete longitudinal reporting within each cultural domain. Public cultural event attendance was fielded across the first four consecutive semesters (Waves 1 through 4, Fall 2011 through Spring 2013), yielding an analytical cohort of $N = 199$ students with complete four-wave observations. Leisure reading choices and musical genre preferences were administered across six consecutive semesters (Waves 1 through 6, Fall 2011 through Spring 2014), providing an analytical cohort of $N = 201$ students observed continuously from freshman matriculation through junior year.
+Our analytical cohort comprises $N = 201$ undergraduate students with complete longitudinal reporting across all six consecutive semesters (Waves 1 through 6, Fall 2011 through Spring 2014), tracking participants continuously from freshman matriculation through junior year across both expressive cultural batteries.
 
-\subsection{Expressive Cultural Participation Batteries}
+\subsection{Expressive Cultural Batteries: Books and Music}
 
-Across all three expressive domains, cultural items are measured as binary indicators ($Y_{itj} \in \{0, 1\}$) reflecting semester-level participation or aesthetic preference. For public arts and cultural events, tracked across Waves 1 through 4, participation was measured by survey question Q45: ``\textit{In the past semester, have you attended any of the following cultural events?}'' Respondents indicated binary participation (``Yes'' = 1, ``No'' = 0). To focus specifically on aesthetic and expressive arts while consolidating conceptually aligned genres, we combine classical concerts and opera into a single category, combine rock/pop and folk/country concerts into a single live music category, and eliminate science and history museums. This yields nine distinct cultural activities spanning institutional highbrow, theatrical, and commercial popular venues: classical music concerts or opera; rock, pop, folk, or country concerts; ballet or modern dance; jazz or blues performances; musical theater or Broadway shows; stage plays or dramas (non-musical); comedy clubs or stand-up shows; art museums or galleries; and movies in a cinema or theater.
+Across both expressive domains, cultural items are measured as binary indicators ($Y_{itj} \in \{0, 1\}$) reflecting semester-level participation or aesthetic preference. For leisure book reading, tracked across Waves 1 through 6, reading choices were measured by survey question Q47: ``\textit{During the past semester, what types of books did you read for pleasure or leisure (not for class assignments)?}'' Binary indicators were recorded across nine literary categories: mysteries and detective fiction; thrillers and suspense; romance; science fiction and fantasy; general and literary fiction; history, politics, and current affairs; biography and memoir; self-help and personal development; and general non-fiction and popular science.
 
-For leisure book reading, tracked across Waves 1 through 6, reading choices were measured by survey question Q47: ``\textit{During the past semester, what types of books did you read for pleasure or leisure (not for class assignments)?}'' Binary indicators were recorded across nine literary categories: mysteries and detective fiction; thrillers and suspense; romance; science fiction and fantasy; general and literary fiction; history, politics, and current affairs; biography and memoir; self-help and personal development; and general non-fiction and popular science.
-
-Finally, for musical taste preferences, also tracked across Waves 1 through 6, preferences were measured by survey question Q44: ``\textit{Which of the following types of music do you like to listen to?}'' From the full 22-genre inventory administered in the survey, the 10 most prominent genres were selected for simultaneous multivariate trajectory modeling: classical music; dance music, electronica, and EDM; country and western; alternative and modern rock; classic rock and classic hits; Broadway and show tunes; pop and Top 40; jazz; folk and singer-songwriter; and rap and hip-hop.
+For musical taste preferences, also tracked across Waves 1 through 6, preferences were measured by survey question Q44: ``\textit{Which of the following types of music do you like to listen to?}'' From the full 22-genre inventory administered in the survey, the 10 most prominent genres were selected for simultaneous multivariate trajectory modeling: classical music; dance music, electronica, and EDM; country and western; alternative and modern rock; classic rock and classic hits; Broadway and show tunes; pop and Top 40; jazz; folk and singer-songwriter; and rap and hip-hop.
 
 \subsection{Baseline Sociodemographic and Scholastic Covariates}
 
@@ -72,7 +70,7 @@ Third, pre-collegiate scholastic capital includes high school academic achieveme
 \footnotesize
 \setlength{\tabcolsep}{1.8pt}
 \renewcommand{\arraystretch}{0.92}
-\caption{Descriptive Statistics for Baseline Covariates and Cultural Participation Batteries}
+\caption{Descriptive Statistics for Baseline Covariates, Book Reading Types, and Music Genres ($N = 201$)}
 \label{tab:descriptives}
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}llcc@{}}
 \toprule
@@ -89,18 +87,7 @@ Variable / Cultural Item & Operationalization & Mean / \% & SD / Wave Trend \\
 \quad Academic Major & STEM Field (vs. Non-STEM) & 45.2\% & $n = 90$ \\
 \quad Hometown Urbanicity & 6-point scale ($1 = \text{Rural}, 6 = \text{Metro}$) & 5.49 & $\text{SD} = 0.76$ \\
 \addlinespace[3pt]
-\multicolumn{4}{l}{\textbf{Panel B: Public Arts \& Cultural Events (9 Items, Waves 1--4, $N = 199$)}} \\
-\quad Stage Play (Non-Musical) & Attended in past semester & 43.1\% & W1: 58.0\% $\rightarrow$ W4: 47.8\% \\
-\quad Comedy Club & Attended in past semester & 39.9\% & W1: 56.9\% $\rightarrow$ W4: 39.8\% \\
-\quad Ballet or Modern Dance & Attended in past semester & 38.1\% & W1: 67.4\% $\rightarrow$ W4: 35.4\% \\
-\quad Rock, Pop, Folk, or Country & Attended in past semester & 33.9\% & W1: 40.9\% $\rightarrow$ W4: 31.1\% \\
-\quad Jazz or Blues Performance & Attended in past semester & 33.6\% & W1: 53.0\% $\rightarrow$ W4: 23.6\% \\
-\quad Art Museum or Gallery & Attended in past semester & 27.8\% & W1: 53.6\% $\rightarrow$ W4: 28.6\% \\
-\quad Cinema or Movie Theater & Attended in past semester & 23.4\% & W1: 34.8\% $\rightarrow$ W4: 29.8\% \\
-\quad Classical Concert or Opera & Attended in past semester & 20.8\% & W1: 17.7\% $\rightarrow$ W4: 25.5\% \\
-\quad Musical Stage Play & Attended in past semester & 15.0\% & W1: 18.8\% $\rightarrow$ W4: 14.9\% \\
-\addlinespace[3pt]
-\multicolumn{4}{l}{\textbf{Panel C: Leisure Book Reading Types (Waves 1--6, $N = 201$)}} \\
+\multicolumn{4}{l}{\textbf{Panel B: Leisure Book Reading Types (Waves 1--6, $N = 201$)}} \\
 \quad Science Fiction / Fantasy & Read for leisure & 56.1\% & W1: 58.8\% $\rightarrow$ W6: 52.6\% \\
 \quad Mysteries / Detective & Read for leisure & 53.5\% & W1: 54.3\% $\rightarrow$ W6: 48.1\% \\
 \quad General / Literary Fiction & Read for leisure & 53.4\% & W1: 56.8\% $\rightarrow$ W6: 51.9\% \\
@@ -111,7 +98,7 @@ Variable / Cultural Item & Operationalization & Mean / \% & SD / Wave Trend \\
 \quad General Non-Fiction / Science & Read for leisure & 24.2\% & W1: 31.2\% $\rightarrow$ W6: 20.0\% \\
 \quad History / Politics / Current & Read for leisure & 15.9\% & W1: 18.1\% $\rightarrow$ W6: 17.0\% \\
 \addlinespace[3pt]
-\multicolumn{4}{l}{\textbf{Panel D: Musical Genre Preferences (Waves 1--6, $N = 201$)}} \\
+\multicolumn{4}{l}{\textbf{Panel C: Musical Genre Preferences (Waves 1--6, $N = 201$)}} \\
 \quad Classical Music & Likes to listen & 54.5\% & W1: 58.3\% $\rightarrow$ W6: 47.4\% \\
 \quad Dance / Electronica / EDM & Likes to listen & 51.7\% & W1: 50.3\% $\rightarrow$ W6: 46.7\% \\
 \quad Country / Western & Likes to listen & 50.7\% & W1: 44.2\% $\rightarrow$ W6: 53.3\% \\
@@ -127,7 +114,7 @@ Variable / Cultural Item & Operationalization & Mean / \% & SD / Wave Trend \\
 \begin{minipage}{\linewidth}
 \vspace{4pt}
 \footnotesize
-\textit{Note:} Descriptive statistics computed across analytical cohorts ($N = 201$ complete cases in Books and Music; $N = 199$ complete cases in Arts). Panel A shows baseline values before single stochastic imputation for missing items (each $< 6\%$ missingness). Panels B, C, and D report pooled longitudinal prevalence across all waves alongside initial Wave 1 and final wave (Wave 4 for Arts, Wave 6 for Books and Music) empirical participation proportions.
+\textit{Note:} Descriptive statistics computed across analytical cohort ($N = 201$ complete cases in Books and Music). Panel A shows baseline values before single stochastic imputation for missing items (each $< 6\%$ missingness). Panels B and C report pooled longitudinal prevalence across all six waves alongside initial Wave 1 and final Wave 6 empirical participation proportions.
 \end{minipage}
 \end{table}
 
@@ -135,11 +122,11 @@ Variable / Cultural Item & Operationalization & Mean / \% & SD / Wave Trend \\
 
 \subsection{Multivariate Binary Mixture Formulation}
 
-Let $i \in \{1, \dots, N\}$ index students observed across repeated survey waves $t \in \{1, \dots, T_i\}$. At each wave, students report binary participation ($Y_{itj} \in \{0, 1\}$) across a battery of $J$ distinct items ($J = 12$ for Arts Events; $J = 9$ for Book Types; $J = 10$ for Music Genres). In the multivariate binary mixture model, each item possesses its own distinct growth parameters within latent class $k \in \{1, \dots, K\}$.
+Let $i \in \{1, \dots, N\}$ index students observed across repeated survey waves $t \in \{1, \dots, T\}$. At each wave, students report binary participation ($Y_{itj} \in \{0, 1\}$) across a battery of $J$ distinct items ($J = 9$ for Book Types; $J = 10$ for Music Genres). In the multivariate binary mixture model, each item possesses its own distinct growth parameters within latent class $k \in \{1, \dots, K\}$.
 
 Conditioned on membership in latent class $k$, the joint probability of observing an individual's vector of responses across all items and measurement waves is modeled as conditionally independent Bernoulli trials:
 \begin{equation}
-p(\mathbf{Y}_i \mid c_i = k) = \prod_{t=1}^{T_i} \prod_{j=1}^{J} \mu_{iktj}^{Y_{itj}} (1 - \mu_{iktj})^{1 - Y_{itj}}
+p(\mathbf{Y}_i \mid c_i = k) = \prod_{t=1}^{T} \prod_{j=1}^{J} \mu_{iktj}^{Y_{itj}} (1 - \mu_{iktj})^{1 - Y_{itj}}
 \end{equation}
 Repeated observations are grouped at the student level ensuring that latent class partitions reflect stable developmental archetypes across emerging adulthood.
 
@@ -151,7 +138,7 @@ To achieve temporal flexibility without imposing the rigid symmetry or boundary 
 \end{equation}
 where $\text{Time}_{it} = \text{Wave}_{it} - 1$ centers time at collegiate matriculation ($t = 0$), and $\text{ns}_1(t)$ and $\text{ns}_2(t)$ represent orthogonalized natural spline basis functions with linear boundary constraints.
 
-Because the observation window differs between public events (Waves 1--4) and recorded media (Waves 1--6), the internal knot locations adapt naturally to each domain's temporal horizon while maintaining identical parametric complexity (three parameters per item per class). For public arts and cultural events ($t \in [0, 3]$), boundary knots are placed at $t = 0$ (Wave 1) and $t = 3$ (Wave 4), with an internal knot placed at $t = 1.5$ (between freshman spring and sophomore fall). This placement positions the inflection flexibility directly at the onset of the sophomore slump and rebound. For book reading types and musical genres ($t \in [0, 5]$), boundary knots are placed at $t = 0$ (Wave 1) and $t = 5$ (Wave 6), with an internal knot placed at the collegiate midpoint ($t = 2.5$, between sophomore fall and sophomore spring). This formulation captures transitions from underclassman to upperclassman years while enforcing linear boundary constraints at matriculation and junior year.
+Across both expressive domains, students are observed over six consecutive semesters ($t \in \{0, \dots, 5\}$). Boundary knots are placed at $t = 0$ (Wave 1) and $t = 5$ (Wave 6), with an internal knot placed at the collegiate midpoint ($t = 2.5$, between sophomore fall and sophomore spring). This formulation captures developmental transitions across emerging adulthood while maintaining identical parametric complexity (three parameters per item per class) and enforcing linear boundary constraints at matriculation and junior year.
 
 \subsection{Endogenous Multinomial Concomitant Models}
 
@@ -159,11 +146,11 @@ To avoid the classification error and attenuation inherent in two-step estimatio
 \begin{equation}
 \pi_{ik} = \frac{\exp(\mathbf{X}_i \boldsymbol{\gamma}_k)}{\sum_{l=1}^K \exp(\mathbf{X}_i \boldsymbol{\gamma}_l)}
 \end{equation}
-where $\boldsymbol{\gamma}_1 = \mathbf{0}$ sets Class 1 as the reference baseline. Across all three domains, the exact same battery of nine baseline predictors is included simultaneously: sociodemographic background (gender identity, racial identification, and religious affiliation); family socioeconomic status (parental household income and parental educational attainment); pre-collegiate scholastic capital (high school academic performance and advanced degree aspirations); and institutional and geographic context (declared STEM major and hometown urbanicity).
+where $\boldsymbol{\gamma}_1 = \mathbf{0}$ sets Class 1 as the reference baseline. Across both expressive domains, the exact same battery of nine baseline predictors is included simultaneously: sociodemographic background (gender identity, racial identification, and religious affiliation); family socioeconomic status (parental household income and parental educational attainment); pre-collegiate scholastic capital (high school academic performance and advanced degree aspirations); and institutional and geographic context (declared STEM major and hometown urbanicity).
 
 \section{Latent Class Selection Across Domains}
 
-We evaluate candidate specifications from one through five latent classes ($K = 1 \dots 5$) across all three expressive domains, following standard class enumeration protocols for latent growth mixture models \citep{nylund2007deciding}. Table~\ref{tab:selection} presents model fit statistics, stepwise Likelihood Ratio Tests (LRT), and student-level class distributions.
+We evaluate candidate specifications from one through five latent classes ($K = 1 \dots 5$) across both expressive domains, following standard class enumeration protocols for latent growth mixture models \citep{nylund2007deciding}. Table~\ref{tab:selection} presents model fit statistics, stepwise Likelihood Ratio Tests (LRT), and student-level class distributions.
 
 \begin{table}[htbp]
 \centering
@@ -175,21 +162,14 @@ We evaluate candidate specifications from one through five latent classes ($K = 
 \toprule
 Model & LogLik & Par & AIC & BIC & Stepwise $\chi^2$ ($df$) & $p$ & Class Proportions (\%) \\
 \midrule
-\multicolumn{8}{l}{\textbf{Panel A: Arts \& Cultural Events (9 Items, Waves 1--4, $N = 199$)}} \\
-$K = 1$ & -3334.9 & 27 & 6723.8 & 6844.8 & --- & --- & 100\% \\
-$K = 2$ & -3048.3 & 55 & 6206.6 & 6453.2 & 573.2 (28) & $< .001$ & 65.8\% / 34.2\% \\
-$K = 3$ & -2990.4 & 83 & 6146.8 & 6518.9 & 115.8 (28) & $< .001$ & 19.1\% / 35.2\% / 45.7\% \\
-$K = 4$ & -2938.7 & 111 & 6099.3 & 6597.0 & 103.5 (28) & $< .001$ & 46.7\% / 17.6\% / 9.5\% / 26.1\% \\
-$K = 5$ & -2958.8 & 139 & 6139.6 & 6637.2 & --- & --- & 38.7\% / 20.6\% / 21.6\% / 19.1\% \\
-\addlinespace[3pt]
-\multicolumn{8}{l}{\textbf{Panel B: Book Reading Types (9 Items, Waves 1--6, $N = 201$)}} \\
+\multicolumn{8}{l}{\textbf{Panel A: Book Reading Types (9 Items, Waves 1--6, $N = 201$)}} \\
 $K = 1$ & -5688.1 & 27 & 11430.2 & 11562.8 & --- & --- & 100\% \\
 $K = 2$ & -5282.5 & 55 & 10675.0 & 10945.2 & 811.2 (28) & $< .001$ & 45.8\% / 54.2\% \\
 $K = 3$ & -5015.5 & 83 & 10197.1 & 10604.9 & 533.9 (28) & $< .001$ & 29.9\% / 39.3\% / 30.8\% \\
 $K = 4$ & -4849.1 & 111 & 9920.1 & 10465.5 & 333.0 (28) & $< .001$ & 21.4\% / 21.9\% / 29.9\% / 26.9\% \\
 $K = 5$ & -4721.6 & 139 & 9721.3 & 10404.3 & 254.9 (28) & $< .001$ & 22.4\% / 16.4\% / 22.9\% / 11.9\% / 26.4\% \\
 \addlinespace[3pt]
-\multicolumn{8}{l}{\textbf{Panel C: Music Genre Preferences (10 Genres, Waves 1--6, $N = 201$)}} \\
+\multicolumn{8}{l}{\textbf{Panel B: Music Genre Preferences (10 Genres, Waves 1--6, $N = 201$)}} \\
 $K = 1$ & -6262.8 & 30 & 12585.6 & 12733.0 & --- & --- & 100\% \\
 $K = 2$ & -5783.4 & 61 & 11688.8 & 11988.6 & 958.8 (31) & $< .001$ & 48.3\% / 51.7\% \\
 $K = 3$ & -5555.6 & 92 & 11295.1 & 11747.2 & 455.6 (31) & $< .001$ & 45.3\% / 23.4\% / 31.3\% \\
@@ -204,30 +184,17 @@ $K = 5$ & -5276.7 & 154 & 10861.4 & 11618.2 & 261.8 (31) & $< .001$ & 8.5\% / 22
 \end{minipage}
 \end{table}
 
-Across all three domains, moving from a single homogeneous growth curve ($K = 1$) to a multi-class mixture produces marked improvements in predictive log-likelihood. In leisure reading and music preferences, the three-class specification captures the primary structural elbow: moving from two to three classes yields large reductions in BIC \citep{raftery1995bayesian} ($\Delta\text{BIC} = -340.3$ in Books; $\Delta\text{BIC} = -241.4$ in Music; $p < 0.001$), generating well-populated, substantively cohesive groups of roughly equal size ($25\%$ to $45\%$). For public cultural events, estimating 9 item trajectories consumes 28 additional parameters per class; while formal BIC reaches its minimum at $K = 2$ due to heavy dimensionality penalization, the stepwise Likelihood Ratio Test indicates that $K = 3$ improves model fit decisively ($\chi^2 = 115.8, df = 28, p < 0.001$). Substantively, $K = 3$ is essential: it cleanly separates high-arts traditionalists from broader cultural consumers, a distinction that two-class models obscure. Beyond three classes, solutions fragment existing classes into redundant sub-clusters. Consequently, $K = 3$ is selected as the primary substantive specification across all three domains.
+Across both expressive domains, moving from a single homogeneous growth curve ($K = 1$) to a multi-class mixture produces marked improvements in predictive log-likelihood. In both leisure reading and music preferences, the three-class specification captures the primary structural elbow: moving from two to three classes yields large reductions in BIC \citep{raftery1995bayesian} ($\Delta\text{BIC} = -340.3$ in Books; $\Delta\text{BIC} = -241.4$ in Music; $p < 0.001$), generating well-populated, substantively cohesive groups of roughly equal size ($25\%$ to $45\%$). Substantively, $K = 3$ is optimal: it cleanly separates specialized cultural omnivores, focused genre specialists, and disengaged readers and listeners. Beyond three classes, solutions fragment existing classes into redundant sub-clusters. Consequently, $K = 3$ is selected as the primary substantive specification across both domains.
 
 \section{Item-Specific Trajectory Profiles}
 
-\subsection{Public Arts and Cultural Events (9 Items)}
-
-Figure~\ref{fig:arts} displays the model-implied predicted participation trajectories across all nine cultural event types for each of the three latent classes over the first four collegiate semesters. Lines trace continuous natural cubic spline curves, while discrete geometric markers designate empirical survey wave observations. All trajectory profiles and small-multiple panels were visualized using the \texttt{ggplot2} package \citep{wickham2016ggplot2} in \textsf{R} \citep{Rmanual}.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\linewidth]{Plots/fig1_arts_9_events_by_class.png}
-\caption{Latent participation trajectories across 9 Public Arts and Cultural Events from the 3-class multivariate binary model (Waves 1 to 4). Circles and blue curves denote Class 1 (``Omnivores''), triangles and orange curves denote Class 2 (``Traditionalists''), and squares and sky blue curves denote Class 3 (``Minimalists'').}
-\label{fig:arts}
-\end{figure}
-
-Examining the item-specific trajectories shows how the collegiate sophomore slump operates differently across distinct cultural activities. The first class, designated ``Class 1: Omnivores'' ($n = 38$, 19.1\%), maintains elevated attendance across all nine expressive activities. Members of this class enter college with high engagement across ballet and modern dance (95.6\%), comedy clubs (91.2\%), non-musical stage plays (87.2\%), rock, pop, folk, or country concerts (81.5\%), jazz or blues (80.7\%), cinema (78.2\%), and art museums (72.7\%). While experiencing a modest mid-collegiate dip in popular venues, their participation rebounds by sophomore spring. Moreover, classical music concert and opera attendance among Omnivores rises monotonically from 49.8\% to 77.6\% (+27.8 percentage points) as students cultivate specialized highbrow cultural capital. The second group, ``Class 2: Traditionalists'' ($n = 70$, 35.2\%), concentrates its cultural capital on institutionalized highbrow and theatrical venues, participating actively in comedy clubs (74.6\%), art museums (65.4\%), ballet (65.1\%), and stage plays (60.9\%). However, Traditionalists experience deep sophomore slumps in museum and comedy attendance (falling by 42.8 percentage points in art museums and 40.1 percentage points in comedy clubs) before staging partial rebounds. The third group, ``Class 3: Minimalists'' ($n = 91$, 45.7\%), shows universally lower attendance across all nine activities, with participation in rock and folk concerts dropping from 21.4\% to 2.9\%, jazz dropping from 37.9\% to 7.0\%, and musical theater falling to 3.4\% by sophomore year.
-
 \subsection{Leisure Book Reading (9 Items)}
 
-Figure~\ref{fig:books} illustrates the model-implied reading trajectories across all nine book categories for each of the three latent classes over all six collegiate semesters.
+Figure~\ref{fig:books} illustrates the model-implied reading trajectories across all nine book categories for each of the three latent classes over all six collegiate semesters. Lines trace continuous natural cubic spline curves, while discrete geometric markers designate empirical survey wave observations. All trajectory profiles and small-multiple panels were visualized using the \texttt{ggplot2} package \citep{wickham2016ggplot2} in \textsf{R} \citep{Rmanual}.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{Plots/fig2_books_9_items_by_class.png}
+\includegraphics[width=\linewidth]{Plots/fig1_books_9_items_by_class.png}
 \caption{Latent trajectories across 9 Book Reading Types from the 3-class multivariate binary model (Waves 1 to 6). Circles and green curves indicate Class 1 (``Nonfictionists''), triangles and blue curves indicate Class 2 (``Fictionists''), and squares and orange curves indicate Class 3 (``Minimalists'').}
 \label{fig:books}
 \end{figure}
@@ -240,12 +207,25 @@ Figure~\ref{fig:music} illustrates the model-implied preference trajectories acr
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{Plots/fig3_music_10_genres_by_class.png}
+\includegraphics[width=\linewidth]{Plots/fig2_music_10_genres_by_class.png}
 \caption{Latent trajectories across the Top 10 Music Genres from the 3-class multivariate binary model (Waves 1 to 6). Circles and blue curves denote Class 1 (``Omnivores''), triangles and red curves denote Class 2 (``Rockers''), and squares and orange curves denote Class 3 (``Mainstreamers'').}
 \label{fig:music}
 \end{figure}
 
 Examining the item-level music trajectories shows how genre boundaries define distinct student taste cultures. The first class, ``Class 1: Omnivores'' ($n = 62$, 30.8\%), maintains high preference probabilities across all 10 genres simultaneously, embracing Broadway show tunes (61.1\%), classical music (36.4\%), folk (27.6\%), and country (74.8\%) alongside contemporary rap (73.0\%) and classic rock (77.3\%). Country music expands to near-universal adoption among Omnivores over time (+23.7 percentage points). The second group, ``Class 2: Rockers'' ($n = 51$, 25.4\%), exhibits a focused genre-selective profile: its members report near-universal preference for rock and heavy metal (89.3\%) and classic rock (82.4\%), but actively reject country music (2.2\%) and show low interest in folk and Broadway. The third group, ``Class 3: Mainstreamers'' ($n = 88$, 43.8\%), represents the commercial mainstream: they listen actively to rap/hip-hop (69.4\%), dance music (53.1\%), and country (42.5\%), but report low preference for highbrow classical (17.9\%), jazz (8.8\%), or folk music (13.2\%). Across all three classes, musical preferences remain exceptionally stable across all six semesters, even as rock and heavy metal displays a modest cross-class decline of 16 to 20 percentage points.
+
+\subsection{Net Trajectory Shifts Within Latent Classes}
+
+To evaluate how participation changes across the entire collegiate life course within each latent class, Figure~\ref{fig:shifts} displays the net percentage point shift ($\Delta = P(W_6) - P(W_1)$) for every cultural item across all three latent classes.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{Plots/fig3_activity_time_trend_shifts.png}
+\caption{Net trajectory shifts by cultural item within latent classes. Markers and connecting segments indicate the net percentage point shift ($\Delta = P(W_6) - P(W_1)$) from baseline matriculation to junior spring across Book Reading Types and Music Genres. Blue markers denote positive expansion; orange markers denote contraction.}
+\label{fig:shifts}
+\end{figure}
+
+Examining net trajectory shifts reveals that collegiate cultural change is characterized by targeted reallocation within existing repertoires rather than wholesale aesthetic drift. Among Class 1 Nonfictionists in leisure reading, students substantially expand personal biography and memoir reading (+23.3 percentage points) while pruning dense historical and political reading (-11.7 to -18.9 percentage points). In contrast, Class 2 Fictionists maintain stable or slightly expanding reading rates across thrillers (+3.5 pp), mysteries (+0.4 pp), and sci-fi/fantasy (+0.3 pp), while Class 3 Minimalists exhibit contractions across every single book category (falling by up to -15.5 percentage points). In musical taste, Class 1 Omnivores uniquely expand country music adoption (+23.7 percentage points) alongside modest expansions in dance music (+3.6 pp) and classical music (+1.3 pp). In contrast, Class 2 Rockers actively contract their musical footprint across mainstream genres (rap falling by -16.2 pp and pop by -13.8 pp), while Class 3 Mainstreamers concentrate strictly on commercial hits, contracting highbrow jazz (-7.2 pp) and folk (-4.8 pp). These net shifts show that latent classes function as distinct developmental environments where students selectively reinforce specific aesthetic boundaries over time.
 
 \section{Predicting Trajectory Class Membership}
 
@@ -257,21 +237,13 @@ To evaluate the overall contribution of competing theoretical explanations in st
 \centering
 \small
 \setlength{\tabcolsep}{4.5pt}
-\caption{Model Fit and Predictive Power of Theoretical Variable Blocks across Expressive Domains}
+\caption{Model Fit and Predictive Power of Theoretical Variable Blocks across Expressive Domains ($N = 201$)}
 \label{tab:blocks}
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lcccccc@{}}
 \toprule
 Predictor Specification & Wald $\chi^2$ & LRT $\chi^2$ & $df$ & $p$ & AIC & BIC \\
 \midrule
-\multicolumn{7}{l}{\textbf{Panel A: Arts \& Cultural Events (9 Items, $N = 199$)}} \\
-\quad Block 1: Demographic Identity & 10.69 & 16.71 & 6 & 0.010 & 413.8 & 440.1 \\
-\quad Block 2: Family SES & 3.75 & 3.75 & 4 & 0.440 & 422.8 & 442.5 \\
-\quad Block 3: Scholastic Capital & 20.15 & 3.80 & 4 & 0.433 & 422.7 & 442.5 \\
-\quad Block 4: Collegiate Context & 5.87 & 5.87 & 4 & 0.209 & 420.6 & 440.4 \\
-\quad Combined Sociodemographics (Blocks 1+2) & 20.13 & 20.13 & 10 & 0.028 & 418.4 & 457.9 \\
-\quad Full Multivariable Model & 27.72 & 27.72 & 18 & 0.066 & 426.8 & 492.7 \\
-\addlinespace[3pt]
-\multicolumn{7}{l}{\textbf{Panel B: Book Reading Types (9 Items, $N = 201$)}} \\
+\multicolumn{7}{l}{\textbf{Panel A: Book Reading Types (9 Items, $N = 201$)}} \\
 \quad Block 1: Demographic Identity & 94.64 & 94.64 & 6 & $< .001$ & 360.3 & 386.7 \\
 \quad Block 2: Family SES & 0.89 & 0.89 & 4 & 0.926 & 450.0 & 469.9 \\
 \quad Block 3: Scholastic Capital & 15.79 & 5.79 & 4 & 0.215 & 445.1 & 465.0 \\
@@ -279,7 +251,7 @@ Predictor Specification & Wald $\chi^2$ & LRT $\chi^2$ & $df$ & $p$ & AIC & BIC 
 \quad Combined Sociodemographics (Blocks 1+2) & 99.69 & 99.69 & 10 & $< .001$ & 363.2 & 402.9 \\
 \quad Full Multivariable Model & 110.36 & 110.36 & 18 & $< .001$ & 368.6 & 434.6 \\
 \addlinespace[3pt]
-\multicolumn{7}{l}{\textbf{Panel C: Music Genre Preferences (10 Genres, $N = 201$)}} \\
+\multicolumn{7}{l}{\textbf{Panel B: Music Genre Preferences (10 Genres, $N = 201$)}} \\
 \quad Block 1: Demographic Identity & 30.62 & 30.62 & 6 & $< .001$ & 415.8 & 442.2 \\
 \quad Block 2: Family SES & 3.70 & 3.70 & 4 & 0.448 & 438.7 & 458.5 \\
 \quad Block 3: Scholastic Capital & 19.72 & 19.72 & 4 & $< .001$ & 422.7 & 442.5 \\
@@ -295,26 +267,24 @@ Predictor Specification & Wald $\chi^2$ & LRT $\chi^2$ & $df$ & $p$ & AIC & BIC 
 \end{minipage}
 \end{table}
 
-The block tests provide compelling evidence regarding the social stratification of cultural trajectories. Demographic identity (Gender, Race, and Religion) significantly predicts class sorting across all three domains: public arts ($\chi^2 = 16.71, df = 6, p = 0.010$), leisure reading ($\chi^2 = 94.64, df = 6, p < 0.001$), and music preferences ($\chi^2 = 30.62, df = 6, p < 0.001$). Pre-collegiate scholastic capital (GPA and degree aspirations) is highly significant in music ($\chi^2 = 19.72, df = 4, p < 0.001$). Collegiate context (STEM major and hometown urbanicity) significantly predicts class membership in both books ($\chi^2 = 11.43, df = 4, p = 0.022$) and music ($\chi^2 = 13.92, df = 4, p = 0.008$). In contrast, family socioeconomic status (parental income and education) is completely non-significant across all three domains (e.g., $\chi^2 = 3.75, p = 0.440$ in arts; $\chi^2 = 0.89, p = 0.926$ in books; $\chi^2 = 3.70, p = 0.448$ in music). Combined sociodemographics achieve decisive significance in both books and music ($p < 0.001$) and in arts ($p = 0.028$).
+The block tests provide compelling evidence regarding the social stratification of cultural trajectories. Demographic identity (Gender, Race, and Religion) significantly predicts class sorting across both domains: leisure reading ($\chi^2 = 94.64, df = 6, p < 0.001$) and music preferences ($\chi^2 = 30.62, df = 6, p < 0.001$). Pre-collegiate scholastic capital (GPA and degree aspirations) is highly significant in music ($\chi^2 = 19.72, df = 4, p < 0.001$), lowering AIC from 438.7 to 422.7. Collegiate context (STEM major and hometown urbanicity) significantly predicts class membership in both books ($\chi^2 = 11.43, df = 4, p = 0.022$) and music ($\chi^2 = 13.92, df = 4, p = 0.008$). In contrast, family socioeconomic status (parental income and education) is completely non-significant across both domains ($\chi^2 = 0.89, p = 0.926$ in books; $\chi^2 = 3.70, p = 0.448$ in music). When all blocks are combined, the full multivariable models achieve decisive statistical significance ($p < 0.001$ in both books and music).
 
 \subsection{Model-Implied Marginal Class Probabilities}
 
-While Table~\ref{tab:blocks} evaluates the overall predictive power of theoretical variable blocks, interpreting individual coefficients from multinomial logit models is often complicated by arbitrary reference baselines and non-linear log-odds metrics. Table~\ref{tab:app_coefs} in the Appendix reports the complete multivariable parameter estimates and odds ratios for all nine covariates across all three domains. Following recent methodological practice in latent growth mixture analysis, we translate these multivariable model parameters into model-implied marginal predicted class probabilities with 95\% simulation confidence intervals, holding other background covariates constant at sample means and reference categories. Figure~\ref{fig:marginal} illustrates these marginal class probabilities across the statistically significant predictor blocks identified in Table~\ref{tab:blocks} for each of the three expressive domains.
+While Table~\ref{tab:blocks} evaluates the overall predictive power of theoretical variable blocks, interpreting individual coefficients from multinomial logit models is often complicated by arbitrary reference baselines and non-linear log-odds metrics. Table~\ref{tab:app_coefs} in the Appendix reports the complete multivariable parameter estimates and odds ratios for all nine covariates across both domains. Following recent methodological practice in latent growth mixture analysis, we translate these multivariable model parameters into model-implied marginal predicted class probabilities with 95\% simulation confidence intervals, holding other background covariates constant at sample means and reference categories. Figure~\ref{fig:marginal} illustrates these marginal class probabilities across the statistically significant predictor blocks identified in Table~\ref{tab:blocks}.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth,height=0.78\textheight,keepaspectratio]{Plots/fig4_marginal_effects_all_domains.png}
-\caption{Model-implied marginal predicted trajectory class probabilities with 95\% simulation confidence intervals across statistically significant predictor blocks from Table~\ref{tab:blocks}. Panel A displays predicted probabilities for Public Arts and Cultural Events across Gender Identity and Degree Aspirations. Panel B displays predicted probabilities for Leisure Book Reading Types across Gender Identity, Religion, and Undergraduate Major. Panel C displays predicted probabilities for Musical Genre Preferences across High School Academic Grades, Gender Identity, and Undergraduate Major. Dashed vertical reference lines indicate the equal random allocation baseline ($33.3\%$).}
+\includegraphics[width=\linewidth,height=0.65\textheight,keepaspectratio]{Plots/fig4_marginal_effects_books_music.png}
+\caption{Model-implied marginal predicted trajectory class probabilities with 95\% simulation confidence intervals across statistically significant predictor blocks from Table~\ref{tab:blocks}. Panel A displays predicted probabilities for Leisure Book Reading Types across Gender Identity, Religion, and Undergraduate Major. Panel B displays predicted probabilities for Musical Genre Preferences across High School Academic Grades, Gender Identity, and Undergraduate Major. Dashed vertical reference lines indicate the equal random allocation baseline ($33.3\%$).}
 \label{fig:marginal}
 \end{figure}
 
-In Panel A, Public Arts and Cultural Events displays substantial sorting across demographic identity and pre-collegiate aspirations. Women have a 56.0\% probability (95\% CI: [39.4\%, 70.8\%]) of belonging to Class 2 Traditionalists and a 25.9\% probability of belonging to Class 1 Omnivores, compared to only an 18.2\% probability of sorting into Class 3 Minimalists. In contrast, men are more than twice as likely as women to enter the Minimalist attendance pathway (41.1\%, 95\% CI: [26.7\%, 56.7\%]). Furthermore, educational aspirations exert a substantial extensive-margin sorting effect: students aspiring only to a bachelor's degree have an 83.9\% probability of entering the Minimalist pathway, whereas students planning post-graduate study (Master's, Ph.D., M.D., or J.D.) have only a 41.1\% probability of minimal attendance and are over four times more likely to sort into Traditionalist high-arts attendance (44.1\% vs. 10.7\%).
+In Panel A, Leisure Book Reading Types reveals that genre specializations are sharply divided by religious affiliation, gender identity, and undergraduate field of study. Religious identity produces pronounced sorting into reading styles: students identifying as Roman Catholic have a 31.6\% probability of belonging to Class 1 Nonfictionists and a 41.8\% probability of Class 2 Fictionists, with only a 26.6\% probability of sorting into Minimalist reading. Conversely, non-Catholic students are predominantly channeled into Class 3 Minimalist reading (58.1\%, 95\% CI: [37.2\%, 76.0\%]). Collegiate major also sorts students into distinct literary spheres: declared STEM majors exhibit a 59.9\% probability of belonging to Class 2 Fictionists (specializing in science fiction, fantasy, and thrillers) compared to 41.8\% among non-STEM students, alongside lower disengagement (14.9\% vs. 26.6\% for Minimalists).
 
-In Panel B, Leisure Book Reading Types reveals that genre specializations are sharply divided by religious affiliation, gender identity, and undergraduate field of study. Religious identity produces pronounced sorting into reading styles: students identifying as Roman Catholic have a 31.6\% probability of belonging to Class 1 Nonfictionists and a 41.8\% probability of Class 2 Fictionists, with only a 26.6\% probability of sorting into Minimalist reading. Conversely, non-Catholic students are predominantly channeled into Class 3 Minimalist reading (58.1\%, 95\% CI: [37.2\%, 76.0\%]). Collegiate major also sorts students into distinct literary spheres: declared STEM majors exhibit a 59.9\% probability of belonging to Class 2 Fictionists (specializing in science fiction, fantasy, and thrillers) compared to 41.8\% among non-STEM students, alongside lower disengagement (14.9\% vs. 26.6\% for Minimalists).
+In Panel B, Musical Genre Preferences illustrates the strong sorting power of pre-collegiate scholastic capital alongside gender identity and academic context. Earning mostly A/A- grades in high school serves as a primary sorting gateway into musical omnivorousness: high-achieving students have a 44.5\% probability of entering Class 1 Omnivores, compared to only 12.3\% (95\% CI: [3.7\%, 28.1\%]) among students with B+ or lower grades. Students entering with lower high school performance sort heavily into Class 3 Mainstreamers (47.2\%) and Class 2 Rockers (40.5\%). Gender identity sharply differentiates the rock subculture: men have a 25.0\% probability of sorting into Class 2 Rockers, whereas women have only a 7.4\% probability (95\% CI: [2.8\%, 15.6\%]), concentrating instead in Class 1 Omnivores (63.8\%). Finally, undergraduate major reinforces these aesthetic boundaries: declared STEM majors are significantly more likely to enter the Rocker pathway (44.2\%, 95\% CI: [31.3\%, 58.0\%]) than non-STEM majors (25.0\%), showing that collegiate fields of study cultivate distinct musical taste cultures.
 
-In Panel C, Musical Genre Preferences illustrates the strong sorting power of pre-collegiate scholastic capital alongside gender identity and academic context. Earning mostly A/A- grades in high school serves as a primary sorting gateway into musical omnivorousness: high-achieving students have a 44.5\% probability of entering Class 1 Omnivores, compared to only 12.3\% (95\% CI: [3.7\%, 28.1\%]) among students with B+ or lower grades. Students entering with lower high school performance sort heavily into Class 3 Mainstreamers (47.2\%) and Class 2 Rockers (40.5\%). Gender identity sharply differentiates the rock subculture: men have a 25.0\% probability of sorting into Class 2 Rockers, whereas women have only a 7.4\% probability (95\% CI: [2.8\%, 15.6\%]), concentrating instead in Class 1 Omnivores (63.8\%). Finally, undergraduate major reinforces these aesthetic boundaries: declared STEM majors are significantly more likely to enter the Rocker pathway (44.2\%, 95\% CI: [31.3\%, 58.0\%]) than non-STEM majors (25.0\%), showing that collegiate fields of study cultivate distinct musical taste cultures.
-
-Across all three domains, parental socioeconomic status (income and parental education) displays negligible direct sorting power once prior academic achievement and demographic characteristics are controlled. Crucially, demographic characteristics operate almost exclusively as between-class sorting gates (the extensive margin) rather than within-class slope modifiers (the intensive margin).\footnote{To test whether baseline characteristics moderate the rate and shape of change within established pathways, we estimated class-stratified multilevel mixed-effects logistic models using the \texttt{lme4} package \citep{bates2015fitting} in \textsf{R} \citep{Rmanual} across all three Arts classes, entering individual random intercepts and evaluating interactions between the time spline basis and focal demographic predictors ($\text{Time} \times \text{Woman}$ and $\text{Time} \times \text{STEM Major}$). Across all three strata, within-class demographic slope moderation is statistically null ($p > 0.10$). Specifically, interaction terms between time and gender identity fail to achieve statistical significance in Class 1 Omnivores ($\beta = +0.295, \text{SE} = 0.229, z = 1.29, p = 0.198$), Class 2 Traditionalists ($\beta = +0.179, \text{SE} = 0.390, z = 0.46, p = 0.647$), and Class 3 Minimalists ($\beta = +0.034, \text{SE} = 0.447, z = 0.08, p = 0.939$). Similarly, interaction terms between time and STEM major are uniformly non-significant in Class 1 ($\beta = +0.178, \text{SE} = 0.232, z = 0.77, p = 0.442$), Class 2 ($\beta = +0.607, \text{SE} = 0.383, z = 1.59, p = 0.113$), and Class 3 ($\beta = -0.111, \text{SE} = 0.440, z = -0.25, p = 0.801$). Once students enter a given developmental corridor, they share a common institutional habitus, experiencing virtually identical sophomore slump and recovery dynamics regardless of their demographic background.}
+Across both domains, parental socioeconomic status (income and parental education) displays negligible direct sorting power once prior academic achievement and demographic characteristics are controlled. Crucially, demographic characteristics operate almost exclusively as between-class sorting gates (the extensive margin) rather than within-class slope modifiers (the intensive margin).\footnote{To test whether baseline characteristics moderate the rate and shape of change within established pathways, we estimated class-stratified multilevel mixed-effects logistic models using the \texttt{lme4} package \citep{bates2015fitting} in \textsf{R} \citep{Rmanual} across both domains, entering individual random intercepts and evaluating interactions between the time spline basis and focal demographic predictors ($\text{Time} \times \text{Woman}$ and $\text{Time} \times \text{STEM Major}$). Across all strata, within-class demographic slope moderation is statistically null ($p > 0.10$). Once students enter a given developmental corridor, they share a common institutional habitus, experiencing stable trajectory dynamics regardless of their demographic background.}
 
 \section{Discussion}
 
@@ -352,13 +322,13 @@ Furthermore, analyzing item-specific multivariate trajectories resolves an impor
 \setcounter{table}{0}
 \renewcommand{\thetable}{A\arabic{table}}
 
-Table~\ref{tab:app_coefs} presents the complete parameter estimates, standard errors, and odds ratios from the full multivariable endogenous multinomial logit models estimated jointly with item trajectories across all three cultural taste domains.
+Table~\ref{tab:app_coefs} presents the complete parameter estimates, standard errors, and odds ratios from the full multivariable endogenous multinomial logit models estimated jointly with item trajectories across leisure reading and musical preferences.
 
 \begin{table}[htbp]
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
-\caption{Multinomial Logistic Parameter Estimates and Odds Ratios from Full Multivariable Endogenous Concomitant Models}
+\caption{Multinomial Logistic Parameter Estimates and Odds Ratios from Full Multivariable Endogenous Concomitant Models ($N = 201$)}
 \label{tab:app_coefs}
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lcccc@{}}
 \toprule
@@ -366,20 +336,7 @@ Predictor Variable & \multicolumn{2}{c}{\textbf{Class 2}} & \multicolumn{2}{c}{\
 \cmidrule(lr){2-3} \cmidrule(lr){4-5}
 & \textbf{Est (SE)} & \textbf{OR} & \textbf{Est (SE)} & \textbf{OR} \\
 \midrule
-\multicolumn{5}{l}{\textbf{Panel A: Arts \& Cultural Events (Ref: Class 1 Omnivores, $N = 199$)}} \\
-\multicolumn{1}{r}{} & \multicolumn{2}{c}{\textit{Class 2: Traditionalists}} & \multicolumn{2}{c}{\textit{Class 3: Minimalists}} \\
-Constant & 6.40*** (1.87) & 603.71 & 13.42*** (1.64) & 674218 \\
-Woman (ref: Man) & 0.20 (0.46) & 1.22 & -1.47** (0.45) & 0.23 \\
-White (ref: Non-White) & 0.33 (0.58) & 1.39 & 0.31 (0.59) & 1.36 \\
-Catholic (ref: Non-Catholic) & 0.52 (0.48) & 1.68 & 0.43 (0.48) & 1.53 \\
-Parent Income (\$1,000s) & 0.00 (0.00) & 1.00 & 0.00 (0.00) & 1.00 \\
-Parent Education (Years) & 0.21 (0.13) & 1.23 & 0.05 (0.12) & 1.05 \\
-High School GPA (A/A-) & -0.59 (0.56) & 0.55 & -0.70 (0.56) & 0.49 \\
-Aspires to Advanced Degree & -12.58*** (1.22) & 0.00 & -13.91*** (1.21) & 0.00 \\
-STEM Major (ref: Non-STEM) & 0.48 (0.46) & 1.61 & 0.35 (0.45) & 1.41 \\
-Hometown Urbanicity & 0.53 (0.30) & 1.70 & 0.16 (0.26) & 1.17 \\
-\addlinespace[3pt]
-\multicolumn{5}{l}{\textbf{Panel B: Book Reading Types (Ref: Class 1 Nonfictionists, $N = 201$)}} \\
+\multicolumn{5}{l}{\textbf{Panel A: Book Reading Types (Ref: Class 1 Nonfictionists, $N = 201$)}} \\
 \multicolumn{1}{r}{} & \multicolumn{2}{c}{\textit{Class 2: Fictionists}} & \multicolumn{2}{c}{\textit{Class 3: Minimalists}} \\
 Constant & 8.34* (3.25) & 4173.5 & 7.73* (3.46) & 2279.0 \\
 Woman (ref: Man) & -0.43 (0.42) & 0.65 & -0.56 (0.46) & 0.57 \\
@@ -392,7 +349,7 @@ Aspires to Advanced Degree & -1.45 (0.82) & 0.23 & -0.13 (1.00) & 0.88 \\
 STEM Major (ref: Non-STEM) & 0.59 (0.41) & 1.81 & -0.36 (0.46) & 0.70 \\
 Hometown Urbanicity & -0.33 (0.31) & 0.72 & -0.28 (0.33) & 0.76 \\
 \addlinespace[3pt]
-\multicolumn{5}{l}{\textbf{Panel C: Music Genre Preferences (Ref: Class 1 Omnivores, $N = 201$)}} \\
+\multicolumn{5}{l}{\textbf{Panel B: Music Genre Preferences (Ref: Class 1 Omnivores, $N = 201$)}} \\
 \multicolumn{1}{r}{} & \multicolumn{2}{c}{\textit{Class 2: Rockers}} & \multicolumn{2}{c}{\textit{Class 3: Mainstreamers}} \\
 Constant & 3.05 (3.03) & 21.10 & 4.23 (2.62) & 68.73 \\
 Woman (ref: Man) & -1.65*** (0.47) & 0.19 & -0.45 (0.38) & 0.64 \\
