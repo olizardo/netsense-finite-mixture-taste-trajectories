@@ -857,13 +857,27 @@ scale_fill_manual(values = COLOR_CREDIBILITY, name = "Directional Credibility")
 - **Table 1**: Descriptive Statistics for Baseline Covariates, Book Reading Types, and Music Genres ($N = 201$) (`tab:descriptives`)
 - **Table 2**: Latent Class Model Selection and Fit Statistics across Candidate Specifications ($K = 1 \dots 5$) for Books and Music (`tab:selection`)
 - **Table 3**: Model Fit and Predictive Power of Theoretical Variable Blocks across Expressive Domains ($N = 201$) (`tab:blocks`)
-- **Table A1**: Multinomial Logistic Parameter Estimates and Odds Ratios from Full Multivariable Endogenous Concomitant Models (Appendix, vertically stacked panels) (`tab:app_coefs`)
+- **Table 4**: Bivariate Poisson Latent Class Growth Models of Expressive Omnivorousness ($N = 201$) (`tab:bivariate`)
+- **Table A1**: Multinomial Logistic Parameter Estimates and Odds Ratios from Full Multivariable Endogenous Concomitant Models (Appendix, vertically stacked panels A, B, and C) (`tab:app_coefs`)
 - **Figure 1**: Latent trajectories across 9 Book Reading Types from the 3-class multivariate binary model (`Plots/fig1_books_9_items_by_class.png`, `fig:books`)
 - **Figure 2**: Latent trajectories across the Top 10 Music Genres from the 3-class multivariate binary model (`Plots/fig2_music_10_genres_by_class.png`, `fig:music`)
 - **Figure 3**: Net trajectory shifts by cultural item within latent classes across Book Reading Types and Music Genres (`Plots/fig3_activity_time_trend_shifts.png`, `fig:shifts`)
 - **Figure 4**: Model-implied marginal predicted class probabilities with 95\% simulation confidence intervals across statistically significant predictor blocks from Table 3 (`Plots/fig4_marginal_effects_books_music.png`, `fig:marginal`)
+- **Figure 5**: Bivariate latent trajectories of cultural omnivorousness across college from the 3-class Poisson growth mixture model (`Plots/fig5_bivariate_omnivorousness_trajectories.png`, `fig:bivariate`)
 
-### 4. Overleaf Git Synchronization & Zero Local Compilation Protocol
+### 4. Bivariate Poisson Omnivorousness Trajectories & Upstream Selection Qualification
+1. **Joint Co-Evolution of Expressive Repertoires**:
+   - Simultaneously models Musical Omnivorousness Count ($Y_{1, it} \in \{0, \dots, 22\}$) and Literature Omnivorousness Count ($Y_{2, it} \in \{0, \dots, 9\}$) over all six waves ($N = 201, 1,006$ obs) using `flexmix`.
+   - Selects $K = 3$ by BIC ($\Delta\text{BIC} = 0.0$):
+     * **Class 1: High Dual Omnivores** ($n = 31, 15.4\%$): High breadth in music ($10.0 \to 12.0$) and books ($4.1 \to 4.9$).
+     * **Class 2: Moderate Eclectics** ($n = 96, 47.8\%$): Modal group, stable bounded breadth (~6 music genres, ~3.6 book types).
+     * **Class 3: Cultural Minimalists** ($n = 74, 36.8\%$): Progressive cultural winnowing across college ($-32.2\%$ in music, $-21.1\%$ in books).
+   - Concomitants: Scholastic capital (high school GPA) is the primary sorting engine ($\text{LRT } \chi^2 = 16.90, p = 0.002$), increasing odds of entering High Dual Omnivorousness nearly five-fold ($\text{OR} = 4.85, p = 0.010$).
+2. **Upstream Institutional Selection & Restriction of Range Qualification**:
+   - The lack of explanatory power for parental socioeconomic status and cultural capital is explicitly qualified as an artifact of sample selection at a selective, elite private university.
+   - Admissions filters homogenize student family backgrounds around high levels of economic and cultural capital, compressing parental SES variance and attenuating statistical associations, allowing proximate collegiate factors (prior GPA, major, collegiate habitus) to emerge as the primary visible sorting channels.
+
+### 5. Overleaf Git Synchronization & Zero Local Compilation Protocol
 - **Zero Local Compilation Rule (CRITICAL):**
   - Never execute `pdflatex`, `xelatex`, `latexmk`, or `bibtex` locally.
   - Compile, preview, and debug directly online within Overleaf.
