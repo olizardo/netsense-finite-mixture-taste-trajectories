@@ -307,49 +307,51 @@ Specification & LogLik & Par & AIC & BIC & $\Delta$BIC / $\chi^2$ ($df$) & $p$ \
 \multicolumn{7}{l}{\textbf{Panel A: Latent Class Enumeration ($K = 1 \dots 5$)}} \\
 $K = 1$ (Homogeneous Growth) & -4101.8 & 6 & 8215.6 & 8245.1 & $\Delta\text{BIC} = 368.9$ & --- \\
 $K = 2$ & -3900.2 & 13 & 7826.4 & 7890.3 & $\Delta\text{BIC} = 14.1$ & $< .001$ \\
-$K = 3$ (Optimal Specification) & -3869.0 & 20 & 7777.9 & 7876.2 & $\Delta\text{BIC} = 0.0$ & $< .001$ \\
-$K = 4$ & -3852.9 & 27 & 7759.7 & 7892.4 & $\Delta\text{BIC} = 16.2$ & $< .001$ \\
+$K = 3$ & -3869.0 & 20 & 7777.9 & 7876.2 & $\Delta\text{BIC} = 0.0$ & $< .001$ \\
+$K = 4$ (Selected Specification) & -3852.9 & 27 & 7759.7 & 7892.4 & $\Delta\text{BIC} = 16.2$ & $< .001$ \\
 $K = 5$ & -3849.4 & 34 & 7766.8 & 7933.9 & $\Delta\text{BIC} = 57.7$ & 0.439 \\
 \addlinespace[3pt]
-\multicolumn{7}{l}{\textbf{Panel B: Predictive Power of Theoretical Variable Blocks ($K = 3$)}} \\
-Baseline Specification (Null) & -3869.0 & 20 & 7777.9 & 7876.2 & --- & --- \\
-\quad Block 1: Demographic Identity & -3863.3 & 26 & 7778.6 & 7906.4 & 11.31 (6) & 0.079 \\
-\quad Block 2: Family SES & -3867.7 & 24 & 7783.5 & 7901.4 & 2.43 (4) & 0.656 \\
-\quad Block 3: Scholastic Capital & -3863.0 & 24 & 7773.9 & 7891.9 & 11.98 (4) & 0.018 \\
-\quad Block 4: Collegiate Context & -3864.7 & 24 & 7777.4 & 7895.3 & 8.52 (4) & 0.074 \\
-\quad Combined Sociodemographics (Blocks 1+2) & -3860.4 & 30 & 7780.8 & 7928.2 & 17.11 (10) & 0.072 \\
-\quad Full Multivariable Model & -3850.3 & 38 & 7776.5 & 7963.3 & 37.36 (18) & 0.005 \\
+\multicolumn{7}{l}{\textbf{Panel B: Predictive Power of Theoretical Variable Blocks ($K = 4$)}} \\
+Baseline Specification (Null) & -3852.9 & 27 & 7759.7 & 7892.4 & --- & --- \\
+\quad Block 1: Demographic Identity & -3845.8 & 36 & 7763.6 & 7940.5 & 14.10 (9) & 0.119 \\
+\quad Block 2: Family SES & -3851.9 & 33 & 7769.8 & 7932.0 & 1.89 (6) & 0.930 \\
+\quad Block 3: Scholastic Capital & -3842.0 & 33 & 7750.0 & 7912.1 & 21.76 (6) & 0.001 \\
+\quad Block 4: Collegiate Context & -3846.6 & 33 & 7759.3 & 7921.4 & 12.43 (6) & 0.053 \\
+\quad Combined Sociodemographics (Blocks 1+2) & -3842.2 & 42 & 7768.3 & 7974.7 & 21.42 (15) & 0.124 \\
+\quad Full Multivariable Model & -3828.0 & 54 & 7764.0 & 8029.4 & 49.70 (27) & 0.005 \\
 \bottomrule
 \end{tabular*}
 \begin{minipage}{\linewidth}
 \vspace{4pt}
 \footnotesize
-\textit{Note:} Models estimated in \texttt{flexmix} using joint Poisson distributions for the Top 10 Musical Genres and 9 Leisure Book Reading Types parameterized via natural cubic splines with 2 degrees of freedom (\texttt{splines::ns(time, df = 2)}). In Panel A, $\Delta\text{BIC}$ is evaluated relative to the optimal $K = 3$ solution; $p$-values reflect stepwise likelihood ratio tests against $K - 1$. In Panel B, LRT $\chi^2$ evaluates improvement over the null baseline concomitant model. Block 1 includes Gender Identity, Racial Identity, and Religion; Block 2 includes Parental Income and Parental Education; Block 3 includes High School GPA and Advanced Degree Aspirations; Block 4 includes Academic Major (STEM) and Hometown Urbanicity.
+\textit{Note:} Models estimated in \texttt{flexmix} using joint Poisson distributions for the Top 10 Musical Genres and 9 Leisure Book Reading Types parameterized via natural cubic splines with 2 degrees of freedom (\texttt{splines::ns(time, df = 2)}). In Panel A, $\Delta\text{BIC}$ is evaluated relative to the $K = 3$ minimum BIC; $p$-values reflect stepwise likelihood ratio tests against $K - 1$. In Panel B, LRT $\chi^2$ evaluates improvement over the null baseline concomitant model. Block 1 includes Gender Identity, Racial Identity, and Religion; Block 2 includes Parental Income and Parental Education; Block 3 includes High School GPA and Advanced Degree Aspirations; Block 4 includes Academic Major (STEM) and Hometown Urbanicity.
 \end{minipage}
 \end{table}
 
-Table~\ref{tab:bivariate} summarizes the latent class enumeration results in Panel A and theoretical block tests in Panel B. Moving from a single homogeneous growth curve ($K = 1$) to a multi-class mixture produces marked improvements in model fit. The Bayesian Information Criterion decisively selects a three-class solution ($K = 3, \text{BIC} = 7876.2, \Delta\text{BIC} = 0.0$), outperforming the two-class model by 14.1 BIC points and yielding a significant stepwise improvement ($\chi^2 = 62.5, df = 7, p < 0.001$). Adding a fourth class increases BIC ($\Delta\text{BIC} = 16.2$), confirming $K = 3$ as the optimal specification.\footnote{Estimating the bivariate Poisson model using the full 22-genre musical inventory alongside the 9 book reading genres produces an identical 3-class selection ($\Delta\text{BIC} = 0.0$ at $K = 3$), confirming that the tripartite developmental structure is robust across alternative genre battery scopes.}
+Table~\ref{tab:bivariate} summarizes the latent class enumeration results in Panel A and theoretical block tests in Panel B. Moving from a single homogeneous growth curve ($K = 1$) to multi-class mixtures produces marked improvements in model fit. While the Bayesian Information Criterion reaches its global minimum at $K = 3$ ($\text{BIC} = 7876.2$), adding a fourth class yields a statistically significant improvement in log-likelihood ($\chi^2 = 32.2, df = 7, p < 0.001$) and achieves the lowest Akaike Information Criterion across all candidate specifications ($K = 4, \text{AIC} = 7759.7$ vs. $7777.9$ for $K = 3$). Crucially, while BIC penalizes the addition of seven parameters ($\Delta\text{BIC} = 16.2$), the four-class specification offers substantially richer sociological interpretability by uncovering a distinct domain-asymmetric trajectory that remains obscured within the broader moderate and univore classes in lower-dimensional solutions. Beyond four classes, model fit deteriorates ($\text{AIC} = 7766.8, \Delta\text{BIC} = 57.7$) without substantive gain. We therefore adopt the four-class model as our primary expressive omnivorousness typology.
 
-Figure~\ref{fig:bivariate} illustrates the model-implied and empirical trajectory profiles across all six collegiate semesters for the three latent classes. Lines trace continuous spline curves, markers indicate empirical semester means, and shaded ribbons depict 95\% confidence bands.
+Figure~\ref{fig:bivariate} illustrates the model-implied and empirical trajectory profiles across all six collegiate semesters for the four latent classes. Lines trace continuous spline curves, markers indicate empirical semester means, and shaded ribbons depict 95\% confidence bands.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{Plots/fig5_bivariate_omnivorousness_trajectories.png}
-\caption{Bivariate latent trajectories of cultural omnivorousness across college from the 3-class Poisson growth mixture model (Waves 1 to 6, $N = 201$). Blue solid curves and circular markers denote Musical Omnivorousness (total genre count endorsed out of the Top 10 genres); orange dashed curves and triangular markers denote Literature Omnivorousness (total book genres read for leisure out of 9 items). Shaded ribbons indicate 95\% confidence intervals around empirical wave means.}
+\caption{Bivariate latent trajectories of cultural omnivorousness across college from the 4-class Poisson growth mixture model (Waves 1 to 6, $N = 201$). Blue solid curves and circular markers denote Musical Omnivorousness (total genre count endorsed out of the Top 10 genres); orange dashed curves and triangular markers denote Literature Omnivorousness (total book genres read for leisure out of 9 items). Shaded ribbons indicate 95\% confidence intervals around empirical wave means.}
 \label{fig:bivariate}
 \end{figure}
 
-The trajectory morphology in Figure~\ref{fig:bivariate} reveals three distinct patterns of expressive repertoire management:
+The trajectory morphology in Figure~\ref{fig:bivariate} reveals four distinct patterns of expressive repertoire management:
 
-First, ``Class 1: High Dual Omnivores'' ($n = 59, 29.4\%$) displays high cultural volume across both spheres throughout college. In music, their repertoire breadth begins at an average of 5.81 genres in freshman fall, expands to 6.33 genres by junior fall, and remains sustained around 6.0 to 6.3 genres through senior spring. In leisure reading, they maintain an average of 4.33 to 4.64 book genres across all semesters. These students embody dual cultural omnivorousness, actively cultivating broad, diverse repertoires in both auditory and literary media.
+First, ``Class 1: High Dual Omnivores'' ($n = 49, 24.4\%$) displays high cultural volume across both spheres throughout college. In music, their repertoire breadth begins at an average of 6.04 genres in freshman fall, expands to 6.52 genres by freshman spring, and remains sustained between 6.11 and 6.40 genres across all subsequent semesters. In leisure reading, they maintain an average of 4.57 to 4.98 book genres across all waves. These students embody dual cultural omnivorousness, actively cultivating broad, diverse repertoires in both auditory and literary media.
 
-Second, ``Class 2: Moderate Eclectics'' ($n = 118, 58.7\%$) represents the modal undergraduate pathway. These students maintain a stable, moderate breadth across college, consistently endorsing between 3.14 and 3.69 musical genres and reading between 2.90 and 3.56 book categories across all six semesters. Their trajectories exhibit minimal fluctuation over time, showing neither expansive aesthetic broadening nor winnowing.
+Second, ``Class 2: Moderate Eclectics'' ($n = 92, 45.8\%$) represents the modal undergraduate pathway. These students maintain a stable, moderate breadth across college, consistently endorsing between 3.86 and 4.31 musical genres and reading between 3.05 and 3.38 book categories across all six semesters. Their trajectories exhibit minimal fluctuation over time, showing neither expansive aesthetic broadening nor winnowing.
 
-Third, ``Class 3: Cultural Minimalists'' ($n = 24, 11.9\%$) enters college with modest repertoires (averaging 1.79 musical genres and 2.88 book genres) and undergoes progressive cultural winnowing across emerging adulthood. By senior year, their musical breadth contracts by 34.3\% (falling to 1.18 genres), while their leisure reading contracts to 1.76--2.06 genres. Rather than expanding their cultural horizons, these students narrow their expressive engagement as collegiate academic demands accumulate.
+Third, ``Class 3: Literary Readers / Music Winnowers'' ($n = 28, 13.9\%$) exhibits a pronounced domain-asymmetric developmental profile. These students enter college with elevated leisure reading habits (averaging 4.79 book genres, on par with High Dual Omnivores) and maintain above-average reading engagement throughout college (3.12 to 4.25 genres). However, their musical preferences undergo a steep collapse: starting at a moderate 3.43 musical genres in freshman fall, their music repertoire plummets by 54.4\% down to 1.57 genres by senior year. Rather than withdrawing from expressive culture entirely, these students selectively abandon musical variety while remaining dedicated book readers.
 
-Panel B of Table~\ref{tab:bivariate} evaluates the predictive power of theoretical variable blocks in sorting students into these bivariate pathways. Pre-collegiate scholastic capital (High School GPA and advanced degree aspirations) emerges as the primary sorting engine ($\chi^2 = 11.98, df = 4, p = 0.018$), significantly lowering AIC from 7777.9 to 7773.9. In contrast, family socioeconomic status (parental income and education) is completely non-significant ($\chi^2 = 2.43, df = 4, p = 0.656$). When all covariates are entered simultaneously, the full multivariable model achieves decisive statistical significance ($\chi^2 = 37.36, df = 18, p = 0.005$).
+Fourth, ``Class 4: Univores'' ($n = 32, 15.9\%$) enters college with modest repertoires (averaging 2.28 musical genres and 2.47 book genres) and undergoes progressive cultural winnowing across emerging adulthood. By senior year, their musical breadth contracts to 1.59 genres, while their leisure reading contracts to 1.32--1.77 genres. These students narrow their expressive engagement across both domains as collegiate academic demands accumulate.
 
-As detailed in Appendix Table~\ref{tab:app_coefs} (Panel C), multivariable parameter estimates indicate that entering college with high school academic achievement (mostly A/A- grades) acts as a primary protective barrier against cultural disengagement. Students with high prior GPA are nearly 90\% less likely to sort into the Cultural Minimalist pathway ($\text{OR} = 0.128, p = 0.001$) and over 70\% less likely to enter Moderate Eclectics ($\text{OR} = 0.284, p = 0.011$) relative to the High Dual Omnivore pathway. Inverted, high scholastic capital increases the odds of sorting into the High Dual Omnivore trajectory by nearly eight-fold ($\text{OR} = 7.82, p = 0.001$) relative to Minimalists, and by 3.5-fold ($\text{OR} = 3.53, p = 0.011$) relative to Moderate Eclectics. Roman Catholic religious affiliation also significantly reduces sorting into Minimalist ($\text{OR} = 0.213, p = 0.013$) and Moderate Eclectic reading and listening ($\text{OR} = 0.341, p = 0.014$). Finally, the statistical null effect of parental income and education persists in the bivariate count model, reinforcing our earlier qualification that upstream institutional admissions filters at selective universities compress family socioeconomic variance, leaving prior scholastic achievement and campus context as the primary observable sorting mechanisms.
+Panel B of Table~\ref{tab:bivariate} evaluates the predictive power of theoretical variable blocks in sorting students into these four bivariate pathways. Pre-collegiate scholastic capital (High School GPA and advanced degree aspirations) emerges as the primary sorting engine ($\chi^2 = 21.76, df = 6, p = 0.001$), significantly lowering AIC from 7759.7 to 7750.0. Collegiate context is marginally significant ($\chi^2 = 12.43, df = 6, p = 0.053$), reflecting the sorting influence of academic major. In contrast, family socioeconomic status (parental income and education) is completely non-significant ($\chi^2 = 1.89, df = 6, p = 0.930$). When all covariates are entered simultaneously, the full multivariable model achieves decisive statistical significance ($\chi^2 = 49.70, df = 27, p = 0.005$).
+
+As detailed in Appendix Table~\ref{tab:app_coefs_biv}, multivariable parameter estimates indicate that entering college with high school academic achievement (mostly A/A- grades) acts as a primary protective barrier against cultural winnowing. Students with high prior GPA are over 85\% less likely to sort into Literary Readers / Music Winnowers ($\text{OR} = 0.121, p = 0.002$) and Univores ($\text{OR} = 0.134, p = 0.002$), while also being significantly less likely to enter Moderate Eclectics ($\text{OR} = 0.288, p = 0.037$) relative to High Dual Omnivores. Inverted, high scholastic capital increases the odds of sorting into the High Dual Omnivore trajectory by over eight-fold relative to Literary Winnowers ($\text{OR} = 8.26, p = 0.002$) and Univores ($\text{OR} = 7.46, p = 0.002$), and by 3.5-fold ($\text{OR} = 3.47, p = 0.037$) relative to Moderate Eclectics. Roman Catholic religious affiliation also significantly reduces sorting into all three non-omnivorous pathways ($\text{OR} = 0.224\text{--}0.321, p < 0.05$). Furthermore, academic major helps explain the domain asymmetry of Class 3: over 71\% of Literary Readers / Music Winnowers are non-STEM majors ($\text{OR} = 0.513$ for STEM), indicating that humanities and social science fields foster persistent literary reading despite the contraction of musical repertoires. Finally, the statistical null effect of parental income and education persists in the four-class count model, reinforcing our earlier qualification that upstream institutional admissions filters at selective universities compress family socioeconomic variance, leaving prior scholastic achievement and campus context as the primary observable sorting mechanisms.
 
 \section{Discussion}
 
@@ -357,7 +359,7 @@ As detailed in Appendix Table~\ref{tab:app_coefs} (Panel C), multivariable param
 
 This study implemented a growth mixture framework with natural cubic splines and endogenous multinomial concomitants to model longitudinal cultural taste trajectories across emerging adulthood in the NetSense study. By estimating item-specific growth parameters across 9 book reading genres and 10 musical genres alongside joint bivariate Poisson trajectories of expressive omnivorousness across all six collegiate semesters, our analysis uncovers four core substantive insights into collegiate cultural dynamics.
 
-First, item-level modeling shows that leisure reading and musical preferences divide students into persistent genre specializations that remain stable across all six semesters rather than undergoing wholesale aesthetic drift. Second, within-class moderation models show that demographic background and collegiate majors act as sorting gates into broad developmental pathways rather than moderating trajectory slopes within those pathways. Third, endogenous concomitant models show that sorting into these cultural pathways is driven by gender identity, religious affiliation, undergraduate major, and pre-collegiate scholastic capital rather than parental socioeconomic resources. Fourth, joint bivariate Poisson modeling reveals that musical and literary portfolio breadth co-evolves along three distinct developmental corridors: High Dual Omnivores who expand expressive breadth across college, Moderate Eclectics who maintain stable, bounded repertoires, and Cultural Minimalists who experience progressive aesthetic winnowing. Pre-collegiate scholastic capital acts as the primary sorting gatekeeper, multiplying the odds of entering the High Dual Omnivore pathway nearly five-fold while shielding students against cultural contraction.
+First, item-level modeling shows that leisure reading and musical preferences divide students into persistent genre specializations that remain stable across all six semesters rather than undergoing wholesale aesthetic drift. Second, within-class moderation models show that demographic background and collegiate majors act as sorting gates into broad developmental pathways rather than moderating trajectory slopes within those pathways. Third, endogenous concomitant models show that sorting into these cultural pathways is driven by gender identity, religious affiliation, undergraduate major, and pre-collegiate scholastic capital rather than parental socioeconomic resources. Fourth, joint bivariate Poisson modeling reveals that musical and literary portfolio breadth co-evolves along four distinct developmental corridors: High Dual Omnivores who expand expressive breadth across college, Stable Moderate Eclectics who maintain bounded repertoires, Literary Readers / Music Winnowers who maintain elevated reading while selectively shedding musical variety, and Univores who experience progressive winnowing across both spheres. Pre-collegiate scholastic capital acts as the primary sorting gatekeeper, multiplying the odds of entering the High Dual Omnivore pathway over seven-fold while shielding students against cultural contraction.
 
 \subsection{Limitations and Suggestions for Future Work}
 
@@ -389,13 +391,13 @@ Furthermore, analyzing item-specific multivariate trajectories resolves an impor
 \setcounter{table}{0}
 \renewcommand{\thetable}{A\arabic{table}}
 
-Table~\ref{tab:app_coefs} presents the complete parameter estimates, standard errors, and odds ratios from the full multivariable endogenous multinomial logit models estimated jointly with item trajectories across leisure reading and musical preferences.
+Table~\ref{tab:app_coefs} presents the complete parameter estimates, standard errors, and odds ratios from the full multivariable endogenous multinomial logit models estimated jointly with item trajectories across leisure reading and musical preferences. Table~\ref{tab:app_coefs_biv} reports the corresponding multivariable parameter estimates for the four-class bivariate expressive omnivorousness model.
 
 \begin{table}[htbp]
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
-\caption{Multinomial Logistic Parameter Estimates and Odds Ratios from Full Multivariable Endogenous Concomitant Models ($N = 201$)}
+\caption{Multinomial Logistic Parameter Estimates and Odds Ratios from Item-Level Multivariate Binary Models ($N = 201$)}
 \label{tab:app_coefs}
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lcccc@{}}
 \toprule
@@ -428,25 +430,43 @@ High School GPA (A/A-) & -1.87** (0.61) & 0.15 & -1.82*** (0.54) & 0.16 \\
 Aspires to Advanced Degree & 1.47 (1.18) & 4.35 & -0.80 (0.62) & 0.45 \\
 STEM Major (ref: Non-STEM) & 0.98* (0.43) & 2.66 & 0.17 (0.38) & 1.19 \\
 Hometown Urbanicity & 0.00 (0.28) & 1.00 & 0.24 (0.24) & 1.28 \\
-\addlinespace[3pt]
-\multicolumn{5}{l}{\textbf{Panel C: Bivariate Expressive Omnivorousness (Ref: Class 1 High Dual Omnivores, $N = 201$)}} \\
-\multicolumn{1}{r}{} & \multicolumn{2}{c}{\textit{Class 2: Moderate Eclectics}} & \multicolumn{2}{c}{\textit{Class 3: Cultural Minimalists}} \\
-Constant & 2.48 (2.34) & 11.97 & -0.16 (4.17) & 0.85 \\
-Woman (ref: Man) & -0.80* (0.36) & 0.45 & -0.17 (0.56) & 0.84 \\
-White (ref: Non-White) & -0.26 (0.48) & 0.77 & -0.06 (0.70) & 0.94 \\
-Catholic (ref: Non-Catholic) & -1.08* (0.44) & 0.34 & -1.55* (0.62) & 0.21 \\
-Parent Income (\$1,000s) & 0.01 (0.00) & 1.01 & 0.00 (0.00) & 1.00 \\
-Parent Education (Years) & 0.01 (0.10) & 1.01 & -0.07 (0.16) & 0.93 \\
-High School GPA (A/A-) & -1.26* (0.50) & 0.28 & -2.06** (0.64) & 0.13 \\
-Aspires to Advanced Degree & -0.91 (0.71) & 0.40 & -1.54 (0.90) & 0.21 \\
-STEM Major (ref: Non-STEM) & 0.17 (0.35) & 1.19 & 0.31 (0.54) & 1.36 \\
-Hometown Urbanicity & 0.11 (0.23) & 1.12 & 0.73 (0.52) & 2.08 \\
 \bottomrule
 \end{tabular*}
 \begin{minipage}{\linewidth}
 \vspace{4pt}
 \footnotesize
 \textit{Note:} Estimates ($\beta$), standard errors in parentheses, and Odds Ratios ($\text{OR} = \exp(\beta)$) from full multivariable endogenous multinomial logit models (\texttt{FLXPmultinom}) estimated jointly with item trajectories in \texttt{flexmix}. Reference category is Class 1 in each respective domain. * $p < 0.05$, ** $p < 0.01$, *** $p < 0.001$.
+\end{minipage}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\caption{Multinomial Logistic Parameter Estimates and Odds Ratios from the Four-Class Bivariate Expressive Omnivorousness Model ($N = 201$)}
+\label{tab:app_coefs_biv}
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lcccccc@{}}
+\toprule
+Predictor Variable & \multicolumn{2}{c}{\textbf{Class 2: Eclectics}} & \multicolumn{2}{c}{\textbf{Class 3: Lit Winnowers}} & \multicolumn{2}{c}{\textbf{Class 4: Univores}} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+& \textbf{Est (SE)} & \textbf{OR} & \textbf{Est (SE)} & \textbf{OR} & \textbf{Est (SE)} & \textbf{OR} \\
+\midrule
+Constant & 2.74 (2.65) & 15.52 & 3.51 (3.41) & 33.32 & 1.28 (3.59) & 3.60 \\
+Woman (ref: Man) & -1.00* (0.40) & 0.37 & -0.58 (0.53) & 0.56 & -0.90 (0.53) & 0.41 \\
+White (ref: Non-White) & -0.41 (0.54) & 0.66 & -0.20 (0.70) & 0.82 & -0.64 (0.68) & 0.53 \\
+Catholic (ref: Non-Catholic) & -1.14* (0.50) & 0.32 & -1.29* (0.62) & 0.28 & -1.50* (0.61) & 0.22 \\
+Parent Income (\$1,000s) & 0.01 (0.00) & 1.01 & 0.00 (0.00) & 1.00 & 0.01 (0.00) & 1.01 \\
+Parent Education (Years) & -0.01 (0.12) & 0.99 & -0.07 (0.15) & 0.93 & 0.02 (0.15) & 1.02 \\
+High School GPA (A/A-) & -1.24* (0.60) & 0.29 & -2.11** (0.67) & 0.12 & -2.01** (0.66) & 0.13 \\
+Aspires to Advanced Degree & -0.55 (0.75) & 0.58 & -0.85 (0.92) & 0.43 & -1.40 (0.85) & 0.25 \\
+STEM Major (ref: Non-STEM) & 0.14 (0.39) & 1.15 & -0.67 (0.55) & 0.51 & 0.13 (0.51) & 1.14 \\
+Hometown Urbanicity & 0.10 (0.26) & 1.10 & 0.14 (0.32) & 1.15 & 0.36 (0.38) & 1.44 \\
+\bottomrule
+\end{tabular*}
+\begin{minipage}{\linewidth}
+\vspace{4pt}
+\footnotesize
+\textit{Note:} Estimates ($\beta$), standard errors in parentheses, and Odds Ratios ($\text{OR} = \exp(\beta)$) from the full multivariable endogenous multinomial logit model (\texttt{FLXPmultinom}) estimated jointly with the four-class bivariate Poisson growth model in \texttt{flexmix}. Reference category is Class 1: High Dual Omnivores ($n = 49$). * $p < 0.05$, ** $p < 0.01$, *** $p < 0.001$.
 \end{minipage}
 \end{table}
 

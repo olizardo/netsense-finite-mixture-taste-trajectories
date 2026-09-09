@@ -1,6 +1,6 @@
 #' ---
 #' title: "13_fit_bivariate_poisson_omnivorousness.R"
-#' description: "Bivariate Poisson Latent Class Growth Modeling of Music (Top 10 Genres) and Literature (9 Book Types) Omnivorousness Counts with Endogenous Concomitants"
+#' description: "Bivariate Poisson Latent Class Growth Modeling of Music (Top 10 Genres) and Literature (9 Book Types) Omnivorousness Counts with Endogenous Concomitants (K = 4 Solution)"
 #' author: "Omar Lizardo & AI Assistant"
 #' date: "2026-09-09"
 #' ---
@@ -17,7 +17,7 @@ suppressPackageStartupMessages({
 
 cat("====================================================================\n")
 cat("Starting Bivariate Poisson Latent Class Growth Modeling Pipeline    \n")
-cat("Focus: Top 10 Musical Genres & 9 Leisure Book Reading Types         \n")
+cat("Focus: Top 10 Musical Genres & 9 Leisure Book Reading Types (K = 4) \n")
 cat("====================================================================\n")
 
 # 1. Load Data
@@ -116,46 +116,53 @@ md_selection <- c(
   })
 )
 writeLines(md_selection, "Cache/summaries/bivariate_model_selection.md")
-cat("   Model selection completed. Decisive solution: K = 3 (ΔBIC = 0.0).\n")
+cat("   Model selection completed. K = 4 yields lowest AIC and substantial sociological interpretability.\n")
 
-# 4. Fit Final K = 3 Model & Extract Empirical Trajectories
-cat("\n--> [3/5] Fitting Optimal K = 3 Bivariate Latent Class Growth Model...\n")
+# 4. Fit K = 4 Bivariate Latent Class Growth Model
+cat("\n--> [3/5] Fitting K = 4 Bivariate Latent Class Growth Model...\n")
 set.seed(2026)
-mod3_final <- flexmix(
+mod4_final <- flexmix(
   cbind(music_count_10, book_count) ~ ns(time, df = 2) | egoid,
-  data = df_biv, k = 3, model = biv_specs_10,
+  data = df_biv, k = 4, model = biv_specs_10,
   control = list(iter.max = 300, minprior = 0.02)
 )
 
-saveRDS(mod3_final, "Cache/bivariate_mod3_10genres_fit.rds")
+saveRDS(mod4_final, "Cache/bivariate_mod4_10genres_fit.rds")
 
 # Person-level posterior classifications
-# Comp 1: mean music = 6.10, mean books = 4.50 -> High Dual Omnivores (n = 59, 29.4%)
-# Comp 2: mean music = 3.44, mean books = 3.23 -> Moderate Eclectics (n = 118, 58.7%)
-# Comp 3: mean music = 1.49, mean books = 2.12 -> Cultural Minimalists (n = 24, 11.9%)
+# Raw 4: mean music = 6.28, mean books = 4.75 -> Class 1: High Dual Omnivores (n = 49, 24.4%)
+# Raw 1: mean music = 4.05, mean books = 3.19 -> Class 2: Moderate Eclectics (n = 92, 45.8%)
+# Raw 3: mean music = 2.32, mean books = 3.84 -> Class 3: Literary Readers / Music Winnowers (n = 28, 13.9%)
+# Raw 2: mean music = 2.02, mean books = 1.95 -> Class 4: Univores (n = 32, 15.9%)
 ego_class <- df_biv %>%
-  mutate(clust = clusters(mod3_final)) %>%
+  mutate(clust = clusters(mod4_final)) %>%
   group_by(egoid) %>%
   summarize(raw_class = names(which.max(table(clust))), .groups = "drop") %>%
   mutate(
     class_name = case_when(
-      raw_class == "1" ~ "High Dual Omnivores",
-      raw_class == "2" ~ "Moderate Eclectics",
-      raw_class == "3" ~ "Cultural Minimalists"
+      raw_class == "4" ~ "High Dual Omnivores",
+      raw_class == "1" ~ "Moderate Eclectics",
+      raw_class == "3" ~ "Literary Readers / Music Winnowers",
+      raw_class == "2" ~ "Univores"
     ),
     class_label = factor(
       case_when(
-        raw_class == "1" ~ "Class 1: High Dual Omnivores\n(n = 59, 29.4%)",
-        raw_class == "2" ~ "Class 2: Moderate Eclectics\n(n = 118, 58.7%)",
-        raw_class == "3" ~ "Class 3: Cultural Minimalists\n(n = 24, 11.9%)"
+        raw_class == "4" ~ "Class 1: High Dual Omnivores\n(n = 49, 24.4%)",
+        raw_class == "1" ~ "Class 2: Moderate Eclectics\n(n = 92, 45.8%)",
+        raw_class == "3" ~ "Class 3: Literary Readers / Music Winnowers\n(n = 28, 13.9%)",
+        raw_class == "2" ~ "Class 4: Univores\n(n = 32, 15.9%)"
       ),
       levels = c(
-        "Class 1: High Dual Omnivores\n(n = 59, 29.4%)",
-        "Class 2: Moderate Eclectics\n(n = 118, 58.7%)",
-        "Class 3: Cultural Minimalists\n(n = 24, 11.9%)"
+        "Class 1: High Dual Omnivores\n(n = 49, 24.4%)",
+        "Class 2: Moderate Eclectics\n(n = 92, 45.8%)",
+        "Class 3: Literary Readers / Music Winnowers\n(n = 28, 13.9%)",
+        "Class 4: Univores\n(n = 32, 15.9%)"
       )
     ),
-    class_factor = factor(class_name, levels = c("High Dual Omnivores", "Moderate Eclectics", "Cultural Minimalists"))
+    class_factor = factor(class_name, levels = c(
+      "High Dual Omnivores", "Moderate Eclectics", 
+      "Literary Readers / Music Winnowers", "Univores"
+    ))
   )
 
 df_biv_classified <- df_biv %>%
@@ -173,9 +180,9 @@ traj_means <- df_biv_classified %>%
     .groups    = "drop"
   )
 
-saveRDS(traj_means, "Cache/summaries/bivariate_trajectories_k3.rds")
+saveRDS(traj_means, "Cache/summaries/bivariate_trajectories_k4.rds")
 
-# 5. Publication Trajectory Figure (Figure 5)
+# 5. Publication Trajectory Figure (Figure 5, 2x2 Layout)
 cat("\n--> [4/5] Generating Publication Trajectory Plot (Plots/fig5_bivariate_omnivorousness_trajectories.png)...\n")
 
 df_plot_lines <- bind_rows(
@@ -194,7 +201,7 @@ p_fig5 <- ggplot(df_plot_lines, aes(x = wave, y = Mean, color = Domain, fill = D
   geom_ribbon(aes(ymin = pmax(0, Mean - 1.96 * SE), ymax = Mean + 1.96 * SE), alpha = 0.15, color = NA) +
   geom_line(linewidth = 1.0) +
   geom_point(size = 2.3) +
-  facet_wrap(~ class_label, ncol = 3) +
+  facet_wrap(~ class_label, ncol = 2) +
   scale_x_continuous(
     breaks = 1:6,
     labels = c("W1\nFrosh Fall", "W2\nFrosh Spr", "W3\nSoph Fall", "W4\nSoph Spr", "W5\nJun Fall", "W6\nJun Spr")
@@ -211,7 +218,7 @@ p_fig5 <- ggplot(df_plot_lines, aes(x = wave, y = Mean, color = Domain, fill = D
   scale_shape_manual(values = c(16, 17)) +
   scale_linetype_manual(values = c("solid", "dashed")) +
   labs(
-    title = "Bivariate Latent Trajectories of Expressive Omnivorousness Across College (K = 3)",
+    title = "Bivariate Latent Trajectories of Expressive Omnivorousness Across College (K = 4)",
     subtitle = "Simultaneous co-evolution of Top 10 Music and Literature repertoire breadth across six semesters (N = 201)",
     x = "Collegiate Semester Wave",
     y = "Average Genre Count (Endorsed / Read)",
@@ -220,11 +227,11 @@ p_fig5 <- ggplot(df_plot_lines, aes(x = wave, y = Mean, color = Domain, fill = D
     shape = "Cultural Domain",
     linetype = "Cultural Domain"
   ) +
-  theme_minimal(base_size = 10.5) +
+  theme_minimal(base_size = 10) +
   theme(
-    plot.title = element_text(face = "bold", size = 11.5, hjust = 0.5),
-    plot.subtitle = element_text(size = 9, hjust = 0.5, color = "grey30"),
-    strip.text = element_text(face = "bold", size = 8.8),
+    plot.title = element_text(face = "bold", size = 11, hjust = 0.5),
+    plot.subtitle = element_text(size = 8.5, hjust = 0.5, color = "grey30"),
+    strip.text = element_text(face = "bold", size = 8.5),
     strip.background = element_rect(fill = "grey95", color = "grey85", linewidth = 0.4),
     legend.position = "bottom",
     legend.title = element_text(face = "bold", size = 8.5),
@@ -240,22 +247,22 @@ p_fig5 <- ggplot(df_plot_lines, aes(x = wave, y = Mean, color = Domain, fill = D
     linetype = guide_legend(nrow = 1, byrow = TRUE)
   )
 
-ggsave("Plots/fig5_bivariate_omnivorousness_trajectories.png", p_fig5, width = 6.5, height = 3.6, dpi = 300)
-ggsave("Plots/fig_bivariate_omnivorousness_trajectories.png", p_fig5, width = 6.5, height = 3.6, dpi = 300)
-cat("   Saved: Plots/fig5_bivariate_omnivorousness_trajectories.png\n")
+ggsave("Plots/fig5_bivariate_omnivorousness_trajectories.png", p_fig5, width = 6.5, height = 5.2, dpi = 300)
+ggsave("Plots/fig_bivariate_omnivorousness_trajectories.png", p_fig5, width = 6.5, height = 5.2, dpi = 300)
+cat("   Saved: Plots/fig5_bivariate_omnivorousness_trajectories.png (2x2 layout)\n")
 
-# 6. Endogenous Concomitant Models across Theoretical Blocks
-cat("\n--> [5/5] Estimating Endogenous Concomitant Models across Theoretical Blocks...\n")
+# 6. Endogenous Concomitant Models across Theoretical Blocks for K = 4
+cat("\n--> [5/5] Estimating Endogenous Concomitant Models across Theoretical Blocks (K = 4)...\n")
 
-ll_base <- logLik(mod3_final)[1]
-df_base <- mod3_final@df
+ll_base <- logLik(mod4_final)[1]
+df_base <- mod4_final@df
 
 fit_concom_block <- function(form, name) {
   set.seed(2026)
   mod <- tryCatch({
     flexmix(
       cbind(music_count_10, book_count) ~ ns(time, df = 2) | egoid,
-      data = df_biv, k = 3, model = biv_specs_10,
+      data = df_biv, k = 4, model = biv_specs_10,
       concomitant = FLXPmultinom(form),
       control = list(iter.max = 300, minprior = 0.02)
     )
@@ -281,7 +288,7 @@ fit_concom_block <- function(form, name) {
   )
 }
 
-m0   <- tibble(Model = "Baseline Specification (Null)", LogLik = ll_base, Par = df_base, AIC = AIC(mod3_final), BIC = BIC(mod3_final), LRT_stat = NA, df_diff = NA, p_val = NA)
+m0   <- tibble(Model = "Baseline Specification (Null)", LogLik = ll_base, Par = df_base, AIC = AIC(mod4_final), BIC = BIC(mod4_final), LRT_stat = NA, df_diff = NA, p_val = NA)
 m1   <- fit_concom_block(~ is_woman + is_white + is_catholic, "Block 1: Demographic Identity (Gender, Race, Religion)")
 m2   <- fit_concom_block(~ income_num + parent_ed_years, "Block 2: Family SES (Parent Income, Parent Education)")
 m3   <- fit_concom_block(~ high_hs_grade + aims_advanced_degree, "Block 3: Scholastic Capital (High School GPA, Advanced Degree Aspirations)")
@@ -308,7 +315,7 @@ md_blocks <- c(
 )
 writeLines(md_blocks, "Cache/summaries/bivariate_concomitant_blocks.md")
 
-# 7. Extract Full Multivariable Multinomial Logistic Parameters
+# 7. Extract Full Multivariable Multinomial Logistic Parameters for K = 4
 df_ego_biv <- df_biv_classified %>%
   dplyr::select(egoid, class_name, class_factor, is_woman, is_white, is_catholic, 
                 income_num, parent_ed_years, high_hs_grade, aims_advanced_degree, 
@@ -378,7 +385,7 @@ md_coefs <- c(
 writeLines(md_coefs, "Cache/summaries/bivariate_multinomial_coefficients.md")
 
 cat("\n====================================================================\n")
-cat("Bivariate Poisson Modeling Pipeline Complete (Top 10 Music Genres)! \n")
+cat("Bivariate Poisson Modeling Pipeline Complete (K = 4 Solution)!      \n")
 cat("Outputs Generated:\n")
 cat("1. Cache/summaries/bivariate_model_selection.md\n")
 cat("2. Cache/summaries/bivariate_concomitant_blocks.md\n")
