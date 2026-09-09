@@ -1,4 +1,4 @@
-#' Generate Publication Plots for Multivariate Binary Trajectory Models
+#' Generate Publication Plots for Multivariate Binary Trajectory Models (K = 4)
 #'
 #' Generates publication figures strictly adhering to global guidelines:
 #' 6.5-inch width, 300 DPI, modernized `linewidth` aesthetic, discrete wave markers,
@@ -10,7 +10,7 @@
 #' 3. Plots/fig3_activity_time_trend_shifts.png (Net trajectory shifts within classes)
 #'
 #' @author Omar Lizardo & AI Assistant
-#' @date 2026-09-08
+#' @date 2026-09-09
 
 suppressPackageStartupMessages({
   library(dplyr)
@@ -18,7 +18,7 @@ suppressPackageStartupMessages({
   library(ggplot2)
 })
 
-cat("--> Loading trajectory datasets...\n")
+cat("--> Loading trajectory datasets (K = 4)...\n")
 books_data <- readRDS("Cache/summaries/books_trajectories.rds")
 music_data <- readRDS("Cache/summaries/music_trajectories.rds")
 
@@ -35,7 +35,7 @@ theme_publication <- function(base_size = 9.5) {
       panel.grid.major = element_line(color = "gray92", linewidth = 0.35),
       legend.position = "bottom",
       legend.title = element_blank(),
-      legend.text = element_text(size = rel(0.80), face = "bold"),
+      legend.text = element_text(size = rel(0.78), face = "bold"),
       legend.box.margin = margin(t = -4, b = 2),
       panel.spacing = unit(0.7, "lines"),
       strip.text = element_text(face = "bold", size = rel(0.80))
@@ -43,20 +43,22 @@ theme_publication <- function(base_size = 9.5) {
 }
 
 # -----------------------------------------------------------------------------
-# Figure 1: All 9 Book Types by Class (with Wave Markers)
+# Figure 1: All 9 Book Types by Class (with Wave Markers, K = 4)
 # -----------------------------------------------------------------------------
-cat("--> Generating Figure 1: Book Reading Types with Wave Markers...\n")
+cat("--> Generating Figure 1: Book Reading Types with Wave Markers (K = 4)...\n")
 
-PALETTE_BOOKS <- c(
-  "Nonfictionists" = "#009E73", # Bluish Green
-  "Fictionists"    = "#0072B2", # Deep Blue
-  "Minimalists"    = "#D55E00"  # Vermillion
+PALETTE_BOOKS4 <- c(
+  "Genre Specialists"      = "#0072B2", # Deep Blue
+  "Romance Readers"        = "#CC79A7", # Reddish Purple
+  "Nonfictionists"         = "#009E73", # Bluish Green
+  "Omnivorous Fictionists" = "#D55E00"  # Vermillion
 )
 
-SHAPES_BOOKS <- c(
-  "Nonfictionists" = 16,
-  "Fictionists"    = 17,
-  "Minimalists"    = 15
+SHAPES_BOOKS4 <- c(
+  "Genre Specialists"      = 16, # Circle
+  "Romance Readers"        = 18, # Diamond
+  "Nonfictionists"         = 17, # Triangle
+  "Omnivorous Fictionists" = 15  # Square
 )
 
 p_books <- ggplot() +
@@ -71,38 +73,40 @@ p_books <- ggplot() +
     labels = scales::percent_format(accuracy = 1),
     limits = c(0, 1.0)
   ) +
-  scale_color_manual(values = PALETTE_BOOKS) +
-  scale_shape_manual(values = SHAPES_BOOKS) +
+  scale_color_manual(values = PALETTE_BOOKS4) +
+  scale_shape_manual(values = SHAPES_BOOKS4) +
   guides(
-    color = guide_legend(nrow = 1, byrow = TRUE),
-    shape = guide_legend(nrow = 1, byrow = TRUE)
+    color = guide_legend(nrow = 2, byrow = TRUE),
+    shape = guide_legend(nrow = 2, byrow = TRUE)
   ) +
   labs(
-    title = "Latent Trajectories Across 9 Book Reading Types",
-    subtitle = "Predicted reading probabilities with wave markers from 3-class multivariate model",
+    title = "Latent Trajectories Across 9 Book Reading Types (K = 4)",
+    subtitle = "Predicted reading probabilities with wave markers from 4-class multivariate binary model",
     x = "Collegiate Semester (W1: Fall Frosh to W6: Spr Junior)",
     y = "Predicted Reading Probability"
   ) +
   theme_publication()
 
-ggsave("Plots/fig1_books_9_items_by_class.png", p_books, width = 6.5, height = 6.8, dpi = 300)
+ggsave("Plots/fig1_books_9_items_by_class.png", p_books, width = 6.5, height = 7.0, dpi = 300)
 cat("   Saved: Plots/fig1_books_9_items_by_class.png\n")
 
 # -----------------------------------------------------------------------------
-# Figure 2: Top 10 Music Genres by Class (with Wave Markers)
+# Figure 2: Top 10 Music Genres by Class (with Wave Markers, K = 4)
 # -----------------------------------------------------------------------------
-cat("--> Generating Figure 2: Music Genre Preferences with Wave Markers...\n")
+cat("--> Generating Figure 2: Music Genre Preferences with Wave Markers (K = 4)...\n")
 
-PALETTE_MUSIC <- c(
-  "Omnivores"     = "#0072B2", # Deep Blue
-  "Rockers"       = "#D55E00", # Vermillion
-  "Mainstreamers" = "#E69F00"  # Orange
+PALETTE_MUSIC4 <- c(
+  "Omnivores"            = "#0072B2", # Deep Blue
+  "Classic Rockers"      = "#D55E00", # Vermillion
+  "Contemporary Rockers" = "#E69F00", # Orange
+  "Mainstreamers"        = "#009E73"  # Bluish Green
 )
 
-SHAPES_MUSIC <- c(
-  "Omnivores"     = 16,
-  "Rockers"       = 17,
-  "Mainstreamers" = 15
+SHAPES_MUSIC4 <- c(
+  "Omnivores"            = 16, # Circle
+  "Classic Rockers"      = 17, # Triangle
+  "Contemporary Rockers" = 15, # Square
+  "Mainstreamers"        = 18  # Diamond
 )
 
 p_music <- ggplot() +
@@ -117,15 +121,15 @@ p_music <- ggplot() +
     labels = scales::percent_format(accuracy = 1),
     limits = c(0, 1.0)
   ) +
-  scale_color_manual(values = PALETTE_MUSIC) +
-  scale_shape_manual(values = SHAPES_MUSIC) +
+  scale_color_manual(values = PALETTE_MUSIC4) +
+  scale_shape_manual(values = SHAPES_MUSIC4) +
   guides(
-    color = guide_legend(nrow = 1, byrow = TRUE),
-    shape = guide_legend(nrow = 1, byrow = TRUE)
+    color = guide_legend(nrow = 2, byrow = TRUE),
+    shape = guide_legend(nrow = 2, byrow = TRUE)
   ) +
   labs(
-    title = "Latent Trajectories Across Top 10 Music Genres",
-    subtitle = "Predicted preference probabilities with wave markers from 3-class multivariate model",
+    title = "Latent Trajectories Across Top 10 Music Genres (K = 4)",
+    subtitle = "Predicted preference probabilities with wave markers from 4-class multivariate binary model",
     x = "Collegiate Semester (W1: Fall Frosh to W6: Spr Junior)",
     y = "Predicted Preference Probability"
   ) +
@@ -135,9 +139,9 @@ ggsave("Plots/fig2_music_10_genres_by_class.png", p_music, width = 6.5, height =
 cat("   Saved: Plots/fig2_music_10_genres_by_class.png\n")
 
 # -----------------------------------------------------------------------------
-# Figure 3: Activity Time Trend Shifts Within Latent Classes
+# Figure 3: Activity Time Trend Shifts Within Latent Classes (K = 4)
 # -----------------------------------------------------------------------------
-cat("--> Generating Figure 3: Activity Time Trend Shifts Within Classes...\n")
+cat("--> Generating Figure 3: Activity Time Trend Shifts Within Classes (K = 4)...\n")
 
 df_books_chg <- books_data$points %>%
   filter(wave %in% c(1, 6)) %>%
@@ -161,13 +165,15 @@ all_chg <- bind_rows(df_books_chg, df_music_chg) %>%
   mutate(
     Domain = factor(Domain, levels = c("Book Reading Types (Waves 1--6)", "Music Genre Preferences (Waves 1--6)")),
     Class_Clean = factor(case_when(
-      Class %in% c("Omnivores", "Nonfictionists") ~ "Class 1\n(Omnivores / Nonfictionists)",
-      Class %in% c("Rockers", "Fictionists")       ~ "Class 2\n(Rockers / Fictionists)",
-      Class %in% c("Mainstreamers", "Minimalists") ~ "Class 3\n(Mainstreamers / Minimalists)"
+      Class %in% c("Genre Specialists", "Classic Rockers")      ~ "Class 1\n(Genre Spec / Classic Rock)",
+      Class %in% c("Romance Readers", "Mainstreamers")          ~ "Class 2\n(Romance / Mainstream)",
+      Class %in% c("Nonfictionists", "Contemporary Rockers")    ~ "Class 3\n(Nonfiction / Contemp Rock)",
+      Class %in% c("Omnivorous Fictionists", "Omnivores")       ~ "Class 4\n(Omniv Fiction / Omnivores)"
     ), levels = c(
-      "Class 1\n(Omnivores / Nonfictionists)",
-      "Class 2\n(Rockers / Fictionists)",
-      "Class 3\n(Mainstreamers / Minimalists)"
+      "Class 1\n(Genre Spec / Classic Rock)",
+      "Class 2\n(Romance / Mainstream)",
+      "Class 3\n(Nonfiction / Contemp Rock)",
+      "Class 4\n(Omniv Fiction / Omnivores)"
     )),
     Direction = ifelse(Delta >= 0, "Expansion (+)", "Contraction (-)"),
     Activity = factor(Activity)
@@ -191,23 +197,23 @@ theme_pub_shift <- theme_minimal(base_size = 9.5) +
     legend.position = "bottom",
     legend.title = element_blank(),
     legend.text = element_text(size = rel(0.80), face = "bold"),
-    panel.spacing = unit(0.7, "lines"),
-    strip.text = element_text(face = "bold", size = rel(0.80)),
+    panel.spacing = unit(0.5, "lines"),
+    strip.text = element_text(face = "bold", size = rel(0.75)),
     strip.background = element_rect(fill = "grey95", color = NA)
   )
 
 p_chg <- ggplot(all_chg, aes(x = Delta, y = Activity, color = Direction)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "gray50", linewidth = 0.5) +
   geom_segment(aes(x = 0, xend = Delta, y = Activity, yend = Activity), linewidth = 0.75) +
-  geom_point(size = 2.2) +
+  geom_point(size = 2.0) +
   facet_grid(Domain ~ Class_Clean, scales = "free_y", space = "free_y") +
   scale_color_manual(values = c("Expansion (+)" = "#0072B2", "Contraction (-)" = "#D55E00")) +
   scale_x_continuous(
     labels = function(x) paste0(ifelse(x > 0, "+", ""), round(x), " pp"),
-    breaks = seq(-30, 30, 10)
+    breaks = seq(-40, 40, 20)
   ) +
   labs(
-    title = "Net Trajectory Shifts by Cultural Item Within Latent Classes",
+    title = "Net Trajectory Shifts by Cultural Item Within Latent Classes (K = 4)",
     subtitle = "Percentage point shift (Wave 6 - Wave 1) across Book Reading Types and Music Genres",
     x = "Net Percentage Point Shift (Wave 6 - Wave 1)"
   ) +
@@ -217,5 +223,4 @@ ggsave("Plots/fig3_activity_time_trend_shifts.png", p_chg, width = 6.5, height =
 cat("   Saved: Plots/fig3_activity_time_trend_shifts.png\n")
 
 cat("\n====================================================================\n")
-cat("Publication Figures 1, 2, and 3 Generated Successfully!\n")
-cat("====================================================================\n")
+cat("Plot Generation Complete!\n")

@@ -1,13 +1,12 @@
-#' Fit Multivariate Binary Trajectory Models for Arts, Books, and Music
+#' Fit Multivariate Binary Trajectory Models for Books and Music (K = 4)
 #'
 #' Implements multivariate binary mixture models using natural cubic splines (`ns(time, df = 2)`):
-#' 1. Arts & Cultural Events: All 12 binary events across Waves 1 to 4.
-#' 2. Book Reading Types: All 9 binary book genres across Waves 1 to 6.
-#' 3. Music Genre Preferences: Top 10 musical genres across Waves 1 to 6.
+#' 1. Book Reading Types: All 9 binary book genres across Waves 1 to 6 (K = 4).
+#' 2. Music Genre Preferences: Top 10 musical genres across Waves 1 to 6 (K = 4).
 #' Includes endogenous multinomial concomitants (`FLXPmultinom`).
 #'
 #' @author Omar Lizardo & AI Assistant
-#' @date 2026-09-08
+#' @date 2026-09-09
 
 suppressPackageStartupMessages({
   library(flexmix)
@@ -18,7 +17,7 @@ suppressPackageStartupMessages({
 })
 
 cat("====================================================================\n")
-cat("Starting Complete Multivariate Binary Trajectory Modeling Pipeline  \n")
+cat("Starting Multivariate Binary Trajectory Modeling Pipeline (K = 4)    \n")
 cat("====================================================================\n")
 
 # 1. Load Data
@@ -45,177 +44,10 @@ var_clean_map <- c(
   "hometown" = "Hometown Urbanicity"
 )
 
-# Helper function to extract robust multinom concomitants
-extract_concom <- function(mod, df_comp, domain_name, ref_level = "1") {
-  df_ego <- df_comp %>%
-    mutate(clust = factor(clusters(mod))) %>%
-    group_by(egoid) %>%
-    summarize(clust = names(sort(table(clust), decreasing = TRUE)[1]), .groups = "drop") %>%
-    mutate(clust = relevel(factor(clust), ref = ref_level)) %>%
-    inner_join(covs, by = "egoid")
-    
-  m_mnl <- multinom(
-    clust ~ is_woman + is_white + is_catholic + income_num + parent_ed_years + 
-      high_hs_grade + aims_advanced_degree + is_stem_major + hometown,
-    data = df_ego, trace = FALSE
-  )
-  
-  coef_mat <- summary(m_mnl)$coefficients
-  se_mat <- summary(m_mnl)$standard.errors
-  z_mat <- coef_mat / se_mat
-  p_mat <- (1 - pnorm(abs(z_mat))) * 2
-  
-  res_list <- list()
-  for (cls in rownames(coef_mat)) {
-    for (v in colnames(coef_mat)) {
-      est <- coef_mat[cls, v]
-      se <- se_mat[cls, v]
-      z <- z_mat[cls, v]
-      p <- p_mat[cls, v]
-      sig <- if (p < 0.001) "***" else if (p < 0.01) "**" else if (p < 0.05) "*" else ""
-      
-      res_list[[paste(cls, v, sep="_")]] <- data.frame(
-        Domain = domain_name,
-        Comparison = paste("Class", cls, "vs. Class", ref_level),
-        Variable = var_clean_map[v],
-        Estimate = est,
-        Std_Error = se,
-        Odds_Ratio = exp(est),
-        Z = z,
-        P_Value = p,
-        Sig = sig,
-        stringsAsFactors = FALSE
-      )
-    }
-  }
-  bind_rows(res_list)
-}
-
 # =============================================================================
-# A. ARTS & CULTURAL EVENTS (Revised 9 Items, Waves 1 to 4)
+# A. BOOK READING TYPES (All 9 Items, Waves 1 to 6, K = 4)
 # =============================================================================
-cat("\n--> [1/3] Estimating Arts Multivariate Binary Model (9 Events)...\n")
-
-event_clean_labels <- c(
-  "art_classical_opera"   = "Classical Concert or Opera",
-  "art_rock_folk_country" = "Rock, Pop, Folk, or Country",
-  "art_ballet_dance"       = "Ballet or Modern Dance",
-  "art_jazz_blues"         = "Jazz or Blues Performance",
-  "art_musical_theater"    = "Musical Stage Play",
-  "art_stage_play"         = "Stage Play (Non-Musical)",
-  "art_comedy_club"        = "Comedy Club",
-  "art_art_museum"         = "Art Museum or Gallery",
-  "art_cinema"             = "Cinema or Movie Theater"
-)
-art_cols <- names(event_clean_labels)
-
-cult_cols <- grep("^egoid|^culturalevents[0-9]+_[1-6]$", names(demo_data), value = TRUE)
-df_arts_comp <- demo_data %>% 
-  dplyr::select(all_of(cult_cols)) %>%
-  pivot_longer(
-    cols = starts_with("culturalevents"),
-    names_to = c("event_type", "wave"),
-    names_pattern = "culturalevents([0-9]+)_([1-6])",
-    values_to = "preference"
-  ) %>%
-  mutate(
-    wave = as.numeric(wave),
-    time = wave - 1,
-    pref_binary = case_when(preference == "Yes" ~ 1, preference == "No" ~ 0, TRUE ~ NA_real_),
-    event_clean = paste0("event_", event_type)
-  ) %>%
-  filter(!is.na(pref_binary)) %>%
-  dplyr::select(egoid, wave, time, event_clean, pref_binary) %>%
-  pivot_wider(names_from = event_clean, values_from = pref_binary) %>%
-  filter(complete.cases(.)) %>%
-  mutate(
-    art_classical_opera   = as.numeric(event_2 == 1 | event_4 == 1),
-    art_rock_folk_country = as.numeric(event_1 == 1 | event_3 == 1),
-    art_ballet_dance       = event_5,
-    art_jazz_blues         = event_6,
-    art_musical_theater    = event_7,
-    art_stage_play         = event_8,
-    art_comedy_club        = event_9,
-    art_art_museum         = event_10,
-    art_cinema             = event_12
-  ) %>%
-  dplyr::select(
-    egoid, wave, time,
-    all_of(art_cols)
-  ) %>%
-  inner_join(covs, by = "egoid") %>%
-  arrange(egoid, time)
-
-specs_arts <- lapply(art_cols, function(col) {
-  FLXMRglm(as.formula(paste0("cbind(", col, ", 1 - ", col, ") ~ ns(time, df = 2)")), family = "binomial")
-})
-
-set.seed(2026)
-mod_arts_final <- flexmix(
-  as.formula(paste0("cbind(", paste(art_cols, collapse=", "), ") ~ ns(time, df = 2) | egoid")),
-  data = df_arts_comp, k = 3, model = specs_arts,
-  concomitant = FLXPmultinom(form_full),
-  control = list(iter.max = 300, minprior = 0.04)
-)
-
-# Trajectory generation: smooth line + wave point markers
-t_smooth_arts <- seq(0, 3, length.out = 80)
-t_points_arts <- 0:3
-basis_arts <- ns(df_arts_comp$time, df = 2)
-eval_smooth_arts <- predict(basis_arts, t_smooth_arts)
-eval_points_arts <- predict(basis_arts, t_points_arts)
-
-params_arts <- parameters(mod_arts_final)
-arts_labels_map <- c(
-  "1" = "Omnivores",
-  "2" = "Traditionalists",
-  "3" = "Minimalists"
-)
-
-# Build smooth lines
-arts_smooth_list <- list()
-for (ev_idx in 1:length(art_cols)) {
-  col <- art_cols[ev_idx]
-  ev_label <- event_clean_labels[col]
-  for (c_idx in 1:3) {
-    b <- params_arts[[ev_idx]][, c_idx]
-    eta <- b[1] + b[2] * eval_smooth_arts[, 1] + b[3] * eval_smooth_arts[, 2]
-    arts_smooth_list[[paste(ev_idx, c_idx, sep="_")]] <- data.frame(
-      Event = ev_label,
-      Class = arts_labels_map[as.character(c_idx)],
-      time = t_smooth_arts,
-      prob = plogis(eta)
-    )
-  }
-}
-df_arts_smooth <- bind_rows(arts_smooth_list)
-
-# Build discrete wave points
-arts_points_list <- list()
-for (ev_idx in 1:length(art_cols)) {
-  col <- art_cols[ev_idx]
-  ev_label <- event_clean_labels[col]
-  for (c_idx in 1:3) {
-    b <- params_arts[[ev_idx]][, c_idx]
-    eta <- b[1] + b[2] * eval_points_arts[, 1] + b[3] * eval_points_arts[, 2]
-    arts_points_list[[paste(ev_idx, c_idx, sep="_")]] <- data.frame(
-      Event = ev_label,
-      Class = arts_labels_map[as.character(c_idx)],
-      time = t_points_arts,
-      wave = t_points_arts + 1,
-      prob = plogis(eta)
-    )
-  }
-}
-df_arts_points <- bind_rows(arts_points_list)
-
-saveRDS(list(smooth = df_arts_smooth, points = df_arts_points), "Cache/summaries/arts_trajectories.rds")
-cat("   Saved: Cache/summaries/arts_trajectories.rds\n")
-
-# =============================================================================
-# B. BOOK READING TYPES (All 9 Items, Waves 1 to 6)
-# =============================================================================
-cat("\n--> [2/3] Estimating Books Multivariate Binary Model (9 Book Types)...\n")
+cat("\n--> [1/2] Estimating Books Multivariate Binary Model (9 Book Types, K = 4)...\n")
 
 book_clean_labels <- c(
   "book_1" = "Mysteries",
@@ -231,7 +63,7 @@ book_clean_labels <- c(
 
 df_books_comp <- books_long %>%
   mutate(book_clean = paste0("book_", book_type), time = wave - 1) %>%
-  select(egoid, wave, time, book_clean, pref_binary) %>%
+  dplyr::select(egoid, wave, time, book_clean, pref_binary) %>%
   pivot_wider(names_from = book_clean, values_from = pref_binary) %>%
   filter(complete.cases(.)) %>%
   inner_join(covs, by = "egoid") %>%
@@ -243,12 +75,14 @@ specs_books <- lapply(book_cols, function(col) {
 })
 
 set.seed(2026)
-mod_books_final <- flexmix(
+mod_books_final4 <- flexmix(
   as.formula(paste0("cbind(", paste(book_cols, collapse=", "), ") ~ ns(time, df = 2) | egoid")),
-  data = df_books_comp, k = 3, model = specs_books,
+  data = df_books_comp, k = 4, model = specs_books,
   concomitant = FLXPmultinom(form_full),
-  control = list(iter.max = 300, minprior = 0.04)
+  control = list(iter.max = 300, minprior = 0.02)
 )
+
+saveRDS(mod_books_final4, "Cache/mod_books_k4_fit.rds")
 
 t_smooth_books <- seq(0, 5, length.out = 80)
 t_points_books <- 0:5
@@ -256,23 +90,25 @@ basis_books <- ns(df_books_comp$time, df = 2)
 eval_smooth_books <- predict(basis_books, t_smooth_books)
 eval_points_books <- predict(basis_books, t_points_books)
 
-params_books <- parameters(mod_books_final)
+params_books <- parameters(mod_books_final4)
 
-# Strictly unique class naming based on verified component profiles:
-# Comp 1: High Non-Fiction & History
-# Comp 2: High Sci-Fi & Thrillers
-# Comp 3: Low / Selective Readers
+# Class profiles:
+# Comp 1 (n=97, 48.3%): Genre Specialists (Sci-Fi, Thrillers, Mysteries, History)
+# Comp 2 (n=40, 19.9%): Romance Readers (High Romance & Other Fiction)
+# Comp 3 (n=32, 15.9%): Nonfictionists (High History, Biography, Non-Fiction)
+# Comp 4 (n=32, 15.9%): Omnivorous Fictionists (High Across All Fiction Categories)
 books_labels_map <- c(
-  "1" = "Nonfictionists",
-  "2" = "Fictionists",
-  "3" = "Minimalists"
+  "1" = "Genre Specialists",
+  "2" = "Romance Readers",
+  "3" = "Nonfictionists",
+  "4" = "Omnivorous Fictionists"
 )
 
 books_smooth_list <- list()
 for (bk_idx in 1:9) {
   col <- book_cols[bk_idx]
   bk_label <- book_clean_labels[col]
-  for (c_idx in 1:3) {
+  for (c_idx in 1:4) {
     b <- params_books[[bk_idx]][, c_idx]
     eta <- b[1] + b[2] * eval_smooth_books[, 1] + b[3] * eval_smooth_books[, 2]
     books_smooth_list[[paste(bk_idx, c_idx, sep="_")]] <- data.frame(
@@ -289,7 +125,7 @@ books_points_list <- list()
 for (bk_idx in 1:9) {
   col <- book_cols[bk_idx]
   bk_label <- book_clean_labels[col]
-  for (c_idx in 1:3) {
+  for (c_idx in 1:4) {
     b <- params_books[[bk_idx]][, c_idx]
     eta <- b[1] + b[2] * eval_points_books[, 1] + b[3] * eval_points_books[, 2]
     books_points_list[[paste(bk_idx, c_idx, sep="_")]] <- data.frame(
@@ -304,12 +140,12 @@ for (bk_idx in 1:9) {
 df_books_points <- bind_rows(books_points_list)
 
 saveRDS(list(smooth = df_books_smooth, points = df_books_points), "Cache/summaries/books_trajectories.rds")
-cat("   Saved: Cache/summaries/books_trajectories.rds\n")
+cat("   Saved: Cache/summaries/books_trajectories.rds (K = 4)\n")
 
 # =============================================================================
-# C. MUSIC GENRE PREFERENCES (Top 10 Genres, Waves 1 to 6)
+# B. MUSIC GENRE PREFERENCES (Top 10 Genres, Waves 1 to 6, K = 4)
 # =============================================================================
-cat("\n--> [3/3] Estimating Music Multivariate Binary Model (Top 10 Genres)...\n")
+cat("\n--> [2/2] Estimating Music Multivariate Binary Model (Top 10 Genres, K = 4)...\n")
 
 genre_clean_labels <- c(
   "rap_hip_hop" = "Rap / Hip-Hop",
@@ -331,7 +167,7 @@ top10_genres_order <- c("Rap/Hip-hop", "Classic rock/Oldies", "Dance music", "Ro
 df_music_wide <- music_long %>%
   filter(genre_label %in% top10_genres_order, !is.na(pref_binary)) %>%
   mutate(genre_clean = gsub("[^a-zA-Z0-9]", "_", tolower(genre_label)), time = wave - 1) %>%
-  select(egoid, wave, time, genre_clean, pref_binary) %>%
+  dplyr::select(egoid, wave, time, genre_clean, pref_binary) %>%
   pivot_wider(names_from = genre_clean, values_from = pref_binary) %>%
   filter(complete.cases(.)) %>%
   inner_join(covs, by = "egoid") %>%
@@ -343,12 +179,14 @@ specs_music <- lapply(music_cols, function(col) {
 })
 
 set.seed(2026)
-mod_music_final <- flexmix(
+mod_music_final4 <- flexmix(
   as.formula(paste0("cbind(", paste(music_cols, collapse=", "), ") ~ ns(time, df = 2) | egoid")),
-  data = df_music_wide, k = 3, model = specs_music,
+  data = df_music_wide, k = 4, model = specs_music,
   concomitant = FLXPmultinom(form_full),
-  control = list(iter.max = 300, minprior = 0.04)
+  control = list(iter.max = 300, minprior = 0.02)
 )
+
+saveRDS(mod_music_final4, "Cache/mod_music_k4_fit.rds")
 
 t_smooth_music <- seq(0, 5, length.out = 80)
 t_points_music <- 0:5
@@ -356,19 +194,25 @@ basis_music <- ns(df_music_wide$time, df = 2)
 eval_smooth_music <- predict(basis_music, t_smooth_music)
 eval_points_music <- predict(basis_music, t_points_music)
 
-params_music <- parameters(mod_music_final)
+params_music <- parameters(mod_music_final4)
 
+# Class profiles:
+# Comp 1 (n=40, 19.9%): Classic Rockers (Classic Rock, Rock, Classical, Broadway, Jazz)
+# Comp 2 (n=60, 29.9%): Mainstreamers (Rap, Dance, Country; no Rock)
+# Comp 3 (n=48, 23.9%): Contemporary Rockers (Rap, Rock, Classic Rock, Dance; no Broadway/Classical)
+# Comp 4 (n=53, 26.4%): Omnivores (High Across All 10 Genres)
 music_labels_map <- c(
-  "1" = "Omnivores",
-  "2" = "Rockers",
-  "3" = "Mainstreamers"
+  "1" = "Classic Rockers",
+  "2" = "Mainstreamers",
+  "3" = "Contemporary Rockers",
+  "4" = "Omnivores"
 )
 
 music_smooth_list <- list()
 for (m_idx in 1:10) {
   col <- music_cols[m_idx]
   m_label <- genre_clean_labels[col]
-  for (c_idx in 1:3) {
+  for (c_idx in 1:4) {
     b <- params_music[[m_idx]][, c_idx]
     eta <- b[1] + b[2] * eval_smooth_music[, 1] + b[3] * eval_smooth_music[, 2]
     music_smooth_list[[paste(m_idx, c_idx, sep="_")]] <- data.frame(
@@ -385,7 +229,7 @@ music_points_list <- list()
 for (m_idx in 1:10) {
   col <- music_cols[m_idx]
   m_label <- genre_clean_labels[col]
-  for (c_idx in 1:3) {
+  for (c_idx in 1:4) {
     b <- params_music[[m_idx]][, c_idx]
     eta <- b[1] + b[2] * eval_points_music[, 1] + b[3] * eval_points_music[, 2]
     music_points_list[[paste(m_idx, c_idx, sep="_")]] <- data.frame(
@@ -400,21 +244,59 @@ for (m_idx in 1:10) {
 df_music_points <- bind_rows(music_points_list)
 
 saveRDS(list(smooth = df_music_smooth, points = df_music_points), "Cache/summaries/music_trajectories.rds")
-cat("   Saved: Cache/summaries/music_trajectories.rds\n")
+cat("   Saved: Cache/summaries/music_trajectories.rds (K = 4)\n")
 
-# =============================================================================
-# D. CONCOMITANT MODEL EXTRACTION (ALL 3 DOMAINS)
-# =============================================================================
-cat("\n--> Extracting multinomial concomitant models across all three domains...\n")
+# Helper function to extract robust multinom concomitants for K = 4
+extract_concom4 <- function(mod, df_comp, domain_name, labels_map, ref_level = "Omnivores") {
+  df_ego <- df_comp %>%
+    mutate(clust = factor(clusters(mod))) %>%
+    group_by(egoid) %>%
+    summarize(clust = names(sort(table(clust), decreasing = TRUE)[1]), .groups = "drop") %>%
+    mutate(class_label = labels_map[as.character(clust)]) %>%
+    mutate(class_label = relevel(factor(class_label), ref = ref_level)) %>%
+    inner_join(covs, by = "egoid")
+    
+  m_mnl <- multinom(
+    class_label ~ is_woman + is_white + is_catholic + income_num + parent_ed_years + 
+      high_hs_grade + aims_advanced_degree + is_stem_major + hometown,
+    data = df_ego, trace = FALSE
+  )
+  
+  coef_mat <- summary(m_mnl)$coefficients
+  se_mat <- summary(m_mnl)$standard.errors
+  z_mat <- coef_mat / se_mat
+  p_mat <- (1 - pnorm(abs(z_mat))) * 2
+  
+  res_list <- list()
+  for (cls in rownames(coef_mat)) {
+    for (v in colnames(coef_mat)) {
+      est <- coef_mat[cls, v]
+      se <- se_mat[cls, v]
+      z <- z_mat[cls, v]
+      p <- p_mat[cls, v]
+      sig <- if (p < 0.001) "***" else if (p < 0.01) "**" else if (p < 0.05) "*" else ""
+      
+      res_list[[paste(cls, v, sep="_")]] <- data.frame(
+        Domain = domain_name,
+        Comparison = paste(cls, "vs.", ref_level),
+        Variable = var_clean_map[v],
+        Estimate = est,
+        Std_Error = se,
+        Odds_Ratio = exp(est),
+        Z = z,
+        P_Value = p,
+        Sig = sig,
+        stringsAsFactors = FALSE
+      )
+    }
+  }
+  bind_rows(res_list)
+}
 
-df_concom_arts <- extract_concom(mod_arts_final, df_arts_comp, "Arts & Cultural Events", "1")
-df_concom_books <- extract_concom(mod_books_final, df_books_comp, "Book Reading Types", "1")
-df_concom_music <- extract_concom(mod_music_final, df_music_wide, "Music Genre Preferences", "1")
+concom_books4 <- extract_concom4(mod_books_final4, df_books_comp, "Books", books_labels_map, ref_level = "Genre Specialists")
+concom_music4 <- extract_concom4(mod_music_final4, df_music_wide, "Music", music_labels_map, ref_level = "Omnivores")
 
-df_concom_all <- bind_rows(df_concom_arts, df_concom_books, df_concom_music)
-write.csv(df_concom_all, "Cache/summaries/all_domains_concomitants.csv", row.names = FALSE)
-cat("   Saved: Cache/summaries/all_domains_concomitants.csv\n")
+saveRDS(list(books = concom_books4, music = concom_music4), "Cache/summaries/multinomial_concomitants_k4.rds")
+cat("   Saved: Cache/summaries/multinomial_concomitants_k4.rds\n")
 
-cat("\n====================================================================\n")
-cat("Pipeline Finished! Trajectories and Concomitant Summaries Serialized.\n")
-cat("====================================================================\n")
+cat("\nModeling Pipeline Complete!\n")
