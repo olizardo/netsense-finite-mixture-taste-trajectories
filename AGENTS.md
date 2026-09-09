@@ -15,53 +15,32 @@ Study cultural taste change trajectories in the NetSense dataset using finite mi
 - **Cluster Deployment & Completion**:
   - Deployed full model suites ($K = 1 \dots 4$) across Arts, Music, and Books to the UCLA Hoffman2 cluster (`submit_master_trajectories_hoffman.sh`, 16 CPU cores).
   - All models completed sampling and were serialized into `Cache/final_robust_trajectories.rds` (555 MB).
-- **Methodological Pivot (Multivariate Binary Trajectory Modeling with Natural Splines)**:
-  - Substituted aggregated count models for full **Multivariate Binary Mixture Models** in `flexmix`, modeling each individual item's binary trajectory simultaneously.
-  - Implemented **Natural Cubic Splines (`splines::ns(time, df = 2)`)** to capture flexible non-linear collegiate trajectories while eliminating quadratic runaway boundary tails.
-  - Estimated candidate solutions ($K = 1 \dots 5$) across:
-    1. **Arts & Cultural Events (All 12 items, Waves 1 to 4, $N = 199$ complete cases)**:
-       * Identified $K = 3$ substantive classes: “Class 1: Omnivorous Cultural Enthusiasts” ($n = 48$, 24.1%), “Class 2: Museum & Performing Arts Regulars” ($n = 93$, 46.7%), and “Class 3: Selective / Low Attendance” ($n = 58$, 29.1%).
-       * Revealed that the sophomore slump is concentrated in commercial and popular venues (cinema, rock concerts, comedy clubs), whereas high-arts attendance (museums, ballet, stage plays) displays institutional resilience.
-    2. **Book Reading Types (All 9 items, Waves 1 to 6, $N = 201$ complete cases)**:
-       * Identified $K = 3$ substantive genre classes: “Class 1: Non-Fiction, History & Biography” ($n = 60$, 29.9%), “Class 2: Popular Genre Fiction (Sci-Fi, Thrillers)” ($n = 79$, 39.3%), and “Class 3: Low / Selective Leisure Readers” ($n = 62$, 30.8%).
-       * Resolved previous label collision bug that merged Classes 2 and 3 into an illegible wide band.
-    3. **Music Genre Preferences (Top 10 genres, Waves 1 to 6, $N = 201$ complete cases)**:
-       * Identified $K = 3$ musical taste classes: “Class 1: High Musical Omnivores” ($n = 62$, 30.8%), “Class 2: Rock & Heavy Metal Aficionados” ($n = 51$, 25.4%), and “Class 3: Mainstream Hits (Rap, Dance, Country)” ($n = 88$, 43.8%).
-  - Estimated multivariable endogenous multinomial logit models (`FLXPmultinom`) predicting trajectory class placement across all three cultural domains.
-  - Computed overall predictive power of theoretical variable blocks (`Scripts/compute_block_wald_tests.R`) using Likelihood Ratio Tests (LRT $\chi^2$) and Wald $\chi^2$ statistics across Demographic Identity, Family SES, Scholastic Capital, and Collegiate Context. Found that Scholastic Capital and Demographic Identity drive class placement, while Family SES is statistically null across domains.
-  - Conducted within-class demographic slope moderation testing via class-stratified multilevel growth curve models (`lme4::glmer`), confirming that demographic-by-time interactions are non-significant ($p > 0.10$). Demographics act as between-class sorting gates (extensive margin) rather than within-class slope modifiers (intensive margin).
-- **Publication Figures & Discrete Wave Markers**:
-  - Generated small-multiple publication figures in `Plots/` at 6.5-inch width, 300 DPI, with Okabe-Ito palettes, modernized `linewidth` aesthetics, and discrete wave markers (`geom_point`) anchoring empirical observations (`Scripts/11_generate_multivariate_binary_plots.R`):
-    * `Plots/fig1_arts_12_events_by_class.png`: 12 small-multiple panels showing participation probabilities with wave markers across all 12 events by class.
-    * `Plots/fig2_books_9_items_by_class.png`: 9 small-multiple panels showing reading probabilities with wave markers across all 9 book types for all three distinct classes.
-    * `Plots/fig3_music_10_genres_by_class.png`: 10 small-multiple panels showing preference probabilities with wave markers across the top 10 music genres by class.
-    * `Plots/fig4_multivariate_concomitant_odds_ratios.png`: Odds Ratio forest plot from the full multivariable concomitant models across Arts, Books, and Music.
-- **Single-Word Class Labels & Streamlined Figure/Table Architecture**:
-  - Purged all slash-containing class labels in favor of punchy, single-word sociological typologies:
-    * Arts: “Omnivores”, “Traditionalists”, “Minimalists”
-    * Books: “Nonfictionists”, “Fictionists”, “Minimalists”
-    * Music: “Omnivores”, “Rockers”, “Mainstreamers”
-  - Pruned redundant Figure 5 (activity shifts plot), promoting the Odds Ratio forest plot to Figure 4.
-  - Relegated within-class slope moderation estimates (Table 5) to a comprehensive substantive footnote, as all interactions are non-significant ($p > 0.10$).
-  - Restructured Table 4 (full multivariable models) into vertically stacked panels by domain with 5 columns, perfectly fitting portrait layout in elastic `tabular*`.
-  - Added rich `Data and Measures` section with comprehensive descriptive statistics (Table 2) detailing NetSense survey stems, response categories, and longitudinal prevalence.
-- **Overleaf Git Remote Integration & Zero Local Compilation**:
-  - Connected project directly to Overleaf repository: `https://www.overleaf.com/project/6aa021d1a0797784962186d8` (`git.overleaf.com/6aa021d1a0797784962186d8`).
-  - Added global rule in `~/.config/agents/AGENTS.md` strictly prohibiting local `.tex` compilation when connected to Overleaf.
-  - Maintained bidirectional synchronization across Overleaf and GitHub (`origin`).
+- **Methodological Refocus (Unified Six-Wave Panel Architecture, $N = 201$)**:
+  - Refocused the investigation exclusively on private expressive media observed continuously across all six collegiate semesters (Waves 1 through 6, Fall 2011 to Spring 2014): **Leisure Book Reading Types (9 items)** and **Musical Genre Preferences (10 genres)**.
+  - Eliminated the truncated 4-wave public arts participation module to resolve temporal asymmetry and quasi-complete separation on pre-collegiate aspirations. Both remaining expressive domains share the exact same $N = 201$ complete-case analytical cohort.
+  - Parameterized item trajectories via natural cubic splines (`splines::ns(time, df = 2)`) centered at matriculation ($t \in \{0, \dots, 5\}$) with an internal knot at midpoint ($t = 2.5$) and linear boundary constraints.
+  - Identified $K = 3$ substantive classes in both spheres using punchy, single-word sociological typologies:
+    1. **Book Reading Types ($N = 201$)**: “Nonfictionists” ($n = 60, 29.9\%$), “Fictionists” ($n = 79, 39.3\%$), and “Minimalists” ($n = 62, 30.8\%$).
+    2. **Musical Genre Preferences ($N = 201$)**: “Omnivores” ($n = 62, 30.8\%$), “Rockers” ($n = 51, 25.4\%$), and “Mainstreamers” ($n = 88, 43.8\%$).
+- **Predictive Concomitant Models & Marginal Effects**:
+  - Estimated multivariable endogenous multinomial logit models (`FLXPmultinom`) predicting trajectory class placement as a function of nine baseline covariates.
+  - Computed overall predictive power of theoretical variable blocks (`Scripts/compute_block_wald_tests.R`) using Likelihood Ratio Tests (LRT $\chi^2$): Demographic Identity ($p < 0.001$) and Collegiate Context ($p < 0.02$) decisively sort students in both domains; Scholastic Capital drives musical sorting ($p < 0.001$), while Family SES is statistically null across domains ($p > 0.40$).
+  - Translated multivariable parameters into model-implied marginal predicted class probabilities (0% to 100%) with 95% simulation confidence intervals across significant blocks (Figure 4), showing that pre-collegiate GPA acts as a sorting gatekeeper into musical omnivorousness (44.5% vs. 12.3%), gender sorts away from rockers (7.4% vs. 25.0%), and declared STEM majors sort into fictionists (59.9%) and rockers (44.2%).
+  - Relegated full 18-parameter multinomial logit coefficient tables to Appendix Table A1, and non-significant within-class GLMM slope moderation tests to a comprehensive substantive footnote.
+- **Publication Figures & Asset Inventory**:
+  - Generated small-multiple publication figures in `Plots/` at 6.5-inch width, 300 DPI, with Okabe-Ito palettes, modernized `linewidth` aesthetics, and discrete wave markers:
+    * `Plots/fig1_books_9_items_by_class.png`: 9 small-multiple panels showing reading probabilities with wave markers across all 9 book types by class.
+    * `Plots/fig2_music_10_genres_by_class.png`: 10 small-multiple panels showing preference probabilities with wave markers across the top 10 music genres by class.
+    * `Plots/fig3_activity_time_trend_shifts.png`: Net trajectory shifts ($\Delta = P(W_6) - P(W_1)$) by cultural item within latent classes across all 19 book and music items, illustrating targeted repertoire reallocation (surging biographies and country music expansion among omnivores).
+    * `Plots/fig4_marginal_effects_books_music.png`: Model-implied marginal predicted class probabilities with 95% simulation confidence intervals across significant demographic, scholastic, and major blocks.
 - **LaTeX Journal Article Manuscript Architecture**:
   - Authored canonical master LaTeX manuscript (`manuscript.tex`) and standalone BibTeX bibliography (`references.bib`) ready for Overleaf compilation:
-    * Formatted using standard article geometry, one-half spacing, microtype, and `booktabs` tables.
-    * Incorporates all 5 publication figures and 4 comprehensive APA tables (Model Selection, Block Predictive Power, Full Multivariable Concomitant Estimates, and Within-Class GLMM Moderation).
+    * Standard article geometry, one-half spacing, microtype, and APA `booktabs` / `tabular*` tables with zero overfull hboxes or float warnings.
+    * Replaced all bulleted and numbered lists with cohesive academic prose paragraphs.
     * Implements the CUA Tripartite discussion architecture (`Summary of Key Results`, `Limitations and Suggestions for Future Work`, and `Implications: Repertoires, Institutions, and the Collegiate Habitus`).
-    * Strictly complies with the zero local compilation rule, double typographic quotes, last names only for scholar references, and zero forbidden terms.
-  - Successfully purged obsolete `.qmd` and `.html` drafts per user instructions.
-- **Cache Optimization & Git Remote Deployment**:
-  - Cleared over 750 MB of heavy legacy Stan and `brms` `.rds` objects (`Cache/Archive_Legacy_Stan/` and `Cache/Archive_Legacy_BRMS/`), bringing the `Cache/` directory down to under 200 KB.
-  - Hardened `.gitignore` to strictly exclude private SSH keys (`hoffmankey*`), IDE artifacts, and heavy cache archives.
-  - Linked and pushed clean working tree to GitHub remote repository (`olizardo/netsense-finite-mixture-taste-trajectories.git`) on branch `main`.
-
----
+    * Strictly complies with the zero local compilation rule, double typographic quotes, scholar naming standards (last names only), and zero forbidden terms.
+- **Bidirectional Git Remote Synchronization**:
+  - Maintained seamless synchronization across Overleaf (`git.overleaf.com/6aa021d1a0797784962186d8`) and GitHub (`origin/main`).
 
 # Global Agent Guidelines
 
