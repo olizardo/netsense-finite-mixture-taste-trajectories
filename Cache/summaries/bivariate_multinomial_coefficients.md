@@ -1,22 +1,22 @@
 | Trajectory Contrast | Covariate | Estimate (SE) | Odds Ratio | Z | p-value |
 |:---|:---|:---:|:---:|:---:|:---:|
-| Moderate Eclectics vs. High Dual Omnivores (Ref) | Constant | 5.307 (3.374) | 201.808 | 1.57 | 0.116 |
-| Moderate Eclectics vs. High Dual Omnivores (Ref) | Woman (ref: Man) | 0.124 (0.442) | 1.132 | 0.28 | 0.780 |
-| Moderate Eclectics vs. High Dual Omnivores (Ref) | White (ref: Non-White) | 0.306 (0.571) | 1.358 | 0.54 | 0.592 |
-| Moderate Eclectics vs. High Dual Omnivores (Ref) | Catholic (ref: Non-Catholic) | -0.845 (0.535) | 0.430 | -1.58 | 0.115 |
-| Moderate Eclectics vs. High Dual Omnivores (Ref) | Parent Income ($1,000s) | 0.001 (0.003) | 1.001 | 0.42 | 0.678 |
-| Moderate Eclectics vs. High Dual Omnivores (Ref) | Parent Education (Years) | 0.025 (0.124) | 1.026 | 0.21 | 0.838 |
-| Moderate Eclectics vs. High Dual Omnivores (Ref) | High School GPA (A/A-) | -0.650 (0.622) | 0.522 | -1.04 | 0.296 |
-| Moderate Eclectics vs. High Dual Omnivores (Ref) | Aspires to Advanced Degree | -0.877 (1.112) | 0.416 | -0.79 | 0.430 |
-| Moderate Eclectics vs. High Dual Omnivores (Ref) | STEM Major (ref: Non-STEM) | 0.401 (0.443) | 1.493 | 0.90 | 0.366 |
-| Moderate Eclectics vs. High Dual Omnivores (Ref) | Hometown Urbanicity | -0.578 (0.383) | 0.561 | -1.51 | 0.131 |
-| Cultural Minimalists vs. High Dual Omnivores (Ref) | Constant | 5.888 (3.518) | 360.663 | 1.67 | 0.094 |
-| Cultural Minimalists vs. High Dual Omnivores (Ref) | Woman (ref: Man) | -0.304 (0.469) | 0.737 | -0.65 | 0.517 |
-| Cultural Minimalists vs. High Dual Omnivores (Ref) | White (ref: Non-White) | 0.305 (0.604) | 1.357 | 0.51 | 0.613 |
-| Cultural Minimalists vs. High Dual Omnivores (Ref) | Catholic (ref: Non-Catholic) | -1.001 (0.557) | 0.367 | -1.80 | 0.072 |
-| Cultural Minimalists vs. High Dual Omnivores (Ref) | Parent Income ($1,000s) | 0.003 (0.004) | 1.003 | 0.88 | 0.379 |
-| Cultural Minimalists vs. High Dual Omnivores (Ref) | Parent Education (Years) | -0.043 (0.129) | 0.958 | -0.33 | 0.738 |
-| Cultural Minimalists vs. High Dual Omnivores (Ref) | High School GPA (A/A-) | -1.578 (0.617)* | 0.206 | -2.56 | 0.010 |
-| Cultural Minimalists vs. High Dual Omnivores (Ref) | Aspires to Advanced Degree | -1.572 (1.109) | 0.208 | -1.42 | 0.156 |
-| Cultural Minimalists vs. High Dual Omnivores (Ref) | STEM Major (ref: Non-STEM) | 0.318 (0.467) | 1.374 | 0.68 | 0.496 |
-| Cultural Minimalists vs. High Dual Omnivores (Ref) | Hometown Urbanicity | -0.265 (0.403) | 0.767 | -0.66 | 0.511 |
+| Moderate Eclectics vs. High Dual Omnivores (Ref) | Constant | 2.482 (2.343) | 11.971 | 1.06 | 0.289 |
+| Moderate Eclectics vs. High Dual Omnivores (Ref) | Woman (ref: Man) | -0.797 (0.360)* | 0.451 | -2.22 | 0.027 |
+| Moderate Eclectics vs. High Dual Omnivores (Ref) | White (ref: Non-White) | -0.259 (0.480) | 0.772 | -0.54 | 0.589 |
+| Moderate Eclectics vs. High Dual Omnivores (Ref) | Catholic (ref: Non-Catholic) | -1.076 (0.440)* | 0.341 | -2.44 | 0.014 |
+| Moderate Eclectics vs. High Dual Omnivores (Ref) | Parent Income ($1,000s) | 0.005 (0.003) | 1.005 | 1.77 | 0.077 |
+| Moderate Eclectics vs. High Dual Omnivores (Ref) | Parent Education (Years) | 0.012 (0.104) | 1.012 | 0.11 | 0.910 |
+| Moderate Eclectics vs. High Dual Omnivores (Ref) | High School GPA (A/A-) | -1.260 (0.499)* | 0.284 | -2.53 | 0.011 |
+| Moderate Eclectics vs. High Dual Omnivores (Ref) | Aspires to Advanced Degree | -0.912 (0.706) | 0.402 | -1.29 | 0.197 |
+| Moderate Eclectics vs. High Dual Omnivores (Ref) | STEM Major (ref: Non-STEM) | 0.171 (0.354) | 1.186 | 0.48 | 0.630 |
+| Moderate Eclectics vs. High Dual Omnivores (Ref) | Hometown Urbanicity | 0.112 (0.228) | 1.118 | 0.49 | 0.625 |
+| Cultural Minimalists vs. High Dual Omnivores (Ref) | Constant | -0.162 (4.169) | 0.851 | -0.04 | 0.969 |
+| Cultural Minimalists vs. High Dual Omnivores (Ref) | Woman (ref: Man) | -0.170 (0.558) | 0.844 | -0.30 | 0.761 |
+| Cultural Minimalists vs. High Dual Omnivores (Ref) | White (ref: Non-White) | -0.064 (0.703) | 0.938 | -0.09 | 0.928 |
+| Cultural Minimalists vs. High Dual Omnivores (Ref) | Catholic (ref: Non-Catholic) | -1.548 (0.624)* | 0.213 | -2.48 | 0.013 |
+| Cultural Minimalists vs. High Dual Omnivores (Ref) | Parent Income ($1,000s) | 0.003 (0.004) | 1.003 | 0.65 | 0.514 |
+| Cultural Minimalists vs. High Dual Omnivores (Ref) | Parent Education (Years) | -0.074 (0.155) | 0.929 | -0.48 | 0.633 |
+| Cultural Minimalists vs. High Dual Omnivores (Ref) | High School GPA (A/A-) | -2.057 (0.636)** | 0.128 | -3.24 | 0.001 |
+| Cultural Minimalists vs. High Dual Omnivores (Ref) | Aspires to Advanced Degree | -1.537 (0.895) | 0.215 | -1.72 | 0.086 |
+| Cultural Minimalists vs. High Dual Omnivores (Ref) | STEM Major (ref: Non-STEM) | 0.310 (0.541) | 1.364 | 0.57 | 0.566 |
+| Cultural Minimalists vs. High Dual Omnivores (Ref) | Hometown Urbanicity | 0.734 (0.516) | 2.083 | 1.42 | 0.155 |

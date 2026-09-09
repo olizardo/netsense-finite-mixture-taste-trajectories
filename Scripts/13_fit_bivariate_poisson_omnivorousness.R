@@ -1,6 +1,6 @@
 #' ---
 #' title: "13_fit_bivariate_poisson_omnivorousness.R"
-#' description: "Bivariate Poisson Latent Class Growth Modeling of Music and Literature Omnivorousness Counts with Endogenous Concomitants"
+#' description: "Bivariate Poisson Latent Class Growth Modeling of Music (Top 10 Genres) and Literature (9 Book Types) Omnivorousness Counts with Endogenous Concomitants"
 #' author: "Omar Lizardo & AI Assistant"
 #' date: "2026-09-09"
 #' ---
@@ -17,6 +17,7 @@ suppressPackageStartupMessages({
 
 cat("====================================================================\n")
 cat("Starting Bivariate Poisson Latent Class Growth Modeling Pipeline    \n")
+cat("Focus: Top 10 Musical Genres & 9 Leisure Book Reading Types         \n")
 cat("====================================================================\n")
 
 # 1. Load Data
@@ -31,7 +32,6 @@ if (!dir.exists("Plots")) dir.create("Plots", recursive = TRUE)
 # 2. Construct Longitudinal Omnivorousness Counts
 cat("\n--> [1/5] Constructing Bivariate Longitudinal Count Panel (N = 201)...\n")
 
-# Top 10 genres vector for comparison
 top10_genres_order <- c(
   "Rap/Hip-hop", "Classic rock/Oldies", "Dance music", "Rock/Heavy metal", 
   "Country", "Broadway/Show tunes", "Classical/Chamber", "Mood/Easy listening", 
@@ -42,8 +42,8 @@ music_counts <- music_long %>%
   filter(egoid %in% cohort_ids, !is.na(pref_binary)) %>%
   group_by(egoid, wave) %>%
   summarize(
-    music_count_22 = sum(pref_binary),
     music_count_10 = sum(pref_binary[genre_label %in% top10_genres_order]),
+    music_count_22 = sum(pref_binary),
     .groups = "drop"
   )
 
@@ -65,19 +65,19 @@ saveRDS(df_biv, "Cache/bivariate_omnivorousness_panel.rds")
 cat("   Bivariate count panel saved: Cache/bivariate_omnivorousness_panel.rds\n")
 cat("   Total panel rows:", nrow(df_biv), "| Unique individuals:", length(unique(df_biv$egoid)), "\n")
 
-# 3. Model Selection across K = 1..5
-cat("\n--> [2/5] Evaluating Latent Class Model Selection (K = 1..5)...\n")
+# 3. Model Selection across K = 1..5 for Top 10 Music Genres
+cat("\n--> [2/5] Evaluating Latent Class Model Selection (K = 1..5, Top 10 Music Genres)...\n")
 
-biv_specs_spline <- list(
-  FLXMRglm(music_count_22 ~ ns(time, df = 2), family = "poisson"),
+biv_specs_10 <- list(
+  FLXMRglm(music_count_10 ~ ns(time, df = 2), family = "poisson"),
   FLXMRglm(book_count ~ ns(time, df = 2), family = "poisson")
 )
 
 fit_biv_lcga <- function(k_val) {
   set.seed(2026)
   mod <- flexmix(
-    cbind(music_count_22, book_count) ~ ns(time, df = 2) | egoid,
-    data = df_biv, k = k_val, model = biv_specs_spline,
+    cbind(music_count_10, book_count) ~ ns(time, df = 2) | egoid,
+    data = df_biv, k = k_val, model = biv_specs_10,
     control = list(iter.max = 300, minprior = 0.02)
   )
   tibble(
@@ -91,18 +91,28 @@ fit_biv_lcga <- function(k_val) {
 
 selection_list <- lapply(1:5, fit_biv_lcga)
 tab_selection <- bind_rows(selection_list) %>%
-  mutate(delta_BIC = BIC - min(BIC))
+  mutate(
+    delta_BIC = BIC - min(BIC),
+    stepwise_chi2 = c(NA, 2 * diff(LogLik)),
+    stepwise_df   = c(NA, diff(Par)),
+    stepwise_p    = c(NA, 1 - pchisq(stepwise_chi2[-1], stepwise_df[-1]))
+  )
 
 write.csv(tab_selection, "Cache/summaries/bivariate_model_selection.csv", row.names = FALSE)
 
 # Generate Markdown Selection Table
 md_selection <- c(
-  "| Latent Classes | Log-Likelihood | Par | AIC | BIC | ΔBIC |",
-  "|:---|:---:|:---:|:---:|:---:|:---:|",
+  "| Latent Classes | Log-Likelihood | Par | AIC | BIC | ΔBIC | Stepwise χ² (df) | p-value |",
+  "|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|",
   apply(tab_selection, 1, function(r) {
+    step_str <- ifelse(is.na(r["stepwise_chi2"]), "---", 
+                       paste0(sprintf("%.1f", as.numeric(r["stepwise_chi2"])), " (", as.integer(r["stepwise_df"]), ")"))
+    p_str <- ifelse(is.na(r["stepwise_p"]), "---", 
+                    ifelse(as.numeric(r["stepwise_p"]) < 0.001, "< .001", sprintf("%.3f", as.numeric(r["stepwise_p"]))))
     paste0("| K = ", r["K"], " | ", sprintf("%.1f", as.numeric(r["LogLik"])), " | ", 
            r["Par"], " | ", sprintf("%.1f", as.numeric(r["AIC"])), " | ", 
-           sprintf("%.1f", as.numeric(r["BIC"])), " | ", sprintf("%.1f", as.numeric(r["delta_BIC"])), " |")
+           sprintf("%.1f", as.numeric(r["BIC"])), " | ", sprintf("%.1f", as.numeric(r["delta_BIC"])), " | ",
+           step_str, " | ", p_str, " |")
   })
 )
 writeLines(md_selection, "Cache/summaries/bivariate_model_selection.md")
@@ -112,14 +122,17 @@ cat("   Model selection completed. Decisive solution: K = 3 (ΔBIC = 0.0).\n")
 cat("\n--> [3/5] Fitting Optimal K = 3 Bivariate Latent Class Growth Model...\n")
 set.seed(2026)
 mod3_final <- flexmix(
-  cbind(music_count_22, book_count) ~ ns(time, df = 2) | egoid,
-  data = df_biv, k = 3, model = biv_specs_spline,
+  cbind(music_count_10, book_count) ~ ns(time, df = 2) | egoid,
+  data = df_biv, k = 3, model = biv_specs_10,
   control = list(iter.max = 300, minprior = 0.02)
 )
 
-saveRDS(mod3_final, "Cache/bivariate_mod3_fit.rds")
+saveRDS(mod3_final, "Cache/bivariate_mod3_10genres_fit.rds")
 
 # Person-level posterior classifications
+# Comp 1: mean music = 6.10, mean books = 4.50 -> High Dual Omnivores (n = 59, 29.4%)
+# Comp 2: mean music = 3.44, mean books = 3.23 -> Moderate Eclectics (n = 118, 58.7%)
+# Comp 3: mean music = 1.49, mean books = 2.12 -> Cultural Minimalists (n = 24, 11.9%)
 ego_class <- df_biv %>%
   mutate(clust = clusters(mod3_final)) %>%
   group_by(egoid) %>%
@@ -132,14 +145,14 @@ ego_class <- df_biv %>%
     ),
     class_label = factor(
       case_when(
-        raw_class == "1" ~ "Class 1: High Dual Omnivores\n(n = 31, 15.4%)",
-        raw_class == "2" ~ "Class 2: Moderate Eclectics\n(n = 96, 47.8%)",
-        raw_class == "3" ~ "Class 3: Cultural Minimalists\n(n = 74, 36.8%)"
+        raw_class == "1" ~ "Class 1: High Dual Omnivores\n(n = 59, 29.4%)",
+        raw_class == "2" ~ "Class 2: Moderate Eclectics\n(n = 118, 58.7%)",
+        raw_class == "3" ~ "Class 3: Cultural Minimalists\n(n = 24, 11.9%)"
       ),
       levels = c(
-        "Class 1: High Dual Omnivores\n(n = 31, 15.4%)",
-        "Class 2: Moderate Eclectics\n(n = 96, 47.8%)",
-        "Class 3: Cultural Minimalists\n(n = 74, 36.8%)"
+        "Class 1: High Dual Omnivores\n(n = 59, 29.4%)",
+        "Class 2: Moderate Eclectics\n(n = 118, 58.7%)",
+        "Class 3: Cultural Minimalists\n(n = 24, 11.9%)"
       )
     ),
     class_factor = factor(class_name, levels = c("High Dual Omnivores", "Moderate Eclectics", "Cultural Minimalists"))
@@ -153,13 +166,11 @@ traj_means <- df_biv_classified %>%
   group_by(class_name, class_label, wave) %>%
   summarize(
     n = n(),
-    music22_mean = mean(music_count_22),
-    music22_se   = sd(music_count_22) / sqrt(n()),
-    music10_mean = mean(music_count_10),
-    music10_se   = sd(music_count_10) / sqrt(n()),
-    book_mean    = mean(book_count),
-    book_se      = sd(book_count) / sqrt(n()),
-    .groups      = "drop"
+    music_mean = mean(music_count_10),
+    music_se   = sd(music_count_10) / sqrt(n()),
+    book_mean  = mean(book_count),
+    book_se    = sd(book_count) / sqrt(n()),
+    .groups    = "drop"
   )
 
 saveRDS(traj_means, "Cache/summaries/bivariate_trajectories_k3.rds")
@@ -169,14 +180,14 @@ cat("\n--> [4/5] Generating Publication Trajectory Plot (Plots/fig5_bivariate_om
 
 df_plot_lines <- bind_rows(
   traj_means %>%
-    dplyr::select(class_name, class_label, wave, Mean = music22_mean, SE = music22_se) %>%
-    mutate(Domain = "Music Omnivorousness (22 Genres)"),
+    dplyr::select(class_name, class_label, wave, Mean = music_mean, SE = music_se) %>%
+    mutate(Domain = "Music Omnivorousness (Top 10 Genres)"),
   traj_means %>%
     dplyr::select(class_name, class_label, wave, Mean = book_mean, SE = book_se) %>%
     mutate(Domain = "Literature Omnivorousness (9 Book Types)")
 ) %>%
   mutate(
-    Domain = factor(Domain, levels = c("Music Omnivorousness (22 Genres)", "Literature Omnivorousness (9 Book Types)"))
+    Domain = factor(Domain, levels = c("Music Omnivorousness (Top 10 Genres)", "Literature Omnivorousness (9 Book Types)"))
   )
 
 p_fig5 <- ggplot(df_plot_lines, aes(x = wave, y = Mean, color = Domain, fill = Domain, shape = Domain, linetype = Domain)) +
@@ -188,20 +199,20 @@ p_fig5 <- ggplot(df_plot_lines, aes(x = wave, y = Mean, color = Domain, fill = D
     breaks = 1:6,
     labels = c("W1\nFrosh Fall", "W2\nFrosh Spr", "W3\nSoph Fall", "W4\nSoph Spr", "W5\nJun Fall", "W6\nJun Spr")
   ) +
-  scale_y_continuous(breaks = seq(0, 14, 2), limits = c(0, 14)) +
+  scale_y_continuous(breaks = seq(0, 10, 2), limits = c(0, 10.5)) +
   scale_color_manual(values = c(
-    "Music Omnivorousness (22 Genres)" = "#0072B2",
+    "Music Omnivorousness (Top 10 Genres)" = "#0072B2",
     "Literature Omnivorousness (9 Book Types)" = "#D55E00"
   )) +
   scale_fill_manual(values = c(
-    "Music Omnivorousness (22 Genres)" = "#0072B2",
+    "Music Omnivorousness (Top 10 Genres)" = "#0072B2",
     "Literature Omnivorousness (9 Book Types)" = "#D55E00"
   )) +
   scale_shape_manual(values = c(16, 17)) +
   scale_linetype_manual(values = c("solid", "dashed")) +
   labs(
-    title = "Bivariate Latent Trajectories of Cultural Omnivorousness Across College (K = 3)",
-    subtitle = "Simultaneous co-evolution of Music and Literature repertoire breadth across six collegiate semesters (N = 201)",
+    title = "Bivariate Latent Trajectories of Expressive Omnivorousness Across College (K = 3)",
+    subtitle = "Simultaneous co-evolution of Top 10 Music and Literature repertoire breadth across six semesters (N = 201)",
     x = "Collegiate Semester Wave",
     y = "Average Genre Count (Endorsed / Read)",
     color = "Cultural Domain",
@@ -232,73 +243,6 @@ p_fig5 <- ggplot(df_plot_lines, aes(x = wave, y = Mean, color = Domain, fill = D
 ggsave("Plots/fig5_bivariate_omnivorousness_trajectories.png", p_fig5, width = 6.5, height = 3.6, dpi = 300)
 ggsave("Plots/fig_bivariate_omnivorousness_trajectories.png", p_fig5, width = 6.5, height = 3.6, dpi = 300)
 cat("   Saved: Plots/fig5_bivariate_omnivorousness_trajectories.png\n")
-cat("   Saved: Plots/fig_bivariate_omnivorousness_trajectories.png\n")
-
-# Also generate Top 10 Music version (Plots/fig5b_bivariate_omnivorousness_trajectories_top10.png)
-df_plot_lines_10 <- bind_rows(
-  traj_means %>%
-    dplyr::select(class_name, class_label, wave, Mean = music10_mean, SE = music10_se) %>%
-    mutate(Domain = "Music Omnivorousness (Top 10 Genres)"),
-  traj_means %>%
-    dplyr::select(class_name, class_label, wave, Mean = book_mean, SE = book_se) %>%
-    mutate(Domain = "Literature Omnivorousness (9 Book Types)")
-) %>%
-  mutate(
-    Domain = factor(Domain, levels = c("Music Omnivorousness (Top 10 Genres)", "Literature Omnivorousness (9 Book Types)"))
-  )
-
-p_fig5b <- ggplot(df_plot_lines_10, aes(x = wave, y = Mean, color = Domain, fill = Domain, shape = Domain, linetype = Domain)) +
-  geom_ribbon(aes(ymin = pmax(0, Mean - 1.96 * SE), ymax = Mean + 1.96 * SE), alpha = 0.15, color = NA) +
-  geom_line(linewidth = 1.0) +
-  geom_point(size = 2.3) +
-  facet_wrap(~ class_label, ncol = 3) +
-  scale_x_continuous(
-    breaks = 1:6,
-    labels = c("W1\nFrosh Fall", "W2\nFrosh Spr", "W3\nSoph Fall", "W4\nSoph Spr", "W5\nJun Fall", "W6\nJun Spr")
-  ) +
-  scale_y_continuous(breaks = seq(0, 10, 2), limits = c(0, 10.5)) +
-  scale_color_manual(values = c(
-    "Music Omnivorousness (Top 10 Genres)" = "#0072B2",
-    "Literature Omnivorousness (9 Book Types)" = "#D55E00"
-  )) +
-  scale_fill_manual(values = c(
-    "Music Omnivorousness (Top 10 Genres)" = "#0072B2",
-    "Literature Omnivorousness (9 Book Types)" = "#D55E00"
-  )) +
-  scale_shape_manual(values = c(16, 17)) +
-  scale_linetype_manual(values = c("solid", "dashed")) +
-  labs(
-    title = "Bivariate Latent Trajectories with Top 10 Music Genres (K = 3)",
-    subtitle = "Simultaneous co-evolution of focal Music and Literature breadth across six collegiate semesters (N = 201)",
-    x = "Collegiate Semester Wave",
-    y = "Average Genre Count (Endorsed / Read)",
-    color = "Cultural Domain",
-    fill = "Cultural Domain",
-    shape = "Cultural Domain",
-    linetype = "Cultural Domain"
-  ) +
-  theme_minimal(base_size = 10.5) +
-  theme(
-    plot.title = element_text(face = "bold", size = 11.5, hjust = 0.5),
-    plot.subtitle = element_text(size = 9, hjust = 0.5, color = "grey30"),
-    strip.text = element_text(face = "bold", size = 8.8),
-    strip.background = element_rect(fill = "grey95", color = "grey85", linewidth = 0.4),
-    legend.position = "bottom",
-    legend.title = element_text(face = "bold", size = 8.5),
-    legend.text = element_text(size = 8),
-    panel.grid.minor = element_blank(),
-    panel.spacing = unit(1.0, "lines"),
-    plot.margin = margin(t = 6, r = 8, b = 6, l = 8)
-  ) +
-  guides(
-    color = guide_legend(nrow = 1, byrow = TRUE),
-    fill  = guide_legend(nrow = 1, byrow = TRUE),
-    shape = guide_legend(nrow = 1, byrow = TRUE),
-    linetype = guide_legend(nrow = 1, byrow = TRUE)
-  )
-
-ggsave("Plots/fig5b_bivariate_omnivorousness_trajectories_top10.png", p_fig5b, width = 6.5, height = 3.6, dpi = 300)
-cat("   Saved: Plots/fig5b_bivariate_omnivorousness_trajectories_top10.png\n")
 
 # 6. Endogenous Concomitant Models across Theoretical Blocks
 cat("\n--> [5/5] Estimating Endogenous Concomitant Models across Theoretical Blocks...\n")
@@ -310,8 +254,8 @@ fit_concom_block <- function(form, name) {
   set.seed(2026)
   mod <- tryCatch({
     flexmix(
-      cbind(music_count_22, book_count) ~ ns(time, df = 2) | egoid,
-      data = df_biv, k = 3, model = biv_specs_spline,
+      cbind(music_count_10, book_count) ~ ns(time, df = 2) | egoid,
+      data = df_biv, k = 3, model = biv_specs_10,
       concomitant = FLXPmultinom(form),
       control = list(iter.max = 300, minprior = 0.02)
     )
@@ -434,11 +378,10 @@ md_coefs <- c(
 writeLines(md_coefs, "Cache/summaries/bivariate_multinomial_coefficients.md")
 
 cat("\n====================================================================\n")
-cat("Bivariate Poisson Modeling Pipeline Complete!                       \n")
+cat("Bivariate Poisson Modeling Pipeline Complete (Top 10 Music Genres)! \n")
 cat("Outputs Generated:\n")
 cat("1. Cache/summaries/bivariate_model_selection.md\n")
 cat("2. Cache/summaries/bivariate_concomitant_blocks.md\n")
 cat("3. Cache/summaries/bivariate_multinomial_coefficients.md\n")
 cat("4. Plots/fig5_bivariate_omnivorousness_trajectories.png\n")
-cat("5. Plots/fig5b_bivariate_omnivorousness_trajectories_top10.png\n")
 cat("====================================================================\n")
