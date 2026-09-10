@@ -1,21 +1,21 @@
 "Domain","Block","LogLik","Par","AIC","BIC","LRT_Chi2","df","p_val"
-"Book Reading Types","Baseline Specification (Null)",-274.6,6,555.3,565.2,0,0,NA
-"Book Reading Types","Block 1: Demographic Identity (Gender, Race, Religion)",-214.8,15,453.5,493.2,119.74,9,0
-"Book Reading Types","Block 2: Family SES (Income, Education)",-271.1,12,560.2,589.9,7.09,6,0.312781706174592
-"Book Reading Types","Block 3: Scholastic Capital (GPA, Degree Aspirations, AP Courses)",-262.3,15,548.6,588.2,24.71,9,0.00331358891222633
-"Book Reading Types","Block 4: Secondary Schooling Habitus (Catholic HS, Single-Sex HS)",-270.3,12,558.6,588.3,8.64,6,0.194591903878374
-"Book Reading Types","Block 5: Pre-Collegiate Cultural Capital (Events, Books, Music Library)",-267.4,15,558.9,598.5,14.41,9,0.108604500043359
-"Book Reading Types","Block 6: Collegiate Context (STEM Major, Hometown Urbanicity)",-269.8,12,557.5,587.3,9.73,6,0.136625802195972
-"Book Reading Types","Combined Sociodemographics (Blocks 1+2)",-209.6,21,455.1,514.6,130.13,15,0
-"Book Reading Types","Combined Educational Habitus (Blocks 3+4)",-258.4,21,552.9,612.3,32.4,15,0.00567428966080519
-"Book Reading Types","Full Multivariable Model (All Blocks Combined)",-195.9,51,487.8,646.3,157.51,45,2.12052597703405e-14
-"Music Genre Preferences","Baseline Specification (Null)",-273.9,6,553.8,563.7,0,0,NA
-"Music Genre Preferences","Block 1: Demographic Identity (Gender, Race, Religion)",-245.2,15,514.4,554.1,57.39,9,4.2461285598705e-09
-"Music Genre Preferences","Block 2: Family SES (Income, Education)",-271.4,12,560.8,590.5,5.06,6,0.536569380158091
-"Music Genre Preferences","Block 3: Scholastic Capital (GPA, Degree Aspirations, AP Courses)",-255.1,15,534.1,573.8,37.69,9,1.9783135656537e-05
-"Music Genre Preferences","Block 4: Secondary Schooling Habitus (Catholic HS, Single-Sex HS)",-272.3,12,562.5,592.2,3.32,6,0.768128811855284
-"Music Genre Preferences","Block 5: Pre-Collegiate Cultural Capital (Events, Books, Music Library)",-255.9,15,535.8,575.4,36.05,9,3.88876115442471e-05
-"Music Genre Preferences","Block 6: Collegiate Context (STEM Major, Hometown Urbanicity)",-266.7,12,551.3,581,14.51,6,0.0244696879138737
-"Music Genre Preferences","Combined Sociodemographics (Blocks 1+2)",-241.4,21,518.8,578.3,65.03,15,3.37502332747874e-08
-"Music Genre Preferences","Combined Educational Habitus (Blocks 3+4)",-253,21,542.1,601.5,41.74,15,0.000246100335574706
-"Music Genre Preferences","Full Multivariable Model (All Blocks Combined)",-199.7,51,495.3,653.9,148.48,45,5.55333556917503e-13
+"Book Reading Types","Baseline Specification (Null)",-269.7,6,545.4,555.3,0,0,NA
+"Book Reading Types","Block 1: Demographic Identity (Gender, Race, Religion)",-214.9,15,453.8,493.4,109.63,9,0
+"Book Reading Types","Block 2: Family SES (Income, Education)",-267.7,12,553.4,583.2,3.94,6,0.684973299289381
+"Book Reading Types","Block 3: Scholastic Capital (GPA, Degree Aspirations, AP Courses)",-257.2,15,538.4,578.1,24.94,9,0.00303912803198569
+"Book Reading Types","Block 4: Secondary Schooling Habitus (Catholic HS, Single-Sex HS)",-263.5,12,545,574.8,12.37,6,0.0542750856370728
+"Book Reading Types","Block 5: Pre-Collegiate Cultural Capital (Events, Books, Music Library)",-260.9,15,545.8,585.4,17.63,9,0.0396856397721951
+"Book Reading Types","Block 6: Collegiate Context (STEM Major, Hometown Urbanicity)",-263.2,12,544.4,574.1,13.01,6,0.0428415360493513
+"Book Reading Types","Combined Sociodemographics (Blocks 1+2)",-209.7,21,455.3,514.8,120.05,15,0
+"Book Reading Types","Combined Educational Habitus (Blocks 3+4)",-252.5,21,541,600.4,34.42,15,0.0029757616277466
+"Book Reading Types","Full Multivariable Model (All Blocks Combined)",-185.5,51,467.1,625.6,168.33,45,3.33066907387547e-16
+"Music Genre Preferences","Baseline Specification (Null)",-275.4,6,556.7,566.6,0,0,NA
+"Music Genre Preferences","Block 1: Demographic Identity (Gender, Race, Religion)",-247.8,15,519.7,559.3,55.05,9,1.19360413775027e-08
+"Music Genre Preferences","Block 2: Family SES (Income, Education)",-272.6,12,563.3,593,5.44,6,0.489303744832776
+"Music Genre Preferences","Block 3: Scholastic Capital (GPA, Degree Aspirations, AP Courses)",-253.8,15,531.6,571.3,43.07,9,2.09536893913675e-06
+"Music Genre Preferences","Block 4: Secondary Schooling Habitus (Catholic HS, Single-Sex HS)",-270.8,12,559.7,589.4,9.01,6,0.173083904937987
+"Music Genre Preferences","Block 5: Pre-Collegiate Cultural Capital (Events, Books, Music Library)",-253.7,15,531.4,571,43.33,9,1.87585885202957e-06
+"Music Genre Preferences","Block 6: Collegiate Context (STEM Major, Hometown Urbanicity)",-269.6,12,557.2,586.9,11.52,6,0.0737024954978742
+"Music Genre Preferences","Combined Sociodemographics (Blocks 1+2)",-243,21,521.9,581.4,64.79,15,3.71446108315965e-08
+"Music Genre Preferences","Combined Educational Habitus (Blocks 3+4)",-249.1,21,534.1,593.6,52.58,15,4.5350464176197e-06
+"Music Genre Preferences","Full Multivariable Model (All Blocks Combined)",-194.2,51,484.3,642.9,162.37,45,3.5527136788005e-15
