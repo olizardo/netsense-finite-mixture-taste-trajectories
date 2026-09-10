@@ -771,9 +771,19 @@ scale_fill_manual(values = COLOR_CREDIBILITY, name = "Directional Credibility")
   - **Absolute Hardcoded Prohibition on "Demonstrate":** Strictly and absolutely NEVER use the words **"demonstrate"**, **"demonstrates"**, **"demonstrating"**, or **"demonstrated"** when you can use **"show"**, **"shows"**, **"showing"**, or **"shown"** across all analytical prose, empirical write-ups, abstracts, introductions, and theoretical discussions. Zero exceptions.
   - Strictly use **"use"**, **"uses"**, **"using"**, and **"used"** rather than **"utilize"**, **"utilizes"**, **"utilizing"**, **"utilized"**, or **"utilization"**.
   - **Absolute Prohibition on "pp" for Percentage Points:** Strictly do **NOT** use the abbreviation **"pp"** or the phrase "percentage points" for changes or differences. Instead, speak directly in terms of **percentages and proportions** (using **"%"** or **"percent"**, e.g., *"+24.0%"* or *"expanded by 24.0 percent"* rather than *"+24.0 pp"*).
-- **Prohibition of "Archetypes" / "Archetype"**:
-  - Don't use the word "archetypes" or "archetype" when you could use words such as **class**, **classes**, **types**, **categories**, **clusters**, **profiles**, or **pathways**.
-  - Strictly use **"classes"**, **"latent classes"**, **"types"**, **"categories"**, **"profiles"**, **"typologies"**, or **"developmental pathways"** instead (e.g., *“distinct developmental pathways”* rather than *“developmental archetypes”*; *“latent classes”* rather than *“latent archetypes”*).
+- **Prohibition of "Archetypes" / "Archetype" and "Developmental Pathway"**:
+  - Don't use the word "archetypes" or "archetype" when you could use words such as **class**, **classes**, **types**, **categories**, **clusters**, **profiles**, or **trajectories**.
+  - Strictly avoid using **"developmental pathway"** or **"developmental pathways"** when referring to taste trajectories; strictly use **"cultural taste trajectory"** or **"cultural taste trajectories"** instead.
+  - Strictly use **"classes"**, **"latent classes"**, **"types"**, **"categories"**, **"profiles"**, **"typologies"**, or **"cultural taste trajectories"** instead.
+- **Prohibition of "Expressive Domain" / "Expressive Sphere" for Cultural Domain**:
+  - Strictly do **NOT** use the phrases **"expressive domain"**, **"expressive domains"**, **"expressive sphere"**, or **"expressive spheres"** when what is meant is **"cultural domain"** or **"cultural domains"**. Always speak directly in terms of **"cultural domain"** or **"cultural domains"** (e.g., *“in each cultural domain”* rather than *“in each expressive sphere”*; *“across both cultural domains”* rather than *“across expressive domains”*).
+- **Prohibition of "Collegiate" in Favor of Natural Cognates**:
+  - Strictly do **NOT** use the word **"collegiate"** (or **"pre-collegiate"**). Use natural, varied cognates instead depending on context:
+    * For student levels or temporal intervals: **undergraduate** (e.g., *“undergraduate career”*, *“undergraduate semesters”*, *“undergraduate reading”*, *“undergraduate cultural life”*).
+    * For spatial, residential, and social peer settings: **campus** (e.g., *“campus environment”*, *“campus social life”*, *“campus rhythms”*, *“campus peer networks”*).
+    * For institutional and status dimensions: **university** (e.g., *“university setting”*, *“university cultural sorting”*, *“university habitus”*).
+    * For plain-English compound nouns: **college** (e.g., *“college years”*, *“college transition”*, *“college context”*, *“college life”*).
+    * For prior attributes: **pre-college** (e.g., *“pre-college cultural capital”*, *“pre-college scholastic capital”*, *“pre-college reading volume”*).
 - **Prohibition of "Modern" for Statistical Methods and Approaches**:
   - Strictly do **NOT** use the word **"modern"** to refer to statistical methods, models, frameworks, techniques, or analytical approaches.
   - Strictly use **"recent"** or **"recently developed"** instead (e.g., *“recent age-period-cohort methods”*, *“recently developed partial identification frameworks”*, *“recent APC bounding techniques”*).
