@@ -209,14 +209,14 @@ p_shift_books <- ggplot(df_books_chg, aes(x = Delta, y = Activity, color = Direc
   facet_wrap(~ Class, ncol = 4) +
   scale_color_manual(values = c("Expansion (+)" = "#0072B2", "Contraction (-)" = "#D55E00")) +
   scale_x_continuous(
-    labels = function(x) paste0(ifelse(x > 0, "+", ""), round(x), " pp"),
+    labels = function(x) paste0(ifelse(x > 0, "+", ""), round(x), "%"),
     breaks = seq(-40, 40, 20),
     limits = c(-45, 45)
   ) +
   labs(
     title = "Net Trajectory Shifts in Book Reading Types (K = 4)",
-    subtitle = "Percentage point shift (Wave 6 - Wave 1) by reading type across latent classes",
-    x = "Net Percentage Point Shift (Wave 6 - Wave 1)"
+    subtitle = "Percentage shift (Wave 6 - Wave 1) by reading type across latent classes",
+    x = "Net Percentage Shift (Wave 6 - Wave 1)"
   ) +
   theme_pub_shift_split
 
@@ -231,14 +231,14 @@ p_shift_music <- ggplot(df_music_chg, aes(x = Delta, y = Activity, color = Direc
   facet_wrap(~ Class, ncol = 4) +
   scale_color_manual(values = c("Expansion (+)" = "#0072B2", "Contraction (-)" = "#D55E00")) +
   scale_x_continuous(
-    labels = function(x) paste0(ifelse(x > 0, "+", ""), round(x), " pp"),
+    labels = function(x) paste0(ifelse(x > 0, "+", ""), round(x), "%"),
     breaks = seq(-40, 40, 20),
     limits = c(-45, 45)
   ) +
   labs(
     title = "Net Trajectory Shifts in Music Genre Preferences (K = 4)",
-    subtitle = "Percentage point shift (Wave 6 - Wave 1) by musical genre across latent classes",
-    x = "Net Percentage Point Shift (Wave 6 - Wave 1)"
+    subtitle = "Percentage shift (Wave 6 - Wave 1) by musical genre across latent classes",
+    x = "Net Percentage Shift (Wave 6 - Wave 1)"
   ) +
   theme_pub_shift_split
 

@@ -767,9 +767,10 @@ scale_fill_manual(values = COLOR_CREDIBILITY, name = "Directional Credibility")
   - Strictly prohibit hyperbolic, dramatic, or sensationalist terms (e.g., *'massive'*, *'gigantic'*, *'profound'*, *'dramatic'*, *'stark'*, *'breakthrough'*, *'monumental'*, *'unprecedented'*, *'complete neutrality'*, *'without exception'*).
   - Use measured, precise empirical descriptions (e.g., *'substantial'*, *'largest'*, *'gradient'*, *'difference'*, *'attenuated'*, *'limited differentiation'*).
   - Always hedge and qualify analytical claims (e.g., *'suggests'*, *'indicates'*, *'is associated with'* rather than *'proves'*, *'confirms that'*, *'confers'*).
-- **Word Choice Standards ("Show" vs. "Demonstrate", "Use" vs. "Utilize")**:
-  - Strictly use **"show"**, **"shows"**, **"showing"**, and **"shown"** rather than **"demonstrate"**, **"demonstrates"**, **"demonstrating"**, or **"demonstrated"** across all analytical prose, empirical write-ups, hypothesis descriptions, and theoretical discussions.
+- **Word Choice Standards ("Show" vs. "Demonstrate", "Use" vs. "Utilize", Prohibition of "pp"):**
+  - **Absolute Hardcoded Prohibition on "Demonstrate":** Strictly and absolutely NEVER use the words **"demonstrate"**, **"demonstrates"**, **"demonstrating"**, or **"demonstrated"** when you can use **"show"**, **"shows"**, **"showing"**, or **"shown"** across all analytical prose, empirical write-ups, abstracts, introductions, and theoretical discussions. Zero exceptions.
   - Strictly use **"use"**, **"uses"**, **"using"**, and **"used"** rather than **"utilize"**, **"utilizes"**, **"utilizing"**, **"utilized"**, or **"utilization"**.
+  - **Absolute Prohibition on "pp" for Percentage Points:** Strictly do **NOT** use the abbreviation **"pp"** or the phrase "percentage points" for changes or differences. Instead, speak directly in terms of **percentages and proportions** (using **"%"** or **"percent"**, e.g., *"+24.0%"* or *"expanded by 24.0 percent"* rather than *"+24.0 pp"*).
 - **Prohibition of "Archetypes" / "Archetype"**:
   - Don't use the word "archetypes" or "archetype" when you could use words such as **class**, **classes**, **types**, **categories**, **clusters**, **profiles**, or **pathways**.
   - Strictly use **"classes"**, **"latent classes"**, **"types"**, **"categories"**, **"profiles"**, **"typologies"**, or **"developmental pathways"** instead (e.g., *“distinct developmental pathways”* rather than *“developmental archetypes”*; *“latent classes”* rather than *“latent archetypes”*).
