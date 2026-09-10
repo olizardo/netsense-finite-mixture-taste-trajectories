@@ -20,7 +20,7 @@ Study cultural taste change trajectories in the NetSense dataset using finite mi
   - Eliminated the truncated 4-wave public arts participation module to resolve temporal asymmetry and quasi-complete separation on pre-collegiate aspirations. Both remaining expressive domains share the exact same $N = 201$ complete-case analytical cohort.
   - Parameterized item trajectories via natural cubic splines (`splines::ns(time, df = 2)`) centered at matriculation ($t \in \{0, \dots, 5\}$) with an internal knot at midpoint ($t = 2.5$) and linear boundary constraints.
   - Identified $K = 3$ substantive classes in both spheres using punchy, single-word sociological typologies:
-    1. **Book Reading Types ($N = 201$)**: “Nonfictionists” ($n = 60, 29.9\%$), “Fictionists” ($n = 79, 39.3\%$), and “Minimalists” ($n = 62, 30.8\%$).
+    1. **Book Reading Types ($N = 201$)**: “Nonfictionists” ($n = 60, 29.9\%$), “Fiction Eclectics” ($n = 79, 39.3\%$), and “Minimalists” ($n = 62, 30.8\%$).
     2. **Musical Genre Preferences ($N = 201$)**: “Omnivores” ($n = 62, 30.8\%$), “Rockers” ($n = 51, 25.4\%$), and “Mainstreamers” ($n = 88, 43.8\%$).
 - **Predictive Concomitant Models & Marginal Effects**:
   - Estimated multivariable endogenous multinomial logit models (`FLXPmultinom`) predicting trajectory class placement as a function of nine baseline covariates.
@@ -853,7 +853,7 @@ scale_fill_manual(values = COLOR_CREDIBILITY, name = "Directional Credibility")
      * **Genre Specialists** ($n = 63, 31.3\%$): Speculative and narrative fiction (sci-fi/fantasy, thrillers, other fiction); zero romance.
      * **Romance Readers** ($n = 57, 28.4\%$): High romance and general fiction; low history/sci-fi.
      * **Nonfictionists** ($n = 42, 20.9\%$): Dedicated analytical history, biography, memoirs; low fiction.
-     * **Fictionists** ($n = 39, 19.4\%$): Avid cross-genre fiction reading across mysteries, thrillers, sci-fi, romance, and general fiction.
+     * **Fiction Eclectics** ($n = 46, 22.9\%$): Avid cross-genre fiction reading across mysteries, thrillers, sci-fi, romance, and general fiction.
    - **Music Genre Preferences (10 Genres, Waves 1--6, $N = 201, 1,006$ obs)**:
      * **Omnivores** ($n = 52, 25.9\%$): High preference across all 10 genres simultaneously; monotonic expansion of country music.
      * **Classic Rockers** ($n = 34, 16.9\%$): Classic rock, heavy metal, classical music, Broadway, and jazz; rejects country and commercial dance music.
