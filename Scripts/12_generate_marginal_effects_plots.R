@@ -271,7 +271,8 @@ ref_music <- data.frame(
 # 1. Books Plot
 p_books <- ggplot(df_plot_books, aes(x = Mean, y = Condition, color = Class)) +
   geom_vline(data = ref_books, aes(xintercept = ref_prob), linetype = "dashed", color = "grey55", linewidth = 0.45) +
-  geom_pointrange(aes(xmin = pmax(0, Low), xmax = pmin(1, High)), size = 0.35, linewidth = 0.65) +
+  geom_segment(aes(x = pmax(0, Low), xend = pmin(1, High), y = Condition, yend = Condition), linewidth = 1.3, alpha = 0.15) +
+  geom_point(aes(x = Mean), size = 2.8, alpha = 1.0) +
   facet_wrap(~ Class, ncol = 4, scales = "free_x") +
   scale_color_manual(values = PALETTE_BOOKS4) +
   scale_x_continuous(
@@ -288,7 +289,8 @@ p_books <- ggplot(df_plot_books, aes(x = Mean, y = Condition, color = Class)) +
 # 2. Music Plot
 p_music <- ggplot(df_plot_music, aes(x = Mean, y = Condition, color = Class)) +
   geom_vline(data = ref_music, aes(xintercept = ref_prob), linetype = "dashed", color = "grey55", linewidth = 0.45) +
-  geom_pointrange(aes(xmin = pmax(0, Low), xmax = pmin(1, High)), size = 0.35, linewidth = 0.65) +
+  geom_segment(aes(x = pmax(0, Low), xend = pmin(1, High), y = Condition, yend = Condition), linewidth = 1.3, alpha = 0.15) +
+  geom_point(aes(x = Mean), size = 2.8, alpha = 1.0) +
   facet_wrap(~ Class, ncol = 4, scales = "free_x") +
   scale_color_manual(values = PALETTE_MUSIC4) +
   scale_x_continuous(
