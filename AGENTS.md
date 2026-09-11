@@ -41,6 +41,11 @@ Study cultural taste change trajectories in the NetSense dataset using finite mi
     * Strictly complies with the zero local compilation rule, double typographic quotes, scholar naming standards (last names only), and zero forbidden terms.
 - **Bidirectional Git Remote Synchronization**:
   - Maintained seamless synchronization across Overleaf (`git.overleaf.com/6aa021d1a0797784962186d8`) and GitHub (`origin/main`).
+- **Literature Review & Discussion Integration (Music & Gender)**:
+  - Incorporated newly acquired scholarship on musical taste and gender into `manuscript.tex` and `references.bib`:
+    * \citet{ma2026deep}: Shows that apparent between-gender homogeneity in cultural taste is an artifact of aggregate/unidimensional measures, whereas multidimensional, relational configurations unmask deep, persistent gendered dynamics that do not erode with cultural capital.
+    * \citet{miller2014symbolic} and \citet{clawson1999when}: Clarifies how musical field structures shape the exchangeability of "masculine capital" for symbolic capital and reputation, explaining why rock and heavy metal maintain aggressive symbolic boundaries that exclude women.
+    * \citet{carbone2024adolescents} and \citet{delsing2008adolescents}: Demonstrates the developmental persistence and symbolic-badge function of discrete music preference profiles across adolescence and into the digital streaming era, channeling young women toward commercial mainstream and eclectic repertoires and young men toward rock.
 
 # Global Agent Guidelines
 
