@@ -850,7 +850,7 @@ scale_fill_manual(values = COLOR_CREDIBILITY, name = "Directional Credibility")
    - Centers time at collegiate matriculation ($t \in \{0, \dots, 5\}$) with linear boundary constraints at W1 ($t = 0$) and W6 ($t = 5$) and interior knots placed evenly across collegiate milestones at Wave 2 ($t = 1$, freshman spring) and Wave 4 ($t = 3$, sophomore spring).
 2. **Substantive 4-Class Typologies (Short & Punchy Single-Word Labels)**:
    - **Leisure Book Reading Types (9 Items, Waves 1--6, $N = 201, 1,006$ obs)**:
-     * **Genre Specialists** ($n = 63, 31.3\%$): Speculative and narrative fiction (sci-fi/fantasy, thrillers, other fiction); zero romance.
+     * **Genre Specialists** ($n = 63, 31.3\%$): Science fiction and fantasy, thrillers, other fiction; zero romance.
      * **Romance Readers** ($n = 57, 28.4\%$): High romance and general fiction; low history/sci-fi.
      * **Nonfictionists** ($n = 42, 20.9\%$): Dedicated analytical history, biography, memoirs; low fiction.
      * **Fiction Eclectics** ($n = 46, 22.9\%$): Avid cross-genre fiction reading across mysteries, thrillers, sci-fi, romance, and general fiction.
