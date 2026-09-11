@@ -102,7 +102,7 @@ books_labels_map <- c(
   "1" = "Nonfictionists",
   "2" = "Romance Readers",
   "3" = "Genre Specialists",
-  "4" = "Fictionists"
+  "4" = "Fiction Eclectics"
 )
 
 books_smooth_list <- list()

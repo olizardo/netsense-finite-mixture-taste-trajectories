@@ -45,7 +45,7 @@ df_ego_b <- post_b %>%
   summarise(across(V1:V4, first), .groups = "drop") %>%
   mutate(class_num = max.col(cbind(V1, V2, V3, V4)),
          class = factor(class_num, levels = 1:4,
-                        labels = c("Genre Specialists", "Romance Readers", "Nonfictionists", "Fictionists"))) %>%
+                        labels = c("Genre Specialists", "Romance Readers", "Nonfictionists", "Fiction Eclectics"))) %>%
   inner_join(covs, by = "egoid")
 
 top10_genres_order <- c("Rap/Hip-hop", "Classic rock/Oldies", "Dance music", "Rock/Heavy metal", 
@@ -177,7 +177,7 @@ ci_b_books  <- simulate_probs(m_full_b, grid_b_books)  %>% mutate(Condition = re
 df_plot_books <- bind_rows(ci_b_gender, ci_b_hs, ci_b_gpa, ci_b_books) %>%
   mutate(
     Domain = "Leisure Book Reading Types",
-    Class = factor(Class, levels = c("Genre Specialists", "Romance Readers", "Nonfictionists", "Fictionists")),
+    Class = factor(Class, levels = c("Genre Specialists", "Romance Readers", "Nonfictionists", "Fiction Eclectics")),
     Condition = factor(Condition, levels = rev(c(
       "Men", "Women",
       "Public/Prep High School", "Catholic High School",
@@ -228,7 +228,7 @@ PALETTE_BOOKS4 <- c(
   "Genre Specialists" = "#0072B2",
   "Romance Readers"   = "#CC79A7",
   "Nonfictionists"    = "#009E73",
-  "Fictionists"       = "#D55E00"
+  "Fiction Eclectics" = "#D55E00"
 )
 
 PALETTE_MUSIC4 <- c(
@@ -259,7 +259,7 @@ theme_facet_pub <- function(base_size = 9.0) {
 
 # Empirical class prevalence reference values
 ref_books <- data.frame(
-  Class = factor(c("Genre Specialists", "Romance Readers", "Nonfictionists", "Fictionists")),
+  Class = factor(c("Genre Specialists", "Romance Readers", "Nonfictionists", "Fiction Eclectics")),
   ref_prob = c(75/201, 47/201, 33/201, 46/201)
 )
 

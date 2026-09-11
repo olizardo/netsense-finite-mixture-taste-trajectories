@@ -51,14 +51,14 @@ PALETTE_BOOKS4 <- c(
   "Genre Specialists" = "#0072B2", # Deep Blue
   "Romance Readers"   = "#CC79A7", # Reddish Purple
   "Nonfictionists"    = "#009E73", # Bluish Green
-  "Fictionists"       = "#D55E00"  # Vermillion
+  "Fiction Eclectics" = "#D55E00"  # Vermillion
 )
 
 SHAPES_BOOKS4 <- c(
   "Genre Specialists" = 16, # Circle
   "Romance Readers"   = 18, # Diamond
   "Nonfictionists"    = 17, # Triangle
-  "Fictionists"       = 15  # Square
+  "Fiction Eclectics" = 15  # Square
 )
 
 p_books <- ggplot() +
@@ -169,7 +169,7 @@ book_order <- df_books_chg %>%
   pull(Activity)
 
 df_books_chg$Activity <- factor(df_books_chg$Activity, levels = book_order)
-df_books_chg$Class <- factor(df_books_chg$Class, levels = c("Genre Specialists", "Romance Readers", "Nonfictionists", "Fictionists"))
+df_books_chg$Class <- factor(df_books_chg$Class, levels = c("Genre Specialists", "Romance Readers", "Nonfictionists", "Fiction Eclectics"))
 
 music_order <- df_music_chg %>%
   group_by(Activity) %>%
@@ -256,7 +256,7 @@ all_chg <- bind_rows(
       Class %in% c("Genre Specialists", "Omnivores")            ~ "Class 1",
       Class %in% c("Romance Readers", "Classic Rockers")        ~ "Class 2",
       Class %in% c("Nonfictionists", "Contemporary Rockers")    ~ "Class 3",
-      Class %in% c("Omnivorous Fictionists", "Mainstreamers")   ~ "Class 4"
+      Class %in% c("Fiction Eclectics", "Mainstreamers")   ~ "Class 4"
     )),
     Activity = factor(Activity, levels = c(book_order, music_order))
   )
