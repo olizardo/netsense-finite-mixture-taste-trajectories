@@ -42,6 +42,10 @@ Study cultural taste change trajectories in the NetSense dataset using finite mi
 - **Bidirectional Git Remote Synchronization**:
   - Maintained seamless synchronization across Overleaf (`git.overleaf.com/6aa021d1a0797784962186d8`) and GitHub (`origin/main`).
 - **Literature Review & Discussion Integration (Music & Gender)**:
+  - Incorporated newly acquired scholarship on musical taste and gender into `manuscript.tex` and `references.bib` (\citet{ma2026deep}, \citet{miller2014symbolic}, \citet{clawson1999when}, \citet{carbone2024adolescents}, \citet{delsing2008adolescents}).
+- **Discussion Section Big-Picture Refactoring**:
+  - Replaced all repeated percentages, odds ratios, and p-values throughout the Discussion section (`\subsection{Summary of Key Results}` and `\subsection{Implications: Habitus, Repertoires, and Institutions}`) with high-level, narrative substantive synthesis.
+  - Articulated the overarching sociological takeaways—relational boundaries, domain asymmetry, sorting versus within-trajectory stability, and gendered field barriers—leaving specific numeric parameters to the results tables and figures.
   - Incorporated newly acquired scholarship on musical taste and gender into `manuscript.tex` and `references.bib`:
     * \citet{ma2026deep}: Shows that apparent between-gender homogeneity in cultural taste is an artifact of aggregate/unidimensional measures, whereas multidimensional, relational configurations unmask deep, persistent gendered dynamics that do not erode with cultural capital.
     * \citet{miller2014symbolic} and \citet{clawson1999when}: Clarifies how musical field structures shape the exchangeability of "masculine capital" for symbolic capital and reputation, explaining why rock and heavy metal maintain aggressive symbolic boundaries that exclude women.
