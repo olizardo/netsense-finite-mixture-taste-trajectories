@@ -9,6 +9,7 @@
 \usepackage{microtype}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{tabularx}
 \usepackage{graphicx}
 \usepackage{caption}
@@ -460,62 +461,154 @@ Conversely, the concentration of women in Mainstreamers and Omnivores resonates 
 
 Table~\ref{tab:app_coefs} presents the complete parameter estimates, standard errors, and odds ratios from the full multivariable endogenous multinomial logit models estimated jointly with item trajectories across leisure reading and musical preferences for the four-class models.\footnote{As detailed in the main text, penalized maximum likelihood estimation ($\lambda = 0.05$) is implemented to resolve quasi-complete separation arising from sparse demographic cells on gender among Romance Readers ($1$ man out of $47$) and zero marginal cells on advanced degree aspirations among Nonfictionists ($0$ non-aspirants out of $33$) and Classic Rockers ($0$ non-aspirants out of $37$), preventing infinite parameter divergence and variance matrix degeneracy.}
 
-\begin{table}[htbp]
-\centering
+\begingroup
 \small
-\setlength{\tabcolsep}{3.5pt}
-\caption{Multinomial Logistic Parameter Estimates and Odds Ratios from Item-Level Multivariate Binary Models ($K = 4, N = 201$)}
-\label{tab:app_coefs}
-\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lcccccc@{}}
+\setlength{\LTleft}{0pt}
+\setlength{\LTright}{0pt}
+\renewcommand{\arraystretch}{0.95}
+\begin{longtable}{@{\extracolsep{\fill}}lcc@{}}
+\caption{Multinomial Logistic Parameter Estimates and Odds Ratios from Item-Level Multivariate Binary Models ($K = 4, N = 201$)}\label{tab:app_coefs} \\
 \toprule
-Predictor Variable & \multicolumn{2}{c}{\textbf{Class 2}} & \multicolumn{2}{c}{\textbf{Class 3}} & \multicolumn{2}{c}{\textbf{Class 4}} \\
-\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
-& \textbf{Est (SE)} & \textbf{OR} & \textbf{Est (SE)} & \textbf{OR} & \textbf{Est (SE)} & \textbf{OR} \\
+Predictor Variable & \textbf{Est (SE)} & \textbf{OR} \\
 \midrule
-\multicolumn{7}{l}{\textbf{Panel A: Book Reading Types (Ref: Class 1 Genre Specialists, $N = 201$)}} \\
-\multicolumn{1}{r}{} & \multicolumn{2}{c}{\textit{Class 2: Romance Readers}} & \multicolumn{2}{c}{\textit{Class 3: Nonfictionists}} & \multicolumn{2}{c}{\textit{Class 4: Fiction Eclectics}} \\
-Constant & -5.14 (4.13) & 0.01 & 1.09 (3.91) & 2.98 & -0.55 (2.90) & 0.58 \\
-Woman (ref: Man) & 6.35*** (1.03) & 571.2 & 1.51** (0.58) & 4.52 & 1.83*** (0.55) & 6.23 \\
-White (ref: Non-White) & 2.39** (0.83) & 10.87 & 0.38 (0.68) & 1.46 & 0.08 (0.63) & 1.08 \\
-Catholic (ref: Non-Catholic) & -0.70 (0.68) & 0.50 & -0.40 (0.55) & 0.67 & 0.46 (0.54) & 1.58 \\
-Parent Income (\$1,000s) & -0.01* (0.00) & 0.99 & 0.00 (0.00) & 1.00 & -0.00 (0.00) & 1.00 \\
-Parent Education (Years) & -0.11 (0.18) & 0.89 & -0.26 (0.14) & 0.77 & -0.11 (0.13) & 0.89 \\
-High School GPA (A/A-) & -1.20 (0.63) & 0.30 & -0.59 (0.54) & 0.55 & 0.66 (0.58) & 1.93 \\
-Aspires to Advanced Degree & 0.02 (1.00) & 1.02 & 2.77 (2.55) & 15.97 & -0.94 (0.80) & 0.39 \\
-High AP Course Load ($\ge 5$) & -0.06 (0.61) & 0.94 & -0.41 (0.55) & 0.66 & 0.68 (0.57) & 1.98 \\
-Catholic High School & 2.05** (0.76) & 7.80 & -0.27 (0.77) & 0.77 & 1.36* (0.56) & 3.90 \\
-Single-Sex High School & 0.22 (1.03) & 1.25 & 0.12 (0.97) & 1.12 & -0.99 (0.83) & 0.37 \\
-Prior Cultural Events (0--12) & -0.11 (0.11) & 0.89 & -0.04 (0.09) & 0.96 & -0.06 (0.08) & 0.94 \\
-Prior Books Read (Count) & 0.00 (0.02) & 1.00 & 0.00 (0.02) & 1.00 & 0.02 (0.02) & 1.02 \\
-Large Music Collection ($\ge 1,000$) & -0.48 (0.59) & 0.62 & -0.91 (0.50) & 0.40 & 0.53 (0.48) & 1.70 \\
-STEM Major (ref: Non-STEM) & -0.09 (0.58) & 0.91 & -0.95 (0.50) & 0.39 & -0.28 (0.44) & 0.76 \\
-Hometown Urbanicity & 0.64 (0.36) & 1.89 & 0.09 (0.33) & 1.09 & 0.12 (0.30) & 1.13 \\
-\addlinespace[3pt]
-\multicolumn{7}{l}{\textbf{Panel B: Music Genre Preferences (Ref: Class 4 Omnivores, $N = 201$)}} \\
-\multicolumn{1}{r}{} & \multicolumn{2}{c}{\textit{Class 1: Classic Rockers}} & \multicolumn{2}{c}{\textit{Class 2: Mainstreamers}} & \multicolumn{2}{c}{\textit{Class 3: Modern Rockers}} \\
-Constant & 2.21 (4.06) & 9.12 & 2.37 (3.23) & 10.73 & 0.52 (3.49) & 1.68 \\
-Woman (ref: Man) & -1.95** (0.59) & 0.14 & 0.01 (0.52) & 1.01 & -2.58*** (0.61) & 0.08 \\
-White (ref: Non-White) & -0.81 (0.74) & 0.44 & -0.74 (0.64) & 0.48 & -0.16 (0.73) & 0.85 \\
-Catholic (ref: Non-Catholic) & 0.31 (0.66) & 1.37 & -0.37 (0.58) & 0.69 & -0.96 (0.61) & 0.38 \\
-Parent Income (\$1,000s) & 0.00 (0.00) & 1.00 & 0.01 (0.00) & 1.01 & 0.01* (0.00) & 1.01 \\
-Parent Education (Years) & -0.10 (0.15) & 0.90 & 0.13 (0.14) & 1.14 & 0.04 (0.15) & 1.04 \\
-High School GPA (A/A-) & -1.52* (0.71) & 0.22 & -1.58* (0.63) & 0.21 & -1.47* (0.70) & 0.23 \\
-Aspires to Advanced Degree & 3.91 (2.56) & 50.00 & 0.47 (0.81) & 1.61 & 0.88 (0.92) & 2.41 \\
-High AP Course Load ($\ge 5$) & -1.75** (0.65) & 0.17 & -1.61** (0.57) & 0.20 & -0.00 (0.68) & 1.00 \\
-Catholic High School & 0.23 (0.68) & 1.26 & -0.14 (0.59) & 0.87 & 0.04 (0.67) & 1.04 \\
-Single-Sex High School & -0.85 (0.94) & 0.43 & -0.09 (0.79) & 0.92 & -2.37 (1.23) & 0.09 \\
-Prior Cultural Events (0--12) & -0.03 (0.10) & 0.97 & -0.30** (0.10) & 0.74 & -0.45*** (0.11) & 0.64 \\
-Prior Books Read (Count) & 0.01 (0.02) & 1.01 & 0.00 (0.01) & 1.00 & 0.02 (0.02) & 1.02 \\
-Large Music Collection ($\ge 1,000$) & -0.11 (0.58) & 0.90 & -1.40** (0.50) & 0.25 & -0.31 (0.56) & 0.74 \\
-STEM Major (ref: Non-STEM) & 1.22* (0.53) & 3.38 & 0.17 (0.48) & 1.18 & -0.42 (0.52) & 0.66 \\
-Hometown Urbanicity & -0.31 (0.34) & 0.74 & -0.04 (0.31) & 0.96 & 0.40 (0.37) & 1.49 \\
+\endfirsthead
+
+\multicolumn{3}{l}{\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+\toprule
+Predictor Variable & \textbf{Est (SE)} & \textbf{OR} \\
+\midrule
+\endhead
+
+\midrule
+\multicolumn{3}{r}{\footnotesize\textit{Continued on next page}} \\
 \bottomrule
-\end{tabular*}
-\begin{minipage}{\linewidth}
-\vspace{4pt}
-\footnotesize
-\textit{Note:} Estimates ($\beta$), standard errors in parentheses, and Odds Ratios ($\text{OR} = \exp(\beta)$) from multivariable penalized endogenous multinomial logit models (\texttt{FLXPmultinom}) with weight decay ($\lambda = 0.05$) to ensure regularized, finite parameter identification in the presence of quasi-complete separation on sparse demographic margins (specifically, zero men among Romance Readers and zero non-aspirants among Nonfictionists). * $p < 0.05$, ** $p < 0.01$, *** $p < 0.001$.
-\end{minipage}
-\end{table}
+\endfoot
+
+\bottomrule
+\multicolumn{3}{@{}p{\textwidth}@{}}{\vspace{4pt}\footnotesize \textit{Note:} Estimates ($\beta$), standard errors in parentheses, and Odds Ratios ($\text{OR} = \exp(\beta)$) from multivariable penalized endogenous multinomial logit models (\texttt{FLXPmultinom}) with weight decay ($\lambda = 0.05$) to ensure regularized, finite parameter identification in the presence of quasi-complete separation on sparse demographic margins (specifically, zero men among Romance Readers and zero non-aspirants among Nonfictionists). * $p < 0.05$, ** $p < 0.01$, *** $p < 0.001$.} \\
+\endlastfoot
+
+\multicolumn{3}{l}{\textbf{Panel A: Book Reading Types (Ref: Class 1 Genre Specialists, $N = 201$)}} \\*
+\midrule
+\addlinespace[2pt]
+\multicolumn{3}{l}{\textit{Class 2: Romance Readers}} \\*
+\addlinespace[1pt]
+\quad Constant & -5.14 (4.13) & 0.01 \\
+\quad Woman (ref: Man) & 6.35*** (1.03) & 571.20 \\
+\quad White (ref: Non-White) & 2.39** (0.83) & 10.87 \\
+\quad Catholic (ref: Non-Catholic) & -0.70 (0.68) & 0.50 \\
+\quad Parent Income (\$1,000s) & -0.01* (0.00) & 0.99 \\
+\quad Parent Education (Years) & -0.11 (0.18) & 0.89 \\
+\quad High School GPA (A/A-) & -1.20 (0.63) & 0.30 \\
+\quad Aspires to Advanced Degree & 0.02 (1.00) & 1.02 \\
+\quad High AP Course Load ($\ge 5$) & -0.06 (0.61) & 0.94 \\
+\quad Catholic High School & 2.05** (0.76) & 7.80 \\
+\quad Single-Sex High School & 0.22 (1.03) & 1.25 \\
+\quad Prior Cultural Events (0--12) & -0.11 (0.11) & 0.89 \\
+\quad Prior Books Read (Count) & 0.00 (0.02) & 1.00 \\
+\quad Large Music Collection ($\ge 1,000$) & -0.48 (0.59) & 0.62 \\
+\quad STEM Major (ref: Non-STEM) & -0.09 (0.58) & 0.91 \\
+\quad Hometown Urbanicity & 0.64 (0.36) & 1.89 \\
+\addlinespace[6pt]
+\multicolumn{3}{l}{\textit{Class 3: Nonfictionists}} \\*
+\addlinespace[1pt]
+\quad Constant & 1.09 (3.91) & 2.98 \\
+\quad Woman (ref: Man) & 1.51** (0.58) & 4.52 \\
+\quad White (ref: Non-White) & 0.38 (0.68) & 1.46 \\
+\quad Catholic (ref: Non-Catholic) & -0.40 (0.55) & 0.67 \\
+\quad Parent Income (\$1,000s) & 0.00 (0.00) & 1.00 \\
+\quad Parent Education (Years) & -0.26 (0.14) & 0.77 \\
+\quad High School GPA (A/A-) & -0.59 (0.54) & 0.55 \\
+\quad Aspires to Advanced Degree & 2.77 (2.55) & 15.97 \\
+\quad High AP Course Load ($\ge 5$) & -0.41 (0.55) & 0.66 \\
+\quad Catholic High School & -0.27 (0.77) & 0.77 \\
+\quad Single-Sex High School & 0.12 (0.97) & 1.12 \\
+\quad Prior Cultural Events (0--12) & -0.04 (0.09) & 0.96 \\
+\quad Prior Books Read (Count) & 0.00 (0.02) & 1.00 \\
+\quad Large Music Collection ($\ge 1,000$) & -0.91 (0.50) & 0.40 \\
+\quad STEM Major (ref: Non-STEM) & -0.95 (0.50) & 0.39 \\
+\quad Hometown Urbanicity & 0.09 (0.33) & 1.09 \\
+\addlinespace[6pt]
+\multicolumn{3}{l}{\textit{Class 4: Fiction Eclectics}} \\*
+\addlinespace[1pt]
+\quad Constant & -0.55 (2.90) & 0.58 \\
+\quad Woman (ref: Man) & 1.83*** (0.55) & 6.23 \\
+\quad White (ref: Non-White) & 0.08 (0.63) & 1.08 \\
+\quad Catholic (ref: Non-Catholic) & 0.46 (0.54) & 1.58 \\
+\quad Parent Income (\$1,000s) & -0.00 (0.00) & 1.00 \\
+\quad Parent Education (Years) & -0.11 (0.13) & 0.89 \\
+\quad High School GPA (A/A-) & 0.66 (0.58) & 1.93 \\
+\quad Aspires to Advanced Degree & -0.94 (0.80) & 0.39 \\
+\quad High AP Course Load ($\ge 5$) & 0.68 (0.57) & 1.98 \\
+\quad Catholic High School & 1.36* (0.56) & 3.90 \\
+\quad Single-Sex High School & -0.99 (0.83) & 0.37 \\
+\quad Prior Cultural Events (0--12) & -0.06 (0.08) & 0.94 \\
+\quad Prior Books Read (Count) & 0.02 (0.02) & 1.02 \\
+\quad Large Music Collection ($\ge 1,000$) & 0.53 (0.48) & 1.70 \\
+\quad STEM Major (ref: Non-STEM) & -0.28 (0.44) & 0.76 \\
+\quad Hometown Urbanicity & 0.12 (0.30) & 1.13 \\
+\addlinespace[8pt]
+\midrule
+\multicolumn{3}{l}{\textbf{Panel B: Music Genre Preferences (Ref: Class 4 Omnivores, $N = 201$)}} \\*
+\midrule
+\addlinespace[2pt]
+\multicolumn{3}{l}{\textit{Class 1: Classic Rockers}} \\*
+\addlinespace[1pt]
+\quad Constant & 2.21 (4.06) & 9.12 \\
+\quad Woman (ref: Man) & -1.95** (0.59) & 0.14 \\
+\quad White (ref: Non-White) & -0.81 (0.74) & 0.44 \\
+\quad Catholic (ref: Non-Catholic) & 0.31 (0.66) & 1.37 \\
+\quad Parent Income (\$1,000s) & 0.00 (0.00) & 1.00 \\
+\quad Parent Education (Years) & -0.10 (0.15) & 0.90 \\
+\quad High School GPA (A/A-) & -1.52* (0.71) & 0.22 \\
+\quad Aspires to Advanced Degree & 3.91 (2.56) & 50.00 \\
+\quad High AP Course Load ($\ge 5$) & -1.75** (0.65) & 0.17 \\
+\quad Catholic High School & 0.23 (0.68) & 1.26 \\
+\quad Single-Sex High School & -0.85 (0.94) & 0.43 \\
+\quad Prior Cultural Events (0--12) & -0.03 (0.10) & 0.97 \\
+\quad Prior Books Read (Count) & 0.01 (0.02) & 1.01 \\
+\quad Large Music Collection ($\ge 1,000$) & -0.11 (0.58) & 0.90 \\
+\quad STEM Major (ref: Non-STEM) & 1.22* (0.53) & 3.38 \\
+\quad Hometown Urbanicity & -0.31 (0.34) & 0.74 \\
+\addlinespace[6pt]
+\multicolumn{3}{l}{\textit{Class 2: Mainstreamers}} \\*
+\addlinespace[1pt]
+\quad Constant & 2.37 (3.23) & 10.73 \\
+\quad Woman (ref: Man) & 0.01 (0.52) & 1.01 \\
+\quad White (ref: Non-White) & -0.74 (0.64) & 0.48 \\
+\quad Catholic (ref: Non-Catholic) & -0.37 (0.58) & 0.69 \\
+\quad Parent Income (\$1,000s) & 0.01 (0.00) & 1.01 \\
+\quad Parent Education (Years) & 0.13 (0.14) & 1.14 \\
+\quad High School GPA (A/A-) & -1.58* (0.63) & 0.21 \\
+\quad Aspires to Advanced Degree & 0.47 (0.81) & 1.61 \\
+\quad High AP Course Load ($\ge 5$) & -1.61** (0.57) & 0.20 \\
+\quad Catholic High School & -0.14 (0.59) & 0.87 \\
+\quad Single-Sex High School & -0.09 (0.79) & 0.92 \\
+\quad Prior Cultural Events (0--12) & -0.30** (0.10) & 0.74 \\
+\quad Prior Books Read (Count) & 0.00 (0.01) & 1.00 \\
+\quad Large Music Collection ($\ge 1,000$) & -1.40** (0.50) & 0.25 \\
+\quad STEM Major (ref: Non-STEM) & 0.17 (0.48) & 1.18 \\
+\quad Hometown Urbanicity & -0.04 (0.31) & 0.96 \\
+\addlinespace[6pt]
+\multicolumn{3}{l}{\textit{Class 3: Modern Rockers}} \\*
+\addlinespace[1pt]
+\quad Constant & 0.52 (3.49) & 1.68 \\
+\quad Woman (ref: Man) & -2.58*** (0.61) & 0.08 \\
+\quad White (ref: Non-White) & -0.16 (0.73) & 0.85 \\
+\quad Catholic (ref: Non-Catholic) & -0.96 (0.61) & 0.38 \\
+\quad Parent Income (\$1,000s) & 0.01* (0.00) & 1.01 \\
+\quad Parent Education (Years) & 0.04 (0.15) & 1.04 \\
+\quad High School GPA (A/A-) & -1.47* (0.70) & 0.23 \\
+\quad Aspires to Advanced Degree & 0.88 (0.92) & 2.41 \\
+\quad High AP Course Load ($\ge 5$) & -0.00 (0.68) & 1.00 \\
+\quad Catholic High School & 0.04 (0.67) & 1.04 \\
+\quad Single-Sex High School & -2.37 (1.23) & 0.09 \\
+\quad Prior Cultural Events (0--12) & -0.45*** (0.11) & 0.64 \\
+\quad Prior Books Read (Count) & 0.02 (0.02) & 1.02 \\
+\quad Large Music Collection ($\ge 1,000$) & -0.31 (0.56) & 0.74 \\
+\quad STEM Major (ref: Non-STEM) & -0.42 (0.52) & 0.66 \\
+\quad Hometown Urbanicity & 0.40 (0.37) & 1.49 \\
+\end{longtable}
+\endgroup
 
 \end{document}
